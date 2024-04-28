@@ -3,14 +3,16 @@
 * ________________________
 *
 * How does this work?
-* For once, I've preimplemented a default implementation
+* I've preimplemented a default implementation
 * for all the most common utility algorithms:
 * - for each
 * - all
+* - map
+* - ...
 * 
 * All utils work with widepointers.
 * Create a new widepointer with the following call:
-* `new_wp(name, type, amount); // the ';' at the end is not nesseccary`
+* `new_wp(name, type, amount); // the ';' at the end is not strictly nesseccary`
 *
 * Since I want to leverage what little type safety there is in C,
 * all the functions are postfixed with the type they operate on.
@@ -24,7 +26,15 @@
 *      DEFINE_FOR_EACH(char) - defines a new for-each for characters.
 *      ...
 *
-* 
+* -----------------------------
+* Signatures
+* -----------------------------
+* new_wp(<name>, <type>, <count>)
+* for_each_<type>(<wp>, <fn>)
+* all_<type>(<wp>, <fn>)
+* any_<type>(<wp>, <fn>)
+* map<from type>_to_<to type>(<from wp>, <fn>, <to wp>)
+* mapip<type>(<wp>, <fn>)
 */
 
 // #include <stdio.h>
@@ -43,6 +53,23 @@ typedef unsigned long unsigned_long;
 typedef long long long_long;
 typedef unsigned long long unsigned_long_long;
 typedef long double long_double;
+
+#define DEFAULT_TYPES(macro) \
+    macro(char) \
+    macro(signed_char) \
+    macro(unsigned_char) \
+    macro(short) \
+    macro(unsigned_short) \
+    macro(int) \
+    macro(unsigned_int) \
+    macro(long) \
+    macro(unsigned_long) \
+    macro(long_long) \
+    macro(unsigned_long_long) \
+    macro(float) \
+    macro(double) \
+    macro(long_double)
+
 
 /* ##################################################
 *  Whidepointer
@@ -67,20 +94,7 @@ typedef struct {
     unsigned long long address;
 } Wp;
 
-DEFINE_WP(char)
-DEFINE_WP(signed_char)
-DEFINE_WP(unsigned_char)
-DEFINE_WP(short)
-DEFINE_WP(unsigned_short)
-DEFINE_WP(int)
-DEFINE_WP(unsigned_int)
-DEFINE_WP(long)
-DEFINE_WP(unsigned_long)
-DEFINE_WP(long_long)
-DEFINE_WP(unsigned_long_long)
-DEFINE_WP(float)
-DEFINE_WP(double)
-DEFINE_WP(long_double)
+DEFAULT_TYPES(DEFINE_WP)
 
 /* ##################################################
 *  TODO: Whidepointer promotions (with typeof)
@@ -109,21 +123,7 @@ void _for_each(Wp ptr, any_to_void fn) {
         } \
     }
 
-DEFINE_FOR_EACH(char)
-DEFINE_FOR_EACH(signed_char)
-DEFINE_FOR_EACH(unsigned_char)
-DEFINE_FOR_EACH(short)
-DEFINE_FOR_EACH(unsigned_short)
-DEFINE_FOR_EACH(int)
-DEFINE_FOR_EACH(unsigned_int)
-DEFINE_FOR_EACH(long)
-DEFINE_FOR_EACH(unsigned_long)
-DEFINE_FOR_EACH(long_long)
-DEFINE_FOR_EACH(unsigned_long_long)
-DEFINE_FOR_EACH(float)
-DEFINE_FOR_EACH(double)
-DEFINE_FOR_EACH(long_double)
-
+DEFAULT_TYPES(DEFINE_FOR_EACH)
 
 /* ##################################################
 *  All
@@ -149,29 +149,48 @@ char _all(Wp ptr, truthy_fn fn) {
         return 1; \
     }
 
-DEFINE_ALL(char)
-DEFINE_ALL(signed_char)
-DEFINE_ALL(unsigned_char)
-DEFINE_ALL(short)
-DEFINE_ALL(unsigned_short)
-DEFINE_ALL(int)
-DEFINE_ALL(unsigned_int)
-DEFINE_ALL(long)
-DEFINE_ALL(unsigned_long)
-DEFINE_ALL(long_long)
-DEFINE_ALL(unsigned_long_long)
-DEFINE_ALL(float)
-DEFINE_ALL(double)
-DEFINE_ALL(long_double)
+DEFAULT_TYPES(DEFINE_ALL)
 
+/* ##################################################
+*  Any
+*  ##################################################
+*/
+
+char _any(Wp ptr, truthy_fn fn) {
+    for (int i = 0; i < ptr.count; i++){
+        char res = (*fn) ((void*) ptr.address+i*ptr.size);
+        if ( res ) return 1;
+    }
+    return 0;
+}
+
+#define DEFINE_ANY(t) \
+    char any_##t(t##Wp ptr, truthy_##t##_fn fn) { \
+        for (int i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((t*) ptr.address+i); \
+            if ( res ) return 1; \
+        } \
+        return 0; \
+    }
+
+DEFAULT_TYPES(DEFINE_ANY)
 
 /* ##################################################
 *  TODO: Join
 *  ##################################################
 */
 
+// join("hi", "my", "name", "is")
+// joinp(&"hi", &"my", &"name", &"is")
+// joinwp(wp)
+
 /* ##################################################
-*  TODO: Map
+*  TODO: Split
+*  ##################################################
+*/
+
+/* ##################################################
+*  Map
 *  ##################################################
 */
 
@@ -200,36 +219,67 @@ DEFINE_ALL(long_double)
     DEFINE_MAP(type, double) \
     DEFINE_MAP(type, long_double)
 
-DEFINE_MAP_TO_STD(char)
-DEFINE_MAP_TO_STD(signed_char)
-DEFINE_MAP_TO_STD(unsigned_char)
-DEFINE_MAP_TO_STD(short)
-DEFINE_MAP_TO_STD(unsigned_short)
-DEFINE_MAP_TO_STD(int)
-DEFINE_MAP_TO_STD(unsigned_int)
-DEFINE_MAP_TO_STD(long)
-DEFINE_MAP_TO_STD(unsigned_long)
-DEFINE_MAP_TO_STD(long_long)
-DEFINE_MAP_TO_STD(unsigned_long_long)
-DEFINE_MAP_TO_STD(float)
-DEFINE_MAP_TO_STD(double)
-DEFINE_MAP_TO_STD(long_double)
+DEFAULT_TYPES(DEFINE_MAP_TO_STD)
 
 /* ##################################################
-*  TODO: Map in Place
+*  Map in Place
 *  ##################################################
 */
 
+#define DEFINE_MAPIP(type) \
+    void mapip_##type(type##Wp wptr, type##_to_##type fn) { \
+        for (int i = 0; i < wptr.count; i++){\
+            wptr.address[i] = (*fn) (wptr.address+i);\
+        }\
+    }
+
+DEFAULT_TYPES(DEFINE_MAPIP)
+
 /* ##################################################
-*  TODO: Fold
+*  Fold
 *  ##################################################
 */
+
+#define DEFINE_FOLD(from_t, to_t) \
+    typedef to_t (*collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
+    int fold_##from_t##_to_##to_t(from_t##Wp wptr, collapse_##from_t##_to_##to_t fn, to_t start){ \
+        for (int i = 0; i < wptr.count; i++) { \
+            start = (*fn) (&start, wptr.address+i); \
+        } \
+        return start; \
+    }
+
+#define DEFINE_FOLD_TO_STD(type) \
+    DEFINE_FOLD(type, char) \
+    DEFINE_FOLD(type, signed_char) \
+    DEFINE_FOLD(type, unsigned_char) \
+    DEFINE_FOLD(type, short) \
+    DEFINE_FOLD(type, unsigned_short) \
+    DEFINE_FOLD(type, int) \
+    DEFINE_FOLD(type, unsigned_int) \
+    DEFINE_FOLD(type, long) \
+    DEFINE_FOLD(type, unsigned_long) \
+    DEFINE_FOLD(type, long_long) \
+    DEFINE_FOLD(type, unsigned_long_long) \
+    DEFINE_FOLD(type, float) \
+    DEFINE_FOLD(type, double) \
+    DEFINE_FOLD(type, long_double)
+
+
+DEFAULT_TYPES(DEFINE_FOLD_TO_STD)
 
 /* ##################################################
 *  TODO: Curry
+*  Needs to be done at runtime with a struct maintaining stuff.
+*  But how do I pass that stuff into the function pointer?
+*  Can I construct a curry object with a macro which is tailor made for the function?
 *  ##################################################
 */
 
 
+/* ##################################################
+*  TODO: Iterator
+*  ##################################################
+*/
 
 
