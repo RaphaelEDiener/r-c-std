@@ -1,22 +1,56 @@
 /**
- * array operations which take care of resizing
- * typedef struct { 
- *     size_t capacity;
- *     unsigned int size; 
- *     size_t count; 
- *     type* ptr; 
- *  } type##Wp; 
- *
- *  also defines corresponding result type
- *
- *  insert(wp, elem) -> res
- *  in case of inserting into a max full wp,
- *  does nothing and returns wp.
- *
- *  In case one is working with stack wide pointers,
- *  inserstion becomes a side effect function
- *  and automatically resizing is not supported anymore.
- */
+* Raphael Standard Library
+* ________________________
+*
+* How does this work?
+* I've preimplemented a default implementation
+* for all the most common utility algorithms:
+* - for each
+* - all
+* - map
+* - ...
+* 
+* All utils work with widepointers.
+* Create a new widepointer with the following call:
+* `new_wp(name, type, amount); // the ';' at the end is not strictly nesseccary`
+*
+* Since I want to leverage what little type safety there is in C,
+* all the functions are postfixed with the type they operate on.
+* E.g: for_each_int, for_each_char, ...
+*
+* The macros are called DEFINE_<function name>.
+* E.g: DEFINE_WP(char) - defines a new wide pointer type for characters.
+*      DEFINE_FOR_EACH(char) - defines a new for-each for characters.
+*      ...
+*
+* -----------------------------
+* Signatures
+* -----------------------------
+* new_wp(<name>, <type>, <count>)
+* for_each_<type>(<wp>, <fn>)
+* all_<type>(<wp>, <fn>)
+* any_<type>(<wp>, <fn>)
+* map<from type>_to_<to type>(<from wp>, <fn>, <to wp>)
+* mapip<type>(<wp>, <fn>)
+
+* array operations which take care of resizing
+* typedef struct { 
+*     size_t capacity;
+*     unsigned int size; 
+*     size_t count; 
+*     type* ptr; 
+*  } type##Wp; 
+*
+*  also defines corresponding result type
+*
+*  insert(wp, elem) -> res
+*  in case of inserting into a max full wp,
+*  does nothing and returns wp.
+*
+*  In case one is working with stack wide pointers,
+*  inserstion becomes a side effect function
+*  and automatically resizing is not supported anymore.
+*/
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -99,6 +133,21 @@
         } \
         return 1; \
     } \
+    typedef char (*truthy_##type##_fn)(type*); \
+    char any_##type(type##Wp ptr, truthy_##type##_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 1; \
+    } \
+    char s_any_##type(type##Swp ptr, truthy_##type##_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 1; \
+    } \
     typedef char (*type##_equality_fn)(type*, type*); \
     char in_##type##Wp(type##Wp ptr, type* elem, type##_equality_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
@@ -106,7 +155,14 @@
             if ( res ) return 1; \
         } \
         return 0; \
-    }
+    } \
+    char in_##type##Swp(type##Swp ptr, type* elem, type##_equality_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) (elem, (type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 0; \
+    } 
 
 DEFAULT_TYPES(DEFINE_WP);
 
