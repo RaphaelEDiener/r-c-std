@@ -164,7 +164,22 @@
         return 0; \
     } 
 
+#define _DEFINE_PRIMITIVE_IN(type) \
+    char pin_##type##Wp(type##Wp ptr, type* elem) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            if ( elem == ptr.ptr[i] ) return 1; \
+        } \
+        return 0; \
+    } \
+    char pin_##type##Swp(type##Swp ptr, type* elem) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            if ( elem == ptr.ptr[i] ) return 1; \
+        } \
+        return 0; \
+    } 
+
 DEFAULT_TYPES(DEFINE_WP);
+DEFAULT_TYPES(_DEFINE_PRIMITIVE_IN);
 
 #define new_wp(name, type, capacity) \
     type##Wp name = {capacity, sizeof(type), 0, calloc(capacity, sizeof(type))}; \
