@@ -145,5 +145,5 @@ typedef long double long_double;
     DEFAULT_TTTYPES(macro, ulong_long, ulong_long) \
     DEFAULT_TTTYPES(macro, float, float) \
     DEFAULT_TTTYPES(macro, double, double) \
-    DEFAULT_TTTYPES(macro, long_double, long_double) \
+    DEFAULT_TTTYPES(macro, long_double, long_double) 
 #endif

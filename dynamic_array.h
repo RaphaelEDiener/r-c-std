@@ -61,6 +61,101 @@
 
 #ifndef DEFINE_WP
 
+#define _WP_DEFINE_INSERT(type) \
+    type##WpRes insert_##type##Wp(type##Wp arr, type elem) { \
+        size_t MAX = SIZE_MAX / arr.size; \
+        type##WpRes ans = {FAILURE, arr}; \
+        if (arr.count == arr.capacity) { \
+            if (arr.capacity == MAX) { \
+                err_redln("Tried to inser into max size and full array!"); \
+                return ans; \
+            } \
+            type* prev = arr.ptr; \
+            size_t new_cap = arr.capacity * 2; \
+            if (new_cap < arr.capacity) new_cap = MAX; \
+            type* new_ptr = calloc(new_cap, sizeof(type)); \
+            memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
+            free(prev); \
+            arr.ptr = new_ptr; \
+            arr.capacity = new_cap; \
+        } \
+        arr.ptr[arr.count] = elem; \
+        arr.count++; \
+        type##WpRes ans2 = {SUCCESS, arr}; \
+        return ans2; \
+    } \
+    voidRes insert_##type##Swp(type##Swp arr, type elem) { \
+        voidRes ans = {FAILURE}; \
+        if (arr.count == arr.capacity) { \
+            err_redln("Tried to inser into max size and full array!"); \
+            return ans; \
+        } \
+        arr.ptr[arr.count] = elem; \
+        arr.count++; \
+        voidRes ans2 = {SUCCESS}; \
+        return ans2; \
+    }
+
+#define _WP_DEFINE_FOR_EACH(type) \
+    void for_each_##type##Wp(type##Wp wptr, _wp_##type##_to_void fn) { \
+        for (size_t i = 0; i < wptr.count; i++) { \
+            (*fn)(wptr.ptr + i); \
+        } \
+    } \
+    void for_each_##type##Wps(type##Swp wptr, _wp_##type##_to_void fn) { \
+        for (size_t i = 0; i < wptr.count; i++) { \
+            (*fn)(wptr.ptr + i); \
+        } \
+    }
+
+#define _WP_DEFINE_ALL(type) \
+    char all_##type##Wp(type##Wp ptr, _wp_truthy_##type##_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((type*) ptr.ptr+i); \
+            if ( !res ) return 0; \
+        } \
+        return 1; \
+    } \
+    char all_##type##Swp(type##Swp ptr, _wp_truthy_##type##_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((type*) ptr.ptr+i); \
+            if ( !res ) return 0; \
+        } \
+        return 1; \
+    }
+
+#define _WP_DEFINE_ANY(type) \
+    char any_##type##Wp(type##Wp ptr, _wp_truthy_##type##_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 1; \
+    } \
+    char any_##type##Swp(type##Swp ptr, _wp_truthy_##type##_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) ((type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 1; \
+    } 
+    
+#define _WP_DEFINE_IN(type) \
+    char in_##type##Wp(type##Wp ptr, type* elem, _wp_##type##_equality_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) (elem, (type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 0; \
+    } \
+    char in_##type##Swp(type##Swp ptr, type* elem, _wp_##type##_equality_fn fn) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            char res = (*fn) (elem, (type*) ptr.ptr+i); \
+            if ( res ) return 1; \
+        } \
+        return 0; \
+    } 
+
 #define _WP_DEFINE_FOLD(from_t, to_t) \
     typedef to_t (*_wp_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
     int fold_##from_t##_to_##to_t(from_t##Wp wptr, _wp_collapse_##from_t##_to_##to_t fn, to_t start){ \
@@ -104,91 +199,11 @@
     typedef void (*_wp_##type##_to_void)(type*) ; \
     typedef type (*_wp_##type##_to_##type)(type*) ; \
     typedef char (*_wp_truthy_##type##_fn)(type*); \
-    type##WpRes insert_##type##Wp(type##Wp arr, type elem) { \
-        size_t MAX = SIZE_MAX / arr.size; \
-        type##WpRes ans = {FAILURE, arr}; \
-        if (arr.count == arr.capacity) { \
-            if (arr.capacity == MAX) { \
-                err_redln("Tried to inser into max size and full array!"); \
-                return ans; \
-            } \
-            type* prev = arr.ptr; \
-            size_t new_cap = arr.capacity * 2; \
-            if (new_cap < arr.capacity) new_cap = MAX; \
-            type* new_ptr = calloc(new_cap, sizeof(type)); \
-            memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
-            free(prev); \
-            arr.ptr = new_ptr; \
-            arr.capacity = new_cap; \
-        } \
-        arr.ptr[arr.count] = elem; \
-        arr.count++; \
-        type##WpRes ans2 = {SUCCESS, arr}; \
-        return ans2; \
-    } \
-    voidRes insert_##type##Swp(type##Swp arr, type elem) { \
-        voidRes ans = {FAILURE}; \
-        if (arr.count == arr.capacity) { \
-            err_redln("Tried to inser into max size and full array!"); \
-            return ans; \
-        } \
-        arr.ptr[arr.count] = elem; \
-        arr.count++; \
-        voidRes ans2 = {SUCCESS}; \
-        return ans2; \
-    } \
-    void for_each_##type#Wp(type##Wp wptr, _wp_##type##_to_void fn) { \
-        for (size_t i = 0; i < wptr.count; i++) { \
-            (*fn)(wptr.ptr + i); \
-        } \
-    } \
-    void for_each_##type##Wps(type##Swp wptr, _wp_##type##_to_void fn) { \
-        for (size_t i = 0; i < wptr.count; i++) { \
-            (*fn)(wptr.ptr + i); \
-        } \
-    } \
-    char all_##type##Wp(type##Wp ptr, _wp_truthy_##type##_fn fn) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            char res = (*fn) ((type*) ptr.ptr+i); \
-            if ( !res ) return 0; \
-        } \
-        return 1; \
-    } \
-    char all_##type##Swp(type##Swp ptr, _wp_truthy_##type##_fn fn) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            char res = (*fn) ((type*) ptr.ptr+i); \
-            if ( !res ) return 0; \
-        } \
-        return 1; \
-    } \
-    char any_##type##Wp(type##Wp ptr, _wp_truthy_##type##_fn fn) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            char res = (*fn) ((type*) ptr.ptr+i); \
-            if ( res ) return 1; \
-        } \
-        return 1; \
-    } \
-    char any_##type##Swp(type##Swp ptr, _wp_truthy_##type##_fn fn) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            char res = (*fn) ((type*) ptr.ptr+i); \
-            if ( res ) return 1; \
-        } \
-        return 1; \
-    } \
-    char in_##type##Wp(type##Wp ptr, type* elem, _wp_##type##_equality_fn fn) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            char res = (*fn) (elem, (type*) ptr.ptr+i); \
-            if ( res ) return 1; \
-        } \
-        return 0; \
-    } \
-    char in_##type##Swp(type##Swp ptr, type* elem, _wp_##type##_equality_fn fn) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            char res = (*fn) (elem, (type*) ptr.ptr+i); \
-            if ( res ) return 1; \
-        } \
-        return 0; \
-    } \
+    _WP_DEFINE_INSERT(type) \
+    _WP_DEFINE_FOR_EACH(type) \
+    _WP_DEFINE_ALL(type) \
+    _WP_DEFINE_ANY(type) \
+    _WP_DEFINE_IN(type) \
     DEFAULT_TTYPES(_WP_DEFINE_FOLD, type); \
     void mapip_##type##Wp(type##Wp wptr, _wp_##type##_to_##type fn) { \
         for (size_t i = 0; i < wptr.count; i++){\
@@ -200,7 +215,7 @@
             wptr.ptr[i] = (*fn) (wptr.ptr+i);\
         }\
     } \
-    DEFAULT_TTYPES(_WP_DEFINE_MAP, type##Wp) \
+    DEFAULT_TTYPES(_WP_DEFINE_MAP, type##Wp)
 
 // Mapping on the stack is done with the array lib
 
