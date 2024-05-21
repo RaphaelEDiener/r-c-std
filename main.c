@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "rstd.c"
+#include "rstd.h"
 
 char test(int* x){
     return (*x % 2) == 0;
