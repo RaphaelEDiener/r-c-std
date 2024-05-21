@@ -61,6 +61,14 @@
 
 #ifndef DEFINE_WP
 
+#define new_wp(name, type, capacity) \
+    type##Wp name = {capacity, sizeof(type), 0, calloc(capacity, sizeof(type))}; \
+
+#define new_swp(name, type, count) \
+    type _##name[count]; \
+    type##Swp name = {sizeof(type), count, _##name}; 
+
+
 #define _WP_DEFINE_INSERT(type) \
     type##WpRes insert_##type##Wp(type##Wp arr, type elem) { \
         size_t MAX = SIZE_MAX / arr.size; \
@@ -160,7 +168,7 @@
     typedef to_t (*_wp_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
     int fold_##from_t##_to_##to_t(from_t##Wp wptr, _wp_collapse_##from_t##_to_##to_t fn, to_t start){ \
         for (size_t i = 0; i < wptr.count; i++) { \
-            start = (*fn) (&start, wptr.address+i); \
+            start = (*fn) (&start, wptr.ptr+i); \
         } \
         return start; \
     }
@@ -170,8 +178,7 @@
     to_t##Wp map_##from_t##Wp_to_##to_t##Wp(from_t##Wp from_ptr, _wp_##from_t##_to_##to_t fn) { \
         new_wp(ans, to_t, from_ptr.count) \
         for (size_t i = 0; i < from_ptr.count; i++){\
-            char res = (*fn) (from_ptr.ptr+i);\
-            to_ptr.address[i] = res;\
+            ans.ptr[i] = (*fn) (from_ptr.ptr+i);\
         } \
         return ans; \
     }
@@ -215,7 +222,7 @@
             wptr.ptr[i] = (*fn) (wptr.ptr+i);\
         }\
     } \
-    DEFAULT_TTYPES(_WP_DEFINE_MAP, type##Wp)
+    DEFAULT_TTYPES(_WP_DEFINE_MAP, type)
 
 // Mapping on the stack is done with the array lib
 
@@ -235,13 +242,6 @@
 
 DEFAULT_TYPES(DEFINE_WP);
 DEFAULT_TYPES(_DEFINE_PRIMITIVE_IN);
-
-#define new_wp(name, type, capacity) \
-    type##Wp name = {capacity, sizeof(type), 0, calloc(capacity, sizeof(type))}; \
-
-#define new_swp(name, type, count) \
-    type _##name[count]; \
-    type##Swp name = {sizeof(type), count, _##name}; 
 
 #endif
 

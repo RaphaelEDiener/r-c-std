@@ -45,22 +45,7 @@ typedef long double long_double;
     macro(type, ulong_long) \
     macro(type, float) \
     macro(type, double) \
-    macro(type, long_double) \
-    macro(type, type) \
-    macro(char, type) \
-    macro(signed_char, type) \
-    macro(uchar, type) \
-    macro(short, type) \
-    macro(ushort, type) \
-    macro(int, type) \
-    macro(uint, type) \
-    macro(long, type) \
-    macro(ulong, type) \
-    macro(long_long, type) \
-    macro(ulong_long, type) \
-    macro(float, type) \
-    macro(double, type) \
-    macro(long_double, type)
+    macro(type, long_double)
 #endif
 
 
