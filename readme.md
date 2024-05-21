@@ -1,5 +1,6 @@
 # TODO
 
+*  Document!
 *  Test...
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
