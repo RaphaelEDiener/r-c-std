@@ -1,7 +1,7 @@
 
 #ifndef TYPE_CONCATS
 #define TYPE_CONCATS
-typedef signed char signed_char;
+typedef signed char schar;
 typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
@@ -14,7 +14,7 @@ typedef long double long_double;
 #ifndef DEFAULT_TYPES
 #define DEFAULT_TYPES(macro) \
     macro(char) \
-    macro(signed_char) \
+    macro(schar) \
     macro(uchar) \
     macro(short) \
     macro(ushort) \
@@ -33,7 +33,7 @@ typedef long double long_double;
 #ifndef DEFAULT_TTYPES
 #define DEFAULT_TTYPES(macro, type) \
     macro(type, char) \
-    macro(type, signed_char) \
+    macro(type, schar) \
     macro(type, uchar) \
     macro(type, short) \
     macro(type, ushort) \
@@ -52,7 +52,7 @@ typedef long double long_double;
 #ifndef DEFAULT_FOR_TTYPES
 #define DEFAULT_FOR_TTYPES(macro) \
     DEFAULT_TTYPES(macro, char) \
-    DEFAULT_TTYPES(macro, signed_char) \
+    DEFAULT_TTYPES(macro, schar) \
     DEFAULT_TTYPES(macro, uchar) \
     DEFAULT_TTYPES(macro, short) \
     DEFAULT_TTYPES(macro, ushort) \
@@ -70,7 +70,7 @@ typedef long double long_double;
 #ifndef DEFAULT_TTTYPES
 #define DEFAULT_TTTYPES(macro, type, epyt) \
     macro(epyt, type, char) \
-    macro(epyt, type, signed_char) \
+    macro(epyt, type, schar) \
     macro(epyt, type, uchar) \
     macro(epyt, type, short) \
     macro(epyt, type, ushort) \
@@ -85,7 +85,7 @@ typedef long double long_double;
     macro(epyt, type, long_double) \
     macro(epyt, type, type) \
     macro(epyt, char, type) \
-    macro(epyt, signed_char, type) \
+    macro(epyt, schar, type) \
     macro(epyt, uchar, type) \
     macro(epyt, short, type) \
     macro(epyt, ushort, type) \
@@ -99,7 +99,7 @@ typedef long double long_double;
     macro(epyt, double, type) \
     macro(epyt, long_double, type) \
     macro(char, epyt, type) \
-    macro(signed_char, epyt, type) \
+    macro(schar, epyt, type) \
     macro(uchar, epyt, type) \
     macro(short, epyt, type) \
     macro(ushort, epyt, type) \
@@ -118,7 +118,7 @@ typedef long double long_double;
 #ifndef DEFAULT_FOR_TTTYPES
 #define DEFAULT_FOR_TTTYPES(macro) \
     DEFAULT_TTTYPES(macro, char, char) \
-    DEFAULT_TTTYPES(macro, signed_char, signed_char) \
+    DEFAULT_TTTYPES(macro, schar, schar) \
     DEFAULT_TTTYPES(macro, uchar, uchar) \
     DEFAULT_TTTYPES(macro, short, short) \
     DEFAULT_TTTYPES(macro, ushort, ushort) \

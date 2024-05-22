@@ -163,6 +163,18 @@
         } \
         return 0; \
     } 
+    
+#define _WP_DEFINE_MAPIP(type) \
+    void mapip_##type##Wp(type##Wp wptr, _wp_##type##_to_##type fn) { \
+        for (size_t i = 0; i < wptr.count; i++){\
+            wptr.ptr[i] = (*fn) (wptr.ptr+i);\
+        }\
+    } \
+    void mapip_##type##Swp(type##Swp wptr, _wp_##type##_to_##type fn) { \
+        for (size_t i = 0; i < wptr.count; i++){\
+            wptr.ptr[i] = (*fn) (wptr.ptr+i);\
+        }\
+    }
 
 #define _WP_DEFINE_FOLD(from_t, to_t) \
     typedef to_t (*_wp_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
@@ -219,17 +231,8 @@
     _WP_DEFINE_ALL(type) \
     _WP_DEFINE_ANY(type) \
     _WP_DEFINE_IN(type) \
+    _WP_DEFINE_MAPIP(type) \
     DEFAULT_TTYPES(_WP_DEFINE_FOLD, type); \
-    void mapip_##type##Wp(type##Wp wptr, _wp_##type##_to_##type fn) { \
-        for (size_t i = 0; i < wptr.count; i++){\
-            wptr.ptr[i] = (*fn) (wptr.ptr+i);\
-        }\
-    } \
-    void mapip_##type##Swp(type##Swp wptr, _wp_##type##_to_##type fn) { \
-        for (size_t i = 0; i < wptr.count; i++){\
-            wptr.ptr[i] = (*fn) (wptr.ptr+i);\
-        }\
-    } \
     DEFAULT_TTYPES(_WP_DEFINE_MAP, type)
 
 #define DEFINE_WP(type) \
@@ -255,17 +258,8 @@
     _WP_DEFINE_ALL(type) \
     _WP_DEFINE_ANY(type) \
     _WP_DEFINE_IN(type) \
+    _WP_DEFINE_MAPIP(type) \
     DEFAULT_TTYPES(_WP_DEFINE_FOLD, type); \
-    void mapip_##type##Wp(type##Wp wptr, _wp_##type##_to_##type fn) { \
-        for (size_t i = 0; i < wptr.count; i++){\
-            wptr.ptr[i] = (*fn) (wptr.ptr+i);\
-        }\
-    } \
-    void mapip_##type##Swp(type##Swp wptr, _wp_##type##_to_##type fn) { \
-        for (size_t i = 0; i < wptr.count; i++){\
-            wptr.ptr[i] = (*fn) (wptr.ptr+i);\
-        }\
-    } \
     DEFAULT_TTYPES(_WP_DEFINE_MAP, type)
 
 // Mapping on the stack is done with the array lib
