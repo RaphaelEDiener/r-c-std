@@ -62,7 +62,7 @@
 #ifndef DEFINE_WP
 
 #define new_wp(name, type, capacity) \
-    type##Wp name = {capacity, sizeof(type), 0, calloc(capacity, sizeof(type))}; \
+    type##Wp name = {capacity, sizeof(type), 0, (type*) calloc(capacity, sizeof(type))}; \
 
 #define new_swp(name, type, capacity) \
     type _##name[capacity]; \
@@ -81,7 +81,7 @@
             type* prev = arr.ptr; \
             size_t new_cap = arr.capacity * 2; \
             if (new_cap < arr.capacity) new_cap = MAX; \
-            type* new_ptr = calloc(new_cap, sizeof(type)); \
+            type* new_ptr = (type*) calloc(new_cap, sizeof(type)); \
             memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
             free(prev); \
             arr.ptr = new_ptr; \
@@ -176,6 +176,11 @@
         }\
     }
 
+#define _WP_DEFINE_FOLD_SIG(from_t, to_t) \
+    typedef to_t (*_wp_sig_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
+    to_t fold_##from_t##Wp_to_##to_t(from_t##Wp wptr, _wp_sig_collapse_##from_t##_to_##to_t fn, to_t start); \
+    to_t fold_##from_t##Swp_to_##to_t(from_t##Swp wptr, _wp_sig_collapse_##from_t##_to_##to_t fn, to_t start);
+
 #define _WP_DEFINE_FOLD(from_t, to_t) \
     typedef to_t (*_wp_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
     to_t fold_##from_t##Wp_to_##to_t(from_t##Wp wptr, _wp_collapse_##from_t##_to_##to_t fn, to_t start){ \
@@ -191,6 +196,10 @@
         return start; \
     }
 
+#define _WP_DEFINE_MAP_SIG(from_t, to_t) \
+    typedef to_t (*_wp_sig_##from_t##_to_##to_t)(from_t*); \
+    to_t##Wp map_##from_t##Wp_to_##to_t##Wp(from_t##Wp from_ptr, _wp_sig_##from_t##_to_##to_t fn);
+
 #define _WP_DEFINE_MAP(from_t, to_t) \
     typedef to_t (*_wp_##from_t##_to_##to_t)(from_t*); \
     to_t##Wp map_##from_t##Wp_to_##to_t##Wp(from_t##Wp from_ptr, _wp_##from_t##_to_##to_t fn) { \
@@ -201,39 +210,10 @@
         return ans; \
     }
 
-// Since I can't define type -> type maps without macro collision, 
+// Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, if he needs that (basically solved in the array utils)
 #define DEFINE_MAPWP(type) _WP_DEFINE_MAP(type, type)
 #define DEFINE_FOLDWP(type) _WP_DEFINE_FOLD(type, type)
-
-#define _DEFINE_PRIMITIVE_TYPES(type) \
-    typedef struct { \
-        size_t capacity; \
-        unsigned int size; \
-        size_t count; \
-        type* ptr; \
-    } type##Wp; \
-    typedef struct { \
-        size_t capacity; \
-        unsigned int size; \
-        size_t count; \
-        type* ptr; \
-    } type##Swp; \
-    DEFINE_RESULT(type##Wp); \
-    typedef char (*_wp_##type##_equality_fn)(type*, type*); \
-    typedef void (*_wp_##type##_to_void)(type*) ; \
-    typedef type (*_wp_##type##_to_##type)(type*) ; \
-    typedef char (*_wp_truthy_##type##_fn)(type*);
-
-#define _DEFINE_PRIMITIVE_FUNCTIONS(type) \
-    _WP_DEFINE_INSERT(type) \
-    _WP_DEFINE_FOR_EACH(type) \
-    _WP_DEFINE_ALL(type) \
-    _WP_DEFINE_ANY(type) \
-    _WP_DEFINE_IN(type) \
-    _WP_DEFINE_MAPIP(type) \
-    DEFAULT_TTYPES(_WP_DEFINE_FOLD, type); \
-    DEFAULT_TTYPES(_WP_DEFINE_MAP, type)
 
 #define DEFINE_WP(type) \
     typedef struct { \
@@ -262,25 +242,45 @@
     DEFAULT_TTYPES(_WP_DEFINE_FOLD, type); \
     DEFAULT_TTYPES(_WP_DEFINE_MAP, type)
 
-// Mapping on the stack is done with the array lib
+#define _WP_DEFINE_SIGS(type) \
+    type##WpRes insert_##type##Wp(type##Wp arr, type elem); \
+    voidRes insert_##type##Swp(type##Swp arr, type elem); \
+    void for_each_##type##Wp(type##Wp wptr, _wp_##type##_to_void fn); \
+    void for_each_##type##Wps(type##Swp wptr, _wp_##type##_to_void fn); \
+    char all_##type##Wp(type##Wp ptr, _wp_truthy_##type##_fn fn); \
+    char all_##type##Swp(type##Swp ptr, _wp_truthy_##type##_fn fn); \
+    char any_##type##Wp(type##Wp ptr, _wp_truthy_##type##_fn fn); \
+    char any_##type##Swp(type##Swp ptr, _wp_truthy_##type##_fn fn); \
+    char in_##type##Wp(type##Wp ptr, type* elem, _wp_##type##_equality_fn fn); \
+    char in_##type##Swp(type##Swp ptr, type* elem, _wp_##type##_equality_fn fn); \
+    void mapip_##type##Wp(type##Wp wptr, _wp_##type##_to_##type fn); \
+    void mapip_##type##Swp(type##Swp wptr, _wp_##type##_to_##type fn); \
+    DEFAULT_TTYPES(_WP_DEFINE_FOLD_SIG, type); \
+    DEFAULT_TTYPES(_WP_DEFINE_MAP_SIG, type);
 
-#define _DEFINE_PRIMITIVE_IN(type) \
-    char pin_##type##Wp(type##Wp ptr, type* elem) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            if ( *elem == ptr.ptr[i] ) return 1; \
-        } \
-        return 0; \
-    } \
-    char pin_##type##Swp(type##Swp ptr, type* elem) { \
-        for (size_t i = 0; i < ptr.count; i++){ \
-            if ( *elem == ptr.ptr[i] ) return 1; \
-        } \
-        return 0; \
-    } 
+
+#define _DEFINE_PRIMITIVE_TYPES(type) \
+    typedef struct { \
+        size_t capacity; \
+        unsigned int size; \
+        size_t count; \
+        type* ptr; \
+    } type##Wp; \
+    typedef struct { \
+        size_t capacity; \
+        unsigned int size; \
+        size_t count; \
+        type* ptr; \
+    } type##Swp; \
+    DEFINE_RESULT(type##Wp); \
+    typedef char (*_wp_##type##_equality_fn)(type*, type*); \
+    typedef void (*_wp_##type##_to_void)(type*) ; \
+    typedef type (*_wp_##type##_to_##type)(type*) ; \
+    typedef char (*_wp_truthy_##type##_fn)(type*);
+
 
 DEFAULT_TYPES(_DEFINE_PRIMITIVE_TYPES);
-DEFAULT_TYPES(_DEFINE_PRIMITIVE_FUNCTIONS);
-DEFAULT_TYPES(_DEFINE_PRIMITIVE_IN);
+DEFAULT_TYPES(_WP_DEFINE_SIGS);
 
 #endif
 
