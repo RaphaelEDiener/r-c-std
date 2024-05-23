@@ -162,34 +162,7 @@
 #define DEFINE_MAPDA(type) _DA_DEFINE_MAP(type, type)
 #define DEFINE_FOLDDA(type) _DA_DEFINE_FOLD(type, type)
 
-#define DEFINE_DA(type) \
-    typedef struct { \
-        size_t capacity; \
-        unsigned int size; \
-        size_t count; \
-        type* ptr; \
-    } type##Da; \
-    typedef struct { \
-        size_t capacity; \
-        unsigned int size; \
-        size_t count; \
-        type* ptr; \
-    } type##Sa; \
-    DEFINE_RESULT(type##Da); \
-    typedef char (*_da_##type##_equality_fn)(type*, type*); \
-    typedef void (*_da_##type##_to_void)(type*) ; \
-    typedef type (*_da_##type##_to_##type)(type*) ; \
-    typedef char (*_da_truthy_##type##_fn)(type*); \
-    _DA_DEFINE_INSERT(type) \
-    _DA_DEFINE_FOR_EACH(type) \
-    _DA_DEFINE_ALL(type) \
-    _DA_DEFINE_ANY(type) \
-    _DA_DEFINE_IN(type) \
-    _DA_DEFINE_MAPIP(type) \
-    DEFAULT_TTYPES(_DA_DEFINE_FOLD, type); \
-    DEFAULT_TTYPES(_DA_DEFINE_MAP, type)
-
-#define _DA_DEFINE_SIGS(type) \
+#define _DA_DEFINE_FN_SIGS(type) \
     type##DaRes insert_##type##Da(type##Da arr, type elem); \
     voidRes insert_##type##Sa(type##Sa arr, type elem); \
     void for_each_##type##Da(type##Da wptr, _da_##type##_to_void fn); \
@@ -206,7 +179,7 @@
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type);
 
 
-#define _DEFINE_PRIMITIVE_TYPES(type) \
+#define _DA_DEFINE_TYPE_SIGS(type) \
     typedef struct { \
         size_t capacity; \
         unsigned int size; \
@@ -225,9 +198,23 @@
     typedef type (*_da_##type##_to_##type)(type*) ; \
     typedef char (*_da_truthy_##type##_fn)(type*);
 
+#define DEFINE_DA(type) \
+    _DA_DEFINE_TYPE_SIGS(type) \
+    _DA_DEFINE_FN_SIGS(type)
 
-DEFAULT_TYPES(_DEFINE_PRIMITIVE_TYPES);
-DEFAULT_TYPES(_DA_DEFINE_SIGS);
+#define IMPL_DA(type) \
+    _DA_DEFINE_INSERT(type) \
+    _DA_DEFINE_FOR_EACH(type) \
+    _DA_DEFINE_ALL(type) \
+    _DA_DEFINE_ANY(type) \
+    _DA_DEFINE_IN(type) \
+    _DA_DEFINE_MAPIP(type) \
+    DEFAULT_TTYPES(_DA_DEFINE_FOLD, type); \
+    DEFAULT_TTYPES(_DA_DEFINE_MAP, type)
+
+
+DEFAULT_TYPES(_DA_DEFINE_TYPE_SIGS);
+DEFAULT_TYPES(_DA_DEFINE_FN_SIGS);
 
 #endif
 

@@ -76,6 +76,7 @@
  * DEFINE_MAPDA(type)  -> Defines a map from type to type
  * DEFINE_FOLDDA(type) -> Defines a fold from type to type
  * DEFINE_DA(type)     -> Defines a dynamic- and stack array with most of the associated functions
+ * IMPL_DA(type)     -> Implements the functionality that was defined previously
  *
  * -- Predefined -- 
  *
