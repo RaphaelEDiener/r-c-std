@@ -143,6 +143,7 @@
  * test_ulong      (ulong, ulong, message)
  * test_long_long  (long_long, long_long, message)
  * test_ulong_long (ulong_long, ulong_long, message)
+ * ! float operations round to 4 and double to 8 level precission !
  * test_float      (float, float, message)
  * test_double     (double, double, message)
  * test_long_double(long_double, long_double, message)
