@@ -1,7 +1,6 @@
 # TODO
 
 *  Test...
-*  Documentaion...
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
 *  TODO: Split

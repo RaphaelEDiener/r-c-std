@@ -4,87 +4,87 @@
 
 #include <stdio.h>
 
-#ifndef print_redln
+#ifndef redln
 // ##############################
 // STD OUT
 // ##############################
 
-#define print_redln(...) \
+#define redln(...) \
     printf ("\x1B[31m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_greenln(...) \
+#define greenln(...) \
     printf ("\x1B[32m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_blackln(...) \
+#define blackln(...) \
     printf ("\x1B[30m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_yellowln(...) \
+#define yellowln(...) \
     printf ("\x1B[33m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_blueln(...) \
+#define blueln(...) \
     printf ("\x1B[34m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_magentyln(...) \
+#define magentaln(...) \
     printf ("\x1B[35m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_cyanln(...) \
+#define cyanln(...) \
     printf ("\x1B[36m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_whiteln(...) \
+#define whiteln(...) \
     printf ("\x1B[37m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m\n");
 
-#define print_red(...) \
+#define red(...) \
     printf ("\x1B[31m"); \
     printf (__VA_ARGS__); \
     printf ("\x1B[0m");
 
-#define print_green(...) \
+#define green(...) \
     printf ("\x1B[32m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
 
-#define print_black(...) \
+#define black(...) \
     printf ("\x1B[30m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
 
-#define print_yellow(...) \
+#define yellow(...) \
     printf ("\x1B[33m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
 
-#define print_blue(...) \
+#define blue(...) \
     printf ("\x1B[34m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
 
-#define print_magenty(...) \
+#define magenta(...) \
     printf ("\x1B[35m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
 
-#define print_cyan(...) \
+#define cyan(...) \
     printf ("\x1B[36m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
 
-#define print_white(...) \
+#define white(...) \
     printf ("\x1B[37m"); \
     printf (__VA_ARGS__);  \
     printf ("\x1B[0m");
@@ -118,7 +118,7 @@
     fprintf (stderr, __VA_ARGS__); \
     fprintf (stderr, "\x1B[0m\n");
 
-#define err_magentyln(...) \
+#define err_magentaln(...) \
     fprintf (stderr, "\x1B[35m"); \
     fprintf (stderr, __VA_ARGS__); \
     fprintf (stderr, "\x1B[0m\n");
@@ -158,7 +158,7 @@
     fprintf (stderr, __VA_ARGS__);  \
     fprintf (stderr, "\x1B[0m");
 
-#define err_magenty(...) \
+#define err_magenta(...) \
     fprintf (stderr, "\x1B[35m"); \
     fprintf (stderr, __VA_ARGS__);  \
     fprintf (stderr, "\x1B[0m");

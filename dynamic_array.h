@@ -2,14 +2,6 @@
 * Raphael Standard Library
 * ________________________
 *
-* How does this work?
-* I've preimplemented a default implementation
-* for all the most common utility algorithms:
-* - for each
-* - all
-* - map
-* - ...
-* 
 * All utils work with widepointers.
 * Create a new widepointer with the following call:
 * `new_wp(name, type, amount); // the ';' at the end is not strictly nesseccary`
@@ -110,7 +102,7 @@
             (*fn)(wptr.ptr + i); \
         } \
     } \
-    void for_each_##type##Das(type##Sa wptr, _da_##type##_to_void fn) { \
+    void for_each_##type##Sa(type##Sa wptr, _da_##type##_to_void fn) { \
         for (size_t i = 0; i < wptr.count; i++) { \
             (*fn)(wptr.ptr + i); \
         } \
