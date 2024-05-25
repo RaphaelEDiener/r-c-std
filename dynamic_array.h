@@ -154,7 +154,24 @@
         for (size_t i = 0; i < from_ptr.count; i++){\
             ans.ptr[i] = (*fn) (from_ptr.ptr+i);\
         } \
+        ans.count = from_ptr.count; \
         return ans; \
+    }
+
+// TODO: document
+/**
+ * I can fearlessly take the result since it accepts a valid DA
+ * and there can never be unique elements than elements in the argument
+ */
+#define _DA_DEFINE_UNIQUE(type) \
+    type##Da unique_##type##Da(type##Da wptr, _da_##type##_equality_fn fn) { \
+        new_da(vals, type, 2); \
+        for (size_t i = 0; i < wptr.count; i++) { \
+            if (!in_##type##Da(vals, wptr.ptr+i, fn)) { \
+                vals = insert_##type##Da(vals, wptr.ptr[i]).result; \
+            } \
+        } \
+        return vals; \
     }
 
 // Since I can't define (type -> type) maps without macro collision, 
@@ -175,6 +192,7 @@
     char in_##type##Sa(type##Sa ptr, type* elem, _da_##type##_equality_fn fn); \
     void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn); \
     void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn); \
+    type##Da unique_##type##Da(type##Da wptr, _da_##type##_equality_fn fn); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type);
 
@@ -209,6 +227,7 @@
     _DA_DEFINE_ANY(type) \
     _DA_DEFINE_IN(type) \
     _DA_DEFINE_MAPIP(type) \
+    _DA_DEFINE_UNIQUE(type) \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP, type)
 
