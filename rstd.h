@@ -16,7 +16,7 @@
  *        Documentation
  * ##############################
  *
- * Linking: dynamic_array.c str_utils.c testing.c
+ * Linking: rmath.c str_utils.c dynamic_array.c testing.c 
  *
  * ------------------------------
  * Working with Arrays (array_utils.h):

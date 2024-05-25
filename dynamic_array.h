@@ -3,8 +3,18 @@
 #include <string.h>
 #include <stdint.h>
 #include "result.h"
+#include "rmath.h"
 #include "default_types.h"
 #include "color_print.h"
+
+#ifndef COMPARING
+#define COMPARING
+typedef enum {
+    LESS,
+    EQUAL,
+    GREATER,
+} Compareable;
+#endif
 
 #ifndef DEFINE_DA
 
@@ -174,6 +184,41 @@
         return vals; \
     }
 
+// TODO: document
+#define _DA_DEFINE_SORT(type) \
+    void swap_##type(type* ptr1, type* ptr2) { \
+        uchar* p1 = (uchar*) ptr1; \
+        uchar* p2 = (uchar*) ptr2; \
+        for (size_t i = 0; i < sizeof(type); i++) { \
+            swap(p1+i, p2+i); \
+        } \
+    } \
+    void _quick_sort_##type(type* arr, size_t low, size_t high, _comperator_##type cmp) { \
+        if (high <= low) return; \
+        size_t p = high-low/2; \
+        size_t h = high; \
+        size_t l = low; \
+        while (1) { \
+            if (l == h) break; \
+            if (cmp(arr+l, arr+h) == GREATER) { \
+                if (p == h) p = l; \
+                if (p == l) p = h; \
+                swap_##type(arr+l, arr+h); \
+                if (cmp(arr+h, arr+p) == GREATER) h--; \
+            } else { \
+                if (l != p) l++; \
+                else h--; \
+            } \
+        } \
+        _quick_sort_##type(arr, low, save_sub(p,1), cmp); \
+        _quick_sort_##type(arr, save_add(p,1), high, cmp); \
+    } \
+    void sort_##type##Da(type##Da arr, _comperator_##type cmp){ \
+        if (arr.count == 0) return; \
+        _quick_sort_##type(arr.ptr, 0, arr.count-1, cmp); \
+    }
+
+
 // Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, if he needs that (basically solved in the array utils)
 #define DEFINE_MAPDA(type) _DA_DEFINE_MAP(type, type)
@@ -193,6 +238,7 @@
     void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn); \
     void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn); \
     type##Da unique_##type##Da(type##Da wptr, _da_##type##_equality_fn fn); \
+    void sort_##type##Da(type##Da arr, _comperator_##type cmp); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type);
 
@@ -214,6 +260,7 @@
     typedef char (*_da_##type##_equality_fn)(type*, type*); \
     typedef void (*_da_##type##_to_void)(type*) ; \
     typedef type (*_da_##type##_to_##type)(type*) ; \
+    typedef Compareable (*_comperator_##type)(type*, type*); \
     typedef char (*_da_truthy_##type##_fn)(type*);
 
 #define DEFINE_DA(type) \
@@ -228,6 +275,7 @@
     _DA_DEFINE_IN(type) \
     _DA_DEFINE_MAPIP(type) \
     _DA_DEFINE_UNIQUE(type) \
+    _DA_DEFINE_SORT(type) \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP, type)
 
