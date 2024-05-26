@@ -17,6 +17,7 @@ typedef enum {
     } t##Res;
 
 DEFAULT_TYPES(DEFINE_RESULT)
+DEFINE_RESULT(size_t);
 
 typedef struct {
     ResultType type;

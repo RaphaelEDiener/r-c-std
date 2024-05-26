@@ -218,6 +218,7 @@ typedef enum {
         _quick_sort_##type(arr.ptr, 0, arr.count-1, cmp); \
     }
 
+// TODO: universal radix
 
 // Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, if he needs that (basically solved in the array utils)
