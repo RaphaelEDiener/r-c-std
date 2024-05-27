@@ -22,7 +22,7 @@
     } type##LL; \
     size_tRes append_##type##LL(type##LL list, type elem); \
     size_tRes prepend_##type##LL(type##LL list, type elem); \
-    type##Res get_##type##LL(type##LL list, long i); \
+    type##Res get_##type##LL(type##LL list, long long i); \
     voidRes del_##type##LL(type##LL list, type elem); \
     voidRes rem_##type##LL(type##LL list, size_t i);
 
@@ -34,7 +34,7 @@ DEFAULT_TYPES(DEFINE_DLList);
         size_tRes ans = {FAILURE, list.len}; \
         if (list.len == SIZE_MAX) return ans; \
         t##LLNode* e = (t##LLNode*) malloc(sizeof(t##LLNode)); \
-        e.val = elem; \
+        e->val = elem; \
         e->prev = list.last; \
         e->next = list.first; \
         list.last->next = e; \
@@ -48,6 +48,7 @@ DEFAULT_TYPES(DEFINE_DLList);
         size_tRes ans = {FAILURE, 0}; \
         if (list.len == SIZE_MAX) return ans; \
         t##LLNode* e = (t##LLNode*) malloc(sizeof(t##LLNode)); \
+        e->val = elem; \
         e->prev = list.last; \
         e->next = list.first; \
         list.last->next = e; \
@@ -57,10 +58,10 @@ DEFAULT_TYPES(DEFINE_DLList);
         ans.type = SUCCESS; \
         return ans; \
     } \
-    t##Res get_##t##LL(t##LL list, long i) { \
+    t##Res get_##t##LL(t##LL list, long long i) { \
         t##Res ans = {FAILURE, 0}; \
         size_t target = save_sub(list.len,1); \
-        if (i > target || -i > target || list.len == 0) return ans; \
+        if (i > (long long) target || -i > (long long) target || list.len == 0) return ans; \
         t##LLNode* res = list.first; \
         while (i != 0) { \
             if (i > 0) { \
