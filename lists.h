@@ -23,8 +23,8 @@
     size_tRes append_##type##LL(type##LL list, type elem); \
     size_tRes prepend_##type##LL(type##LL list, type elem); \
     type##Res get_##type##LL(type##LL list, long i); \
-    voidRes del_##t##LL(t##LL list, t elem); \
-    voidRes rem_##t##LL(t##LL list, size_t i);
+    voidRes del_##type##LL(type##LL list, type elem); \
+    voidRes rem_##type##LL(type##LL list, size_t i);
 
 DEFAULT_TYPES(DEFINE_DLList);
 
@@ -34,6 +34,7 @@ DEFAULT_TYPES(DEFINE_DLList);
         size_tRes ans = {FAILURE, list.len}; \
         if (list.len == SIZE_MAX) return ans; \
         t##LLNode* e = (t##LLNode*) malloc(sizeof(t##LLNode)); \
+        e.val = elem; \
         e->prev = list.last; \
         e->next = list.first; \
         list.last->next = e; \
