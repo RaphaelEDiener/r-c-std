@@ -6,15 +6,7 @@
 #include "rmath.h"
 #include "default_types.h"
 #include "color_print.h"
-
-#ifndef COMPARING
-#define COMPARING
-typedef enum {
-    LESS,
-    EQUAL,
-    GREATER,
-} Compareable;
-#endif
+#include "cmp.h"
 
 #ifndef DEFINE_DA
 
@@ -186,14 +178,8 @@ typedef enum {
 
 // TODO: document
 #define _DA_DEFINE_SORT(type) \
-    void swap_##type(type* ptr1, type* ptr2) { \
-        uchar* p1 = (uchar*) ptr1; \
-        uchar* p2 = (uchar*) ptr2; \
-        for (size_t i = 0; i < sizeof(type); i++) { \
-            swap(p1+i, p2+i); \
-        } \
-    } \
-    void _quick_sort_##type(type* arr, size_t low, size_t high, _comperator_##type cmp) { \
+    DEFINE_SWAP(type) \
+    void _quick_sort_##type(type* arr, size_t low, size_t high, _da_comperator_##type cmp) { \
         if (high <= low) return; \
         size_t p = high-low/2; \
         size_t h = high; \
@@ -213,12 +199,54 @@ typedef enum {
         _quick_sort_##type(arr, low, save_sub(p,1), cmp); \
         _quick_sort_##type(arr, save_add(p,1), high, cmp); \
     } \
-    void sort_##type##Da(type##Da arr, _comperator_##type cmp){ \
+    void sort_##type##Da(type##Da arr, _da_comperator_##type cmp){ \
         if (arr.count == 0) return; \
         _quick_sort_##type(arr.ptr, 0, arr.count-1, cmp); \
     }
 
-// TODO: universal radix
+#define _DA_DEFINE_RADIX(type) \
+    void radix_##type##DA(type##Da arr) { \
+        size_t size = sizeof(type); \
+        new_sa(buff0, type, arr.count); \
+        new_sa(buff1, type, arr.count); \
+        new_sa(buff2, type, arr.count); \
+        new_sa(buff3, type, arr.count); \
+        for (size_t b = 0; b < size; b++) { \
+            for (uchar shift = 0; shift < 4; shift++) { \
+                for (size_t i = 0; i < arr.count; i++) { \
+                    type elem = arr.ptr[i]; \
+                    uchar* ptr = (uchar*) &elem; \
+                    uchar byte = *(ptr+(size-(b+1))); \
+                    byte >>= 2 * shift; \
+                    uchar masked = byte & 3; \
+                    switch (masked) { \
+                        case 0: { \
+                            insert_##type##Sa(buff0, elem); \
+                        } \
+                        case 1: { \
+                            insert_##type##Sa(buff1, elem); \
+                        } \
+                        case 2: { \
+                            insert_##type##Sa(buff2, elem); \
+                        } \
+                        case 3: { \
+                            insert_##type##Sa(buff3, elem); \
+                        } \
+                    } \
+                } \
+                arr.count = 0; \
+                for (size_t i = 0; i < buff0.count; i++) insert_##type##Da(arr, buff0.ptr[i]); \
+                for (size_t i = 0; i < buff1.count; i++) insert_##type##Da(arr, buff1.ptr[i]); \
+                for (size_t i = 0; i < buff2.count; i++) insert_##type##Da(arr, buff2.ptr[i]); \
+                for (size_t i = 0; i < buff3.count; i++) insert_##type##Da(arr, buff3.ptr[i]); \
+                buff0.count = 0; \
+                buff1.count = 0; \
+                buff2.count = 0; \
+                buff3.count = 0; \
+            } \
+        } \
+    }
+
 
 // Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, if he needs that (basically solved in the array utils)
@@ -239,9 +267,10 @@ typedef enum {
     void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn); \
     void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn); \
     type##Da unique_##type##Da(type##Da wptr, _da_##type##_equality_fn fn); \
-    void sort_##type##Da(type##Da arr, _comperator_##type cmp); \
+    void sort_##type##Da(type##Da arr, _da_comperator_##type cmp); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
-    DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type);
+    DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type); \
+    void radix_##type##DA(type##Da arr);
 
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
@@ -261,7 +290,7 @@ typedef enum {
     typedef char (*_da_##type##_equality_fn)(type*, type*); \
     typedef void (*_da_##type##_to_void)(type*) ; \
     typedef type (*_da_##type##_to_##type)(type*) ; \
-    typedef Compareable (*_comperator_##type)(type*, type*); \
+    typedef Compareable (*_da_comperator_##type)(type*, type*); \
     typedef char (*_da_truthy_##type##_fn)(type*);
 
 #define DEFINE_DA(type) \
@@ -278,7 +307,8 @@ typedef enum {
     _DA_DEFINE_UNIQUE(type) \
     _DA_DEFINE_SORT(type) \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD, type); \
-    DEFAULT_TTYPES(_DA_DEFINE_MAP, type)
+    DEFAULT_TTYPES(_DA_DEFINE_MAP, type); \
+    _DA_DEFINE_RADIX(type);
 
 
 DEFAULT_TYPES(_DA_DEFINE_TYPE_SIGS);

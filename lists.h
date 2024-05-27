@@ -1,6 +1,6 @@
 /**
- * TODO: linked lists
  * TODO: document
+ * TODO: universalize del
  */
 #include <stdint.h>
 #include <stdlib.h>
@@ -22,7 +22,9 @@
     } type##LL; \
     size_tRes append_##type##LL(type##LL list, type elem); \
     size_tRes prepend_##type##LL(type##LL list, type elem); \
-    type##Res get_##type##LL(type##LL list, long i);
+    type##Res get_##type##LL(type##LL list, long i); \
+    voidRes del_##t##LL(t##LL list, t elem); \
+    voidRes rem_##t##LL(t##LL list, size_t i);
 
 DEFAULT_TYPES(DEFINE_DLList);
 
@@ -80,8 +82,24 @@ DEFAULT_TYPES(DEFINE_DLList);
                 cur->prev->next = cur->next; \
                 cur->next->prev = cur->prev; \
                 return ans; \
+            } else { \
+                cur = cur->next; \
             } \
         } \
         return ans; \
+    } \
+    voidRes rem_##t##LL(t##LL list, size_t i) { \
+        voidRes ans = {FAILURE}; \
+        size_t target = save_sub(list.len,1); \
+        if (i > target || list.len == 0) return ans; \
+        t##LLNode* cur = list.first; \
+        for (size_t i = 0; i < list.len; i++) { \
+            cur = cur->next; \
+        } \
+        ans.type = SUCCESS; \
+        cur->prev->next = cur->next; \
+        cur->next->prev = cur->prev; \
+        return ans; \
     }
+
 #endif

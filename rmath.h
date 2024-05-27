@@ -6,6 +6,15 @@
 #define RMATH
 void swap(uchar* p1, uchar* p2);
 
+#define DEFINE_SWAP(type) \
+    void swap_##type(type* ptr1, type* ptr2) { \
+        uchar* p1 = (uchar*) ptr1; \
+        uchar* p2 = (uchar*) ptr2; \
+        for (size_t i = 0; i < sizeof(type); i++) { \
+            swap(p1+i, p2+i); \
+        } \
+    }
+
 size_t save_sub(size_t x, size_t y);
 size_t save_add(size_t x, size_t y);
 
