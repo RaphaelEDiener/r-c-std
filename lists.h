@@ -28,18 +28,22 @@
 
 DEFAULT_TYPES(DEFINE_DLList);
 
-
 #define IMPL_DLList(t) \
     size_tRes append_##t##LL(t##LL list, t elem) { \
         size_tRes ans = {FAILURE, list.len}; \
         if (list.len == SIZE_MAX) return ans; \
         t##LLNode* e = (t##LLNode*) malloc(sizeof(t##LLNode)); \
-        e->val = elem; \
-        e->prev = list.last; \
-        e->next = list.first; \
-        list.last->next = e; \
-        list.first->prev = e; \
-        list.last = e; \
+        if (list.len == 0) { \
+            list.last = e; \
+            list.first = e; \
+        } else { \
+            e->val = elem; \
+            e->prev = list.last; \
+            e->next = list.first; \
+            list.last->next = e; \
+            list.first->prev = e; \
+            list.last = e; \
+        } \
         list.len++; \
         ans.type = SUCCESS; \
         return ans; \
@@ -48,20 +52,25 @@ DEFAULT_TYPES(DEFINE_DLList);
         size_tRes ans = {FAILURE, 0}; \
         if (list.len == SIZE_MAX) return ans; \
         t##LLNode* e = (t##LLNode*) malloc(sizeof(t##LLNode)); \
-        e->val = elem; \
-        e->prev = list.last; \
-        e->next = list.first; \
-        list.last->next = e; \
-        list.first->prev = e; \
-        list.first = e; \
+        if (list.len == 0) { \
+            list.last = e; \
+            list.first = e; \
+        } else { \
+            e->val = elem; \
+            e->prev = list.last; \
+            e->next = list.first; \
+            list.last->next = e; \
+            list.first->prev = e; \
+            list.first = e; \
+        } \
         list.len++; \
         ans.type = SUCCESS; \
         return ans; \
     } \
     t##Res get_##t##LL(t##LL list, long long i) { \
         t##Res ans = {FAILURE, 0}; \
-        size_t target = save_sub(list.len,1); \
-        if (i > (long long) target || -i > (long long) target || list.len == 0) return ans; \
+        long long target = (long long) save_sub(list.len,1); \
+        if (i > target || -i > target || list.len == 0) return ans; \
         t##LLNode* res = list.first; \
         while (i != 0) { \
             if (i > 0) { \
