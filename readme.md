@@ -1,6 +1,5 @@
 # TODO
 
-*  Document!
 *  Test...
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
@@ -14,7 +13,8 @@
 *  TODO: Hashmaps
 *  TODO: Hashsets
 *  TODO: Arraysets
-*  TODO: default comparators
+*  TODO: universalize del for DA, SA, LL
+*  TODO: impl filter for DA, SA, LL
  
 ```
 // join("hi", "my", "name", "is")

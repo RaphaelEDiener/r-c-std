@@ -1,7 +1,3 @@
-/**
- * TODO: document
- * TODO: universalize del
- */
 #include <stdint.h>
 #include <stdlib.h>
 #include "default_types.h"

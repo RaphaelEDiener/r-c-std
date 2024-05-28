@@ -16,7 +16,11 @@
  *        Documentation
  * ##############################
  *
- * Linking: rmath.c str_utils.c dynamic_array.c testing.c 
+ * If no clarification is given on the specific type,
+ * it is implemented for all types available in c
+ * using the aliases/shorthands found in default_types.h
+ *
+ * Linking: cmp.c rmath.c str_utils.c dynamic_array.c testing.c 
  *
  * ------------------------------
  * Working with Arrays (array_utils.h):
@@ -37,7 +41,28 @@
  * FOLDP(arr, len, fn, type, name, start) : fn(start, t*)->start
  *
  * ------------------------------
- * Printing (color_print):
+ * Comparing (cmp.h):
+ * ------------------------------
+ *
+ * Compareable = {LESS | EQUAL | GREATER}
+ *
+ * cmp_char(char*, char*)
+ * cmp_schar(schar, schar)
+ * cmp_uchar(uchar*, uchar*)
+ * cmp_short(short*, short*)
+ * cmp_ushort(ushort*, ushort*)
+ * cmp_int(int*, int*)
+ * cmp_uint(uint*, uint*)
+ * cmp_long(long*, long*)
+ * cmp_ulong(ulong*, ulong*)
+ * cmp_long_long(long_long*, long_long*)
+ * cmp_ulong_long(ulong_long*, ulong_long*)
+ * cmp_float(float*, float*)
+ * cmp_double(double*, double*)
+ * cmp_long_double(long_double*, long_double*)
+ *
+ * ------------------------------
+ * Printing (color_print.h):
  * ------------------------------
  * 
  * colors: red, green, black, yellow, blue, mangenta, cyan, white
@@ -95,12 +120,34 @@
  * char        any_<type>Sa(wptr, fn(<type>*)->char)
  * char        in_<type>Da(wptr, elem*, fn(<type>*,<type>*)->char)
  * char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
+ * <type>Da    unique_<type>Da(wptr, equality(<type>*,<type>*)->char)
+ * void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place
+ * void        radix_<type>Da(wptr) -> implements generic radix for arbitrary data. 
+ *                                     sorts in place with 4 buffers
  * void        mapip_<type>Da(wptr, fn(<type>*)-><type>)
  * void        mapip_<type>Sa(wptr, fn(<type>*)-><type>)
  * <to_t>Da    (from_wptr, fn(<from_t>*)-><to_t>)
  * !err!       map_<from_t>Da_to_<to_t>Da -> !use array utils instead!
  * <to_t>      fold_<from_t>Da_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
  * <to_t>      fold_<from_t>Sa_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
+ * 
+ * ------------------------------
+ * Lists (lists.h):
+ * ------------------------------
+ * 
+ * -- Costume --
+ * 
+ * DEFINE_DLList(type) -> defines signatures for a new type of double linked list
+ * IMPL_DLList(type)   -> implements the previously defined signatures
+ * 
+ * -- Predefined -- 
+ * 
+ * size_tRes append_<type>LL(<type>LL list, t elem)  -> appends in back
+ * size_tRes prepend_<type>LL(<type>LL list, t elem) -> appends in front
+ * <type>Res get_<type>LL(<type>LL list, long long i) -> returns element at position. 
+ *                                     works with negative numbers for backwards traversal.
+ * voidRes   rem_<type>LL(<type>LL list, size_t i) -> removes the element at a given position.
+ *                                     works with negative numbers for backwards traversal.
  * 
  * ------------------------------
  * Result (result.h):
@@ -120,6 +167,30 @@
  *  uchar is_digit(char c);
  *  uchar is_lower(char c);
  *  uchar is_upper(char c);
+ *
+ * ------------------------------
+ * Math (rmath.h):
+ * ------------------------------
+ *
+ * -- Costume --
+ *
+ * IMPL_SWAP(type)  -> implements a swap in place function for a given datadype
+ *                  -> swap_<type>(<type>*, <type>*)
+ * DEFINE_VEC2(type) 
+ * DEFINE_VEC3(type) 
+ * DEFINE_VEC4(type) 
+ *
+ * -- Predefined -- 
+ *
+ * size_t save_sub(size_t x, size_t y)  -> caps at 0
+ * size_t save_add(size_t x, size_t y) -> caps out at MAX_SIZE
+ *
+ * <type>Vec2 {x;y}
+ * <type>Vec3 {x;y;z} 
+ * <type>Vec4 {x;y;z;w} 
+ * <type>Mat { type* ptr; size_t x; size_t y; }
+ * <type>Mat { type* ptr; size_t x; size_t y; size_t z; }
+ * <type>Mat { type* ptr; size_t x; size_t y; size_t z; size_t w; }
  *   
  * ------------------------------
  * Testing (testing.h):

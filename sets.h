@@ -1,6 +1,5 @@
 /**
- * TODO: array set
- * TODO: hash set
+ * set signatures
  */
 
 

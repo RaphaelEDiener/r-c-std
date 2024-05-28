@@ -12,10 +12,10 @@ typedef enum {
 } Compareable;
 
 #define DEFINE_CMP(type) \
-    Compareable comperator_##type(type* x, type* y);
+    Compareable cmp_##type(type* x, type* y);
 
 #define _IMPL_PRIM_CMP(type) \
-    Compareable comperator_##type(type* x, type* y) { \
+    Compareable cmp_##type(type* x, type* y) { \
         if (*x > *y) return GREATER; \
         else if (*x < *y) return LESS; \
         else return EQUAL; \

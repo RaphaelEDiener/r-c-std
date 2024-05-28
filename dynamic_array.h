@@ -160,7 +160,6 @@
         return ans; \
     }
 
-// TODO: document
 /**
  * I can fearlessly take the result since it accepts a valid DA
  * and there can never be unique elements than elements in the argument
@@ -176,7 +175,6 @@
         return vals; \
     }
 
-// TODO: document
 #define _DA_DEFINE_SORT(type) \
     DEFINE_SWAP(type) \
     void _quick_sort_##type(type* arr, size_t low, size_t high, _da_comperator_##type cmp) { \
