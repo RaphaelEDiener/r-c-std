@@ -96,7 +96,7 @@
         } \
         return 1; \
     } 
-    
+
 #define _DA_DEFINE_IN(type) \
     char in_##type##Da(type##Da ptr, type* elem, _da_##type##_equality_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
@@ -112,7 +112,7 @@
         } \
         return 0; \
     } 
-    
+
 #define _DA_DEFINE_MAPIP(type) \
     void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn) { \
         for (size_t i = 0; i < wptr.count; i++){\
@@ -218,18 +218,10 @@
                     byte >>= 2 * shift; \
                     uchar masked = byte & 3; \
                     switch (masked) { \
-                        case 0: { \
-                            insert_##type##Sa(buff0, elem); \
-                        } \
-                        case 1: { \
-                            insert_##type##Sa(buff1, elem); \
-                        } \
-                        case 2: { \
-                            insert_##type##Sa(buff2, elem); \
-                        } \
-                        case 3: { \
-                            insert_##type##Sa(buff3, elem); \
-                        } \
+                        case 0: insert_##type##Sa(buff0, elem); break; \
+                        case 1: insert_##type##Sa(buff1, elem); break; \
+                        case 2: insert_##type##Sa(buff2, elem); break; \
+                        case 3: insert_##type##Sa(buff3, elem); break; \
                     } \
                 } \
                 arr.count = 0; \

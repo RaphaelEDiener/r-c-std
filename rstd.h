@@ -37,8 +37,9 @@
  * MAPP(from, len, fn, target) : fn(t1*)->t2
  * MAP_IP(arr, len, fn) : fn(t)->t
  * MAP_IPP(arr, len, fn) : fn(t*)->t
- * FOLD(arr, len, fn, type, name, start) : fn(start, t)->start
- * FOLDP(arr, len, fn, type, name, start) : fn(start, t*)->start
+ * FOLD(arr, len, fn, type, name, start) : fn(start, type)->start
+ * FOLDP(arr, len, fn, type, name, start) : fn(start, type*)->start
+ * FOLDPP(arr, len, fn, type, name, start) : fn(start*, type*)->start
  *
  * ------------------------------
  * Comparing (cmp.h):

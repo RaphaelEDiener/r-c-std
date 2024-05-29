@@ -1,6 +1,10 @@
 # TODO
 
 *  Test...
+    *  dynamic arrays
+    *  lists
+    *  string ops
+    *  math
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
 *  TODO: Split
@@ -10,6 +14,7 @@
     *  But how do I pass that stuff into the function pointer?
     *  Can I construct a curry object with a macro which is tailor made for the function?
 *  TODO: Iterator
+*  TODO: Reduce
 *  TODO: Hashmaps
 *  TODO: Hashsets
 *  TODO: Arraysets
