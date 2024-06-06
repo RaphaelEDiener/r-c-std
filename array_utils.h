@@ -82,9 +82,4 @@
     for (size_t i = 0; i < len; i++) { \
         name = fn(&name, arr+i); \
     } 
-#define FOLDPP(arr, len, fn, type, name, start) \
-    type name = start; \
-    for (size_t i = 0; i < len; i++) { \
-        fn(&name, arr+i); \
-    } 
 #endif
