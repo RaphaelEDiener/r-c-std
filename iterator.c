@@ -1,0 +1,4 @@
+#include "interator.c"
+
+DEFAULT_TYPES(IMPL_ITER);
+DEFAULT_TTYPES(IMPL_ITER_D);

@@ -237,6 +237,7 @@ test_size_t     (size_t, size_t, message)
 *  TODO: Arraysets
 *  TODO: universalize del for DA, SA, LL
 *  TODO: impl filter for DA, SA, LL
+*  TODO: reduce
  
 ```
 // join("hi", "my", "name", "is")

@@ -12,13 +12,13 @@
 #ifndef ANY
 #define ANY(arr, len, fn, exp) \
     for (size_t i = 0; i < len; i++) { \
-        uchar res = fn(arr[i]); \
-        if (res) {exp; break;} \
+        uchar res_##arr = fn(arr[i]); \
+        if (res_##arr) {exp; break;} \
     } 
 #define ANYP(arr, len, fn, exp) \
     for (size_t i = 0; i < len; i++) { \
-        uchar res = fn(arr + i); \
-        if (res) {exp; break;} \
+        uchar res_##arr = fn(arr + i); \
+        if (res_##arr) {exp; break;} \
     } 
 #endif
 
@@ -81,5 +81,10 @@
     type name = start; \
     for (size_t i = 0; i < len; i++) { \
         name = fn(&name, arr+i); \
+    } 
+#define FOLDPP(arr, len, fn, type, name, start) \
+    type name = start; \
+    for (size_t i = 0; i < len; i++) { \
+        fn(&name, arr+i); \
     } 
 #endif

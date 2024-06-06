@@ -14,3 +14,13 @@ size_t save_add(size_t x, size_t y) {
     size_t max = x + y;
     return max < x ? SIZE_MAX : max;
 }
+
+char brk(double curr, double target){
+    return (curr >= target);
+}
+double step(double curr, double add){
+    return curr + add;
+}
+intIterator lerp(int start, int end) {
+    int_doubleIterator ans = {end, start, };
+}
