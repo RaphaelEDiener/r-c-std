@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <assert.h> 
 #include "result.h"
 #include "rmath.h"
 #include "default_types.h"
@@ -18,7 +19,7 @@
     type##Sa name = {capacity, sizeof(type), 0, _##name}; 
 
 
-#define _DA_DEFINE_INSERT(type) \
+#define _DA_IMPL_INSERT(type) \
     type##DaRes insert_##type##Da(type##Da arr, type elem) { \
         size_t MAX = SIZE_MAX / arr.size; \
         type##DaRes ans = {FAILURE, arr}; \
@@ -28,7 +29,7 @@
                 return ans; \
             } \
             type* prev = arr.ptr; \
-            size_t new_cap = arr.capacity * 2; \
+            size_t new_cap = (arr.capacity == 0) ? 8 : arr.capacity * 2; \
             if (new_cap < arr.capacity) new_cap = MAX; \
             type* new_ptr = (type*) calloc(new_cap, sizeof(type)); \
             memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
@@ -288,7 +289,7 @@
     _DA_DEFINE_FN_SIGS(type)
 
 #define IMPL_DA(type) \
-    _DA_DEFINE_INSERT(type) \
+    _DA_IMPL_INSERT(type) \
     _DA_DEFINE_FOR_EACH(type) \
     _DA_DEFINE_ALL(type) \
     _DA_DEFINE_ANY(type) \

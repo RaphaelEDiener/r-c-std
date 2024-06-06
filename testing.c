@@ -3,7 +3,7 @@
 */
 #include <stdio.h>
 #include "testing.h"
-#include "default_types.h"
+#include "rstd.h"
 
 // char
 // signed_char
@@ -134,3 +134,36 @@ char test_long_double(const long_double real, const long_double expected, const 
     } 
 }
 
+char test_Compareable(const Compareable real, const Compareable expected, const char* message) {
+    if (real == expected) {
+        printf("\x1B[32m%s\x1B[0m\n", message); 
+        return 0; 
+    } else {
+        char* exp_s = expected == LESS ? "LESS" : (expected == EQUAL) ? "EQUAL" : "GREATER";
+        char* real_s = real == LESS ? "LESS" : (real == EQUAL) ? "EQUAL" : "GREATER";
+        printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", exp_s, real_s, message); 
+        return 1; 
+    }
+}
+
+char test_size_t(const size_t real, const size_t expected, const char* message) {
+    if (real == expected) {
+        printf("\x1B[32m%s\x1B[0m\n", message); 
+        return 0; 
+    } else {
+        printf("\x1B[31mexpected: %zu\nreceived: %zu\n%s\x1B[0m\n", expected, real, message); 
+        return 1; 
+    }
+}
+
+char test_ResultType(const ResultType real, const ResultType expected, const char* message) {
+    if (real == expected) {
+        printf("\x1B[32m%s\x1B[0m\n", message); 
+        return 0; 
+    } else {
+        char* exp_s = expected == SUCCESS ? "SUCCESS" : "FAILURE";
+        char* real_s = real == SUCCESS ? "SUCCESS" : "FAILURE";
+        printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", exp_s, real_s, message); 
+        return 1; 
+    }
+}

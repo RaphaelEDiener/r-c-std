@@ -1,3 +1,4 @@
+#include <stddef.h>
 
 #ifndef TYPE_CONCATS
 #define TYPE_CONCATS
@@ -26,7 +27,8 @@ typedef long double long_double;
     macro(ulong_long) \
     macro(float) \
     macro(double) \
-    macro(long_double)
+    macro(long_double) \
+    macro(size_t)
 #endif
 
 
@@ -45,7 +47,8 @@ typedef long double long_double;
     macro(type, ulong_long) \
     macro(type, float) \
     macro(type, double) \
-    macro(type, long_double)
+    macro(type, long_double) \
+    macro(type, size_t)
 #endif
 
 
@@ -64,7 +67,8 @@ typedef long double long_double;
     DEFAULT_TTYPES(macro, ulong_long) \
     DEFAULT_TTYPES(macro, float) \
     DEFAULT_TTYPES(macro, double) \
-    DEFAULT_TTYPES(macro, long_double)
+    DEFAULT_TTYPES(macro, long_double) \
+    DEFAULT_TTYPES(macro, size_t)
 #endif
 
 #ifndef DEFAULT_TTTYPES
@@ -83,6 +87,7 @@ typedef long double long_double;
     macro(epyt, type, float) \
     macro(epyt, type, double) \
     macro(epyt, type, long_double) \
+    macro(epyt, type, size_t) \
     macro(epyt, type, type) \
     macro(epyt, char, type) \
     macro(epyt, schar, type) \
@@ -98,6 +103,7 @@ typedef long double long_double;
     macro(epyt, float, type) \
     macro(epyt, double, type) \
     macro(epyt, long_double, type) \
+    macro(epyt, size_t, type) \
     macro(char, epyt, type) \
     macro(schar, epyt, type) \
     macro(uchar, epyt, type) \
@@ -111,7 +117,8 @@ typedef long double long_double;
     macro(ulong_long, epyt, type) \
     macro(float, epyt, type) \
     macro(double, epyt, type) \
-    macro(long_double, epyt, type) 
+    macro(long_double, epyt, type) \
+    macro(size_t, epyt, type) 
 #endif
 
 
@@ -130,5 +137,6 @@ typedef long double long_double;
     DEFAULT_TTTYPES(macro, ulong_long, ulong_long) \
     DEFAULT_TTTYPES(macro, float, float) \
     DEFAULT_TTTYPES(macro, double, double) \
-    DEFAULT_TTTYPES(macro, long_double, long_double) 
+    DEFAULT_TTTYPES(macro, long_double, long_double) \
+    DEFAULT_TTTYPES(macro, size_t, size_t) 
 #endif

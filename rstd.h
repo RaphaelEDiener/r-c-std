@@ -220,5 +220,7 @@
  * test_float      (float, float, message)
  * test_double     (double, double, message)
  * test_long_double(long_double, long_double, message)
+ * test_Compareable(Compareable, Compareable, message)
+ * test_size_t     (size_t, size_t, message)
  * 
  */

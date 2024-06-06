@@ -5,6 +5,8 @@
  */
 
 #include "default_types.h"
+#include "cmp.h"
+#include "result.h" 
 
 #ifndef TEST_SIGNATURES
 #define TEST_SIGNATURES
@@ -23,7 +25,9 @@ char test_costume(
 #define DEFINE_TEST_SIG(type) \
     char test_##type(const type real, const type expected, const char* message);
 
-DEFAULT_TYPES(DEFINE_TEST_SIG)
+DEFAULT_TYPES(DEFINE_TEST_SIG);
+DEFINE_TEST_SIG(Compareable)
+DEFINE_TEST_SIG(ResultType)
 
 #endif
 

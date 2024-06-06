@@ -8,7 +8,7 @@
  */
 
 #define _DEFINE_PRIMITIVE_FUNCTIONS(type) \
-    _DA_DEFINE_INSERT(type) \
+    _DA_IMPL_INSERT(type) \
     _DA_DEFINE_FOR_EACH(type) \
     _DA_DEFINE_ALL(type) \
     _DA_DEFINE_ANY(type) \
