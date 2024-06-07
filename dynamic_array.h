@@ -18,10 +18,11 @@
     type _##name[capacity]; \
     type##Sa name = {capacity, sizeof(type), 0, _##name}; 
 
-
+// TODO: mark in doc as const
 #define _DA_IMPL_INSERT(type) \
-    type##DaRes insert_##type##Da(type##Da arr, type elem) { \
+    type##DaRes insert_##type##Da(const type##Da arr, const type elem) { \
         size_t MAX = SIZE_MAX / arr.size; \
+        type##Da new_arr = {arr.capacity, sizeof(type), arr.count, arr.ptr}; \
         type##DaRes ans = {FAILURE, arr}; \
         if (arr.count == arr.capacity) { \
             if (arr.capacity == MAX) { \
@@ -34,15 +35,15 @@
             type* new_ptr = (type*) calloc(new_cap, sizeof(type)); \
             memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
             free(prev); \
-            arr.ptr = new_ptr; \
-            arr.capacity = new_cap; \
+            new_arr.ptr = new_ptr; \
+            new_arr.capacity = new_cap; \
         } \
-        arr.ptr[arr.count] = elem; \
-        arr.count++; \
-        type##DaRes ans2 = {SUCCESS, arr}; \
+        new_arr.ptr[new_arr.count] = elem; \
+        new_arr.count++; \
+        type##DaRes ans2 = {SUCCESS, new_arr}; \
         return ans2; \
     } \
-    voidRes insert_##type##Sa(type##Sa arr, type elem) { \
+    voidRes insert_##type##Sa(type##Sa arr, const type elem) { \
         voidRes ans = {FAILURE}; \
         if (arr.count == arr.capacity) { \
             err_redln("Tried to inser into max size and full array!"); \
@@ -55,12 +56,12 @@
     }
 
 #define _DA_DEFINE_FOR_EACH(type) \
-    void for_each_##type##Da(type##Da wptr, _da_##type##_to_void fn) { \
+    void for_each_##type##Da(const type##Da wptr, const _da_##type##_to_void fn) { \
         for (size_t i = 0; i < wptr.count; i++) { \
             (*fn)(wptr.ptr + i); \
         } \
     } \
-    void for_each_##type##Sa(type##Sa wptr, _da_##type##_to_void fn) { \
+    void for_each_##type##Sa(const type##Sa wptr, const _da_##type##_to_void fn) { \
         for (size_t i = 0; i < wptr.count; i++) { \
             (*fn)(wptr.ptr + i); \
         } \
