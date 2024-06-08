@@ -7,6 +7,9 @@
 #define RMATH
 void swap(uchar* p1, uchar* p2);
 
+#define DEFINE_SWAP(type) \
+    void swap_##type(type* ptr1, type* ptr2);
+
 #define IMPL_SWAP(type) \
     void swap_##type(type* ptr1, type* ptr2) { \
         uchar* p1 = (uchar*) ptr1; \
@@ -15,6 +18,8 @@ void swap(uchar* p1, uchar* p2);
             swap(p1+i, p2+i); \
         } \
     }
+
+DEFAULT_TYPES(DEFINE_SWAP)
 
 size_t save_sub(size_t x, size_t y);
 size_t save_add(size_t x, size_t y);

@@ -11,28 +11,43 @@
 
 #ifndef DEFINE_DA
 
-#define new_da(name, type, capacity) \
-    type##Da name = {capacity, sizeof(type), 0, (type*) calloc(capacity, sizeof(type))}; \
+#define _DA_IMPL_NEW(t) \
+    t##DaRes new_##t##Da(const size_t capacity) { \
+        t##Da ans = {capacity, sizeof(t), 0, (t*) calloc(capacity, sizeof(t))}; \
+        t##DaRes res = {FAILURE, ans}; \
+        if (ans.ptr == NULL) { \
+            err_redln("failed to allocated for with capacity of %zu", capacity); \
+            return res; \
+        } \
+        else { \
+        res.type = SUCCESS; \
+        return res; \
+        } \
+    }
 
 #define new_sa(name, type, capacity) \
     type _##name[capacity]; \
-    type##Sa name = {capacity, sizeof(type), 0, _##name}; 
+    type##Sa name = {capacity, sizeof(type), 0, _##name}; \
+    assert(name.ptr != NULL);
 
-// TODO: mark in doc as const
+/**
+ * I've removed checking for inserting into something which reached its
+ * theoretical maximum.
+ * Thats in the zetabytes.
+ * Not hitting zetabyre ram sticks anytime soon~
+ */
 #define _DA_IMPL_INSERT(type) \
     type##DaRes insert_##type##Da(const type##Da arr, const type elem) { \
-        size_t MAX = SIZE_MAX / arr.size; \
         type##Da new_arr = {arr.capacity, sizeof(type), arr.count, arr.ptr}; \
         type##DaRes ans = {FAILURE, arr}; \
         if (arr.count == arr.capacity) { \
-            if (arr.capacity == MAX) { \
-                err_redln("Tried to inser into max size and full array!"); \
-                return ans; \
-            } \
             type* prev = arr.ptr; \
             size_t new_cap = (arr.capacity == 0) ? 8 : arr.capacity * 2; \
-            if (new_cap < arr.capacity) new_cap = MAX; \
             type* new_ptr = (type*) calloc(new_cap, sizeof(type)); \
+            if (new_ptr == NULL) { \
+                err_redln("failed to allocated for new capacity of %zu", new_cap); \
+                return ans; \
+            } \
             memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
             free(prev); \
             new_arr.ptr = new_ptr; \
@@ -149,29 +164,33 @@
 
 #define _DA_DEFINE_MAP_SIG(from_t, to_t) \
     typedef to_t (*_da_sig_##from_t##_to_##to_t)(from_t*); \
-    to_t##Da map_##from_t##Da_to_##to_t##Da(from_t##Da from_ptr, _da_sig_##from_t##_to_##to_t fn);
+    to_t##DaRes map_##from_t##Da_to_##to_t##Da(const from_t##Da from_ptr, const _da_sig_##from_t##_to_##to_t fn);
 
 #define _DA_DEFINE_MAP(from_t, to_t) \
     typedef to_t (*_da_##from_t##_to_##to_t)(from_t*); \
-    to_t##Da map_##from_t##Da_to_##to_t##Da(from_t##Da from_ptr, _da_##from_t##_to_##to_t fn) { \
-        new_da(ans, to_t, from_ptr.count) \
+    to_t##DaRes map_##from_t##Da_to_##to_t##Da(const from_t##Da from_ptr, const _da_##from_t##_to_##to_t fn) { \
+        to_t##DaRes ans = new_##to_t##Da(from_ptr.count); \
+        if (ans.type == FAILURE) return ans; \
         for (size_t i = 0; i < from_ptr.count; i++){\
-            ans.ptr[i] = (*fn) (from_ptr.ptr+i);\
+            ans.result.ptr[i] = (*fn) (from_ptr.ptr+i);\
         } \
-        ans.count = from_ptr.count; \
+        ans.result.count = from_ptr.count; \
         return ans; \
     }
 
 /**
  * I can fearlessly take the result since it accepts a valid DA
  * and there can never be unique elements than elements in the argument
+ * TODO: change up algorithm to overallocate and then shrink to size afterward
  */
-#define _DA_DEFINE_UNIQUE(type) \
-    type##Da unique_##type##Da(type##Da wptr, _da_##type##_equality_fn fn) { \
-        new_da(vals, type, 2); \
+#define _DA_DEFINE_UNIQUE(t) \
+    t##DaRes unique_##t##Da(const t##Da wptr, const _da_##t##_equality_fn fn) { \
+        t##DaRes vals = new_##t##Da(2); \
+        if (vals.type == FAILURE) return vals; \
         for (size_t i = 0; i < wptr.count; i++) { \
-            if (!in_##type##Da(vals, wptr.ptr+i, fn)) { \
-                vals = insert_##type##Da(vals, wptr.ptr[i]).result; \
+            if (!in_##t##Da(vals.result, wptr.ptr+i, fn)) { \
+                vals = insert_##t##Da(vals.result, wptr.ptr[i]); \
+                if (vals.type == FAILURE) return vals; \
             } \
         } \
         return vals; \
@@ -246,8 +265,9 @@
 #define DEFINE_FOLDDA(type) _DA_DEFINE_FOLD(type, type)
 
 #define _DA_DEFINE_FN_SIGS(type) \
-    type##DaRes insert_##type##Da(type##Da arr, type elem); \
-    voidRes insert_##type##Sa(type##Sa arr, type elem); \
+    type##DaRes new_##type##Da(const size_t capacity); \
+    type##DaRes insert_##type##Da(const type##Da arr, const type elem); \
+    voidRes insert_##type##Sa(type##Sa arr, const type elem); \
     void for_each_##type##Da(type##Da wptr, _da_##type##_to_void fn); \
     void for_each_##type##Das(type##Sa wptr, _da_##type##_to_void fn); \
     char all_##type##Da(type##Da ptr, _da_truthy_##type##_fn fn); \
@@ -258,7 +278,7 @@
     char in_##type##Sa(type##Sa ptr, type* elem, _da_##type##_equality_fn fn); \
     void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn); \
     void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn); \
-    type##Da unique_##type##Da(type##Da wptr, _da_##type##_equality_fn fn); \
+    type##DaRes unique_##type##Da(const type##Da wptr, const _da_##type##_equality_fn fn); \
     void sort_##type##Da(type##Da arr, _da_comperator_##type cmp); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type); \
@@ -290,6 +310,7 @@
     _DA_DEFINE_FN_SIGS(type)
 
 #define IMPL_DA(type) \
+    _DA_IMPL_NEW(type) \
     _DA_IMPL_INSERT(type) \
     _DA_DEFINE_FOR_EACH(type) \
     _DA_DEFINE_ALL(type) \

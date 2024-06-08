@@ -20,26 +20,28 @@
  * it is implemented for all types available in c
  * using the aliases/shorthands found in default_types.h
  *
+ * if a parameter is not declared 'const', it is getting modified.
+ *
  * Linking: cmp.c rmath.c str_utils.c dynamic_array.c testing.c 
  *
  * ------------------------------
  * Working with Arrays (array_utils.h):
  * ------------------------------
  * 
- * FOR_EACH(arr, len, fn) : fn(t)->void
- * FOR_EACHP(arr, len, fn) : fn(t*)->void
- * ANY(arr, len, fn, expr) : fn(t)->char
- * ANYP(arr, len, fn, expr) : fn(t*)->char
- * ALL(arr, len, fn, exp) : fn(t)->char
- * ALLP(arr, len, fn, expr) : fn(t*)->char
- * IN(arr, len, elem, expr) 
- * MAP(from, len, fn, target) : fn(t1)->t2
- * MAPP(from, len, fn, target) : fn(t1*)->t2
- * MAP_IP(arr, len, fn) : fn(t)->t
- * MAP_IPP(arr, len, fn) : fn(t*)->t
- * FOLD(arr, len, fn, type, name, start) : fn(start, type)->start
- * FOLDP(arr, len, fn, type, name, start) : fn(start, type*)->start
- * FOLDPP(arr, len, fn, type, name, start) : fn(start*, type*)->start
+ * FOR_EACH (arr, len, fn)                    : fn(t)->void
+ * FOR_EACHP(arr, len, fn)                    : fn(t*)->void
+ * ANY      (arr, len, fn, expr)              : fn(t)->char
+ * ANYP     (arr, len, fn, expr)              : fn(t*)->char
+ * ALL      (arr, len, fn, exp)               : fn(t)->char
+ * ALLP     (arr, len, fn, expr)              : fn(t*)->char
+ * IN       (arr, len, elem, expr) 
+ * MAP      (from, len, fn, target)           : fn(t1)->t2
+ * MAPP     (from, len, fn, target)           : fn(t1*)->t2
+ * MAP_IP   (arr, len, fn)                    : fn(t)->t
+ * MAP_IPP  (arr, len, fn)                    : fn(t*)->t
+ * FOLD     (arr, len, fn, type, name, start) : fn(start, type)->start
+ * FOLDP    (arr, len, fn, type, name, start) : fn(start, type*)->start
+ * FOLDPP   (arr, len, fn, type, name, start) : fn(start*, type*)->start
  *
  * ------------------------------
  * Comparing (cmp.h):
@@ -47,20 +49,21 @@
  *
  * Compareable = {LESS | EQUAL | GREATER}
  *
- * cmp_char(char*, char*)
- * cmp_schar(schar, schar)
- * cmp_uchar(uchar*, uchar*)
- * cmp_short(short*, short*)
- * cmp_ushort(ushort*, ushort*)
- * cmp_int(int*, int*)
- * cmp_uint(uint*, uint*)
- * cmp_long(long*, long*)
- * cmp_ulong(ulong*, ulong*)
- * cmp_long_long(long_long*, long_long*)
- * cmp_ulong_long(ulong_long*, ulong_long*)
- * cmp_float(float*, float*)
- * cmp_double(double*, double*)
- * cmp_long_double(long_double*, long_double*)
+ * cmp_char       (const char*, const char*)
+ * cmp_schar      (const schar, const schar)
+ * cmp_uchar      (const uchar*, const uchar*)
+ * cmp_short      (const short*, const short*)
+ * cmp_ushort     (const ushort*, const ushort*)
+ * cmp_int        (const int*, const int*)
+ * cmp_uint       (const uint*, const uint*)
+ * cmp_long       (const long*, const long*)
+ * cmp_ulong      (const ulong*, const ulong*)
+ * cmp_long_long  (const long_long*, const long_long*)
+ * cmp_ulong_long (const ulong_long*, const ulong_long*)
+ * cmp_float      (const float*, const float*)
+ * cmp_double     (const double*, const double*)
+ * cmp_long_double(const long_double*, const long_double*)
+ * cmp_size_t     (const size_t*, const size_t*)
  *
  * ------------------------------
  * Printing (color_print.h):
@@ -108,11 +111,11 @@
  *
  * DA / SA = {capacity; size; count; ptr}
  *
- * new_da(name, type, capacity) -> create heap array
  * new_sa(name, type, capacity) -> create stack array
  * 
- * <type>DaRes insert_<type>Da(wprt, elem)
- * voidRes     insert_<type>Sa(wprt, elem)
+ * <type>DaRes insert_<type>Da(const wprt, const elem)
+ * <type>DaRes new_<type>Da(const size_t capacity)
+ * voidRes     insert_<type>Sa(wprt, const elem)
  * void        for_each_<type>Da(wptr, fn(<type>*)->void)
  * void        for_each_<type>Sa(wptr, fn(<type>*)->void)
  * char        all_<type>Da(wptr, fn(<type>*)->char)
@@ -121,7 +124,7 @@
  * char        any_<type>Sa(wptr, fn(<type>*)->char)
  * char        in_<type>Da(wptr, elem*, fn(<type>*,<type>*)->char)
  * char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
- * <type>Da    unique_<type>Da(wptr, equality(<type>*,<type>*)->char)
+ * <type>DaRes unique_<type>Da(const wptr, const equality(<type>*,<type>*)->char)
  * void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place
  * void        radix_<type>Da(wptr) -> implements generic radix for arbitrary data. 
  *                                     sorts in place with 4 buffers

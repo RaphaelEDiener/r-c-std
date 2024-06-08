@@ -1,5 +1,7 @@
 #include "rmath.h"
 
+DEFAULT_TYPES(IMPL_SWAP)
+
 void swap(uchar* p1, uchar* p2) {
     *p1 ^= *p2;
     *p2 ^= *p1;
