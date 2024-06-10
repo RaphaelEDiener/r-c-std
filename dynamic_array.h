@@ -284,17 +284,16 @@
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type); \
     void radix_##type##DA(type##Da arr);
 
-
 #define _DA_DEFINE_TYPE_SIGS(type) \
     typedef struct { \
         size_t capacity; \
-        unsigned int size; \
+        size_t size; \
         size_t count; \
         type* ptr; \
     } type##Da; \
     typedef struct { \
         size_t capacity; \
-        unsigned int size; \
+        size_t size; \
         size_t count; \
         type* ptr; \
     } type##Sa; \
