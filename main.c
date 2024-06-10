@@ -48,6 +48,11 @@ int addp(int x, int* y) {
 int addpp(int* x, int* y) {
     return (*x) + (*y);
 }
+static int counter_ = 0;
+void inc_counter(int* _ignore) {
+    (void)_ignore;
+    counter_++;
+}
 
 
 int test_array_macros(void) {
@@ -152,17 +157,78 @@ int test_array_macros(void) {
     return fails;
 }
 
-int test_dynamic_arrays(void) {
-    
-    return 1;
+
+int test_cmp(void) {
+    int fails = 0;
+    char x0 = '0';
+    char y0 = '9';
+    test_Compareable(cmp_char(&x0, &y0), LESS, "0 is less than 9");
+    char x1 = '0';
+    char y1 = '0';
+    test_Compareable(cmp_char(&x1, &y1), EQUAL, "0 equal 0");
+    char x2 = '9';
+    char y2 = '0';
+    test_Compareable(cmp_char(&x2, &y2), GREATER, "9 is greater than 0");
+    return fails;
 }
 
+int test_dynamic_arrays(void) {
+    int fails = 0;
+    {
+        // creating
+        intDaRes da0 = new_intDa(1);
+        fails += test_ResultType(da0.type, SUCCESS, "can create new dynamic array with cap 1");
+        intDaRes da1 = new_intDa(SIZE_MAX);
+        fails += test_ResultType(da1.type, FAILURE, "can't create new dynamic array with cap > ram space");
+    }
+    {  // inserting
+        intDa da0 = new_intDa(16).result;
+        fails += test_size_t(da0.count, 0, "new dynamic arrays are empty");
+        fails += test_size_t(da0.size, sizeof(int), "new dynamic arrays have the element size gets correctly inferred");
+        fails += test_size_t(da0.capacity, 16, "new dynamic arrays have the given capacity");
+
+        charDa da1 = new_charDa(0).result;
+        fails += test_size_t(da1.capacity, 0, "new dynamic arrays can be empty");
+        charDaRes suc = insert_charDa(da1, '0');
+        fails += test_ResultType(suc.type, SUCCESS, "Inserting into empty DA succeeds");
+        size_t zero = 0;
+        fails += test_Compareable(cmp_size_t(&suc.result.capacity, &zero), GREATER, "inserting into empty DA increases capacity");
+
+        charDa da2 = new_charDa(1).result;
+        da2 = insert_charDa(da2, '0').result;
+        fails += test_size_t(da2.capacity, 1, "inserting into DA while not at full capacity doesn't increase capacity");
+        da2 = insert_charDa(da2, '1').result;
+        size_t one = 1;
+        fails += test_Compareable(cmp_size_t(&suc.result.capacity, &one), GREATER, "inserting into DA while at full capacity increases capacity");
+        fails += test_char(suc.result.ptr[0], '0', "capacity increase doesn't modify old data");
+
+        // this will be invalid and pointing to null, ensuring that the new size, will also point to null 
+        charDa da4 = new_charDa(SIZE_MAX / 4).result;
+        da4.count = SIZE_MAX / 4;
+        charDaRes faill = insert_charDa(da4, '0');
+        fails += test_ResultType(faill.type, FAILURE, "Fail if can't allocate new memory for size increase");
+    }
+    { // for_each
+        intDa da0 = new_intDa(8).result;
+        da0.count = 8;
+        for_each_intDa(da0, inc_counter);
+        fails += test_int(counter_, 8, "for each DA executes the right amount of times");
+    }
+
+    return fails;
+}
+
+/**
+ * Leaks in tests are fiiiiine ~
+ */
 int main(void) {
     int fails = 0;
     fails += test_array_macros();
+    fails += test_cmp();
     fails += test_dynamic_arrays();
 
-    if (fails > 0) {redln("%d\tFAILED TESTS", fails)};
+    if (fails > 0) {redln("%d\tFAILED TESTS", fails)}
+    else {greenln("\tTESTS PASSES!")};
     return -fails;
 }
 
