@@ -113,8 +113,8 @@
  *
  * new_sa(name, type, capacity) -> create stack array
  * 
- * <type>DaRes insert_<type>Da(const wprt, const elem)
  * <type>DaRes new_<type>Da(const size_t capacity)
+ * <type>DaRes insert_<type>Da(const wprt, const elem)
  * voidRes     insert_<type>Sa(wprt, const elem)
  * void        for_each_<type>Da(wptr, fn(<type>*)->void)
  * void        for_each_<type>Sa(wptr, fn(<type>*)->void)
@@ -123,6 +123,10 @@
  * char        any_<type>Da(wptr, fn(<type>*)->char)
  * char        any_<type>Sa(wptr, fn(<type>*)->char)
  * char        in_<type>Da(wptr, elem*, fn(<type>*,<type>*)->char)
+ * char        pin_<type>Da(const wptr, const elem*) 
+ *             -> !only for primitive data types!
+ * char        pin_<type>Sa(const wptr, const elem*) 
+ *             -> !only for primitive data types!
  * char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
  * <type>DaRes unique_<type>Da(const wptr, const equality(<type>*,<type>*)->char)
  * void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place
