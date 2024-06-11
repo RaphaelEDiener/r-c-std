@@ -8,6 +8,7 @@
 #include "default_types.h"
 #include "color_print.h"
 #include "cmp.h"
+#include "array_utils.h"
 
 #ifndef DEFINE_DA
 
@@ -27,8 +28,7 @@
 
 #define new_sa(name, type, capacity) \
     type _##name[capacity]; \
-    type##Sa name = {capacity, sizeof(type), 0, _##name}; \
-    assert(name.ptr != NULL);
+    type##Sa name = {capacity, sizeof(type), 0, _##name};
 
 /**
  * I've removed checking for inserting into something which reached its
@@ -38,23 +38,22 @@
  */
 #define _DA_IMPL_INSERT(type) \
     type##DaRes insert_##type##Da(const type##Da arr, const type elem) { \
-        type##Da new_arr = {arr.capacity, sizeof(type), arr.count, arr.ptr}; \
-        type##DaRes ans = {FAILURE, arr}; \
+        size_t new_cap = arr.capacity; \
+        type* new_ptr = arr.ptr; \
+        type##DaRes failure = {FAILURE, {new_cap, sizeof(type), arr.count+1, new_ptr}}; \
         if (arr.count == arr.capacity) { \
             type* prev = arr.ptr; \
-            size_t new_cap = (arr.capacity == 0) ? 8 : arr.capacity * 2; \
-            type* new_ptr = (type*) calloc(new_cap, sizeof(type)); \
+            new_cap = (arr.capacity == 0) ? 8 : arr.capacity * 2; \
+            new_ptr = (type*) calloc(new_cap, sizeof(type)); \
             if (new_ptr == NULL) { \
                 err_redln("failed to allocated for new capacity of %zu", new_cap); \
-                return ans; \
+                return failure; \
             } \
             memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
-            free(prev); \
-            new_arr.ptr = new_ptr; \
-            new_arr.capacity = new_cap; \
+            FREE(prev); \
         } \
-        new_arr.ptr[new_arr.count] = elem; \
-        new_arr.count++; \
+        new_ptr[arr.count] = elem; \
+        type##Da new_arr = {new_cap, sizeof(type), arr.count+1, new_ptr}; \
         type##DaRes ans2 = {SUCCESS, new_arr}; \
         return ans2; \
     } \
@@ -178,22 +177,29 @@
         return ans; \
     }
 
-/**
- * I can fearlessly take the result since it accepts a valid DA
- * and there can never be unique elements than elements in the argument
- * TODO: change up algorithm to overallocate and then shrink to size afterward
- */
 #define _DA_DEFINE_UNIQUE(t) \
     t##DaRes unique_##t##Da(const t##Da wptr, const _da_##t##_equality_fn fn) { \
-        t##DaRes vals = new_##t##Da(2); \
-        if (vals.type == FAILURE) return vals; \
+        const t##DaRes failure = {FAILURE, wptr}; \
+        size_t count = 0; \
+        t* vals = malloc(wptr.count * sizeof(t)); \
+        if (vals == NULL) return failure; \
         for (size_t i = 0; i < wptr.count; i++) { \
-            if (!in_##t##Da(vals.result, wptr.ptr+i, fn)) { \
-                vals = insert_##t##Da(vals.result, wptr.ptr[i]); \
-                if (vals.type == FAILURE) return vals; \
+            char in = 0; \
+            for (size_t v = 0; v < count; v++) { \
+                if (fn(vals+v, wptr.ptr+i)) { \
+                    in = 1;  \
+                    break; \
+                } \
+            } \
+            if (!in) { \
+                vals[count] = wptr.ptr[i]; \
             } \
         } \
-        return vals; \
+        t* new_ptr = realloc(vals, count * sizeof(t)); \
+        if (new_ptr == NULL) return failure; \
+        const t##Da ans = {count, wptr.size, count, new_ptr}; \
+        const t##DaRes success = {SUCCESS, ans}; \
+        return success; \
     }
 
 #define _DA_DEFINE_SORT(type) \
@@ -286,14 +292,14 @@
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
     typedef struct { \
-        size_t capacity; \
-        size_t size; \
+        const size_t capacity; \
+        const size_t size; \
         size_t count; \
         type* ptr; \
     } type##Da; \
     typedef struct { \
-        size_t capacity; \
-        size_t size; \
+        const size_t capacity; \
+        const size_t size; \
         size_t count; \
         type* ptr; \
     } type##Sa; \

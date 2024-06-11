@@ -1,3 +1,9 @@
+#ifndef FREE
+#define FREE(ptr) \
+    free(ptr); \
+    ptr=NULL;
+#endif
+
 #ifndef FOR_EACH
 #define FOR_EACH(arr, len, fn) \
     for (size_t i = 0; i < len; i++) { \

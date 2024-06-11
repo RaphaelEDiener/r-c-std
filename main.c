@@ -172,47 +172,66 @@ int test_cmp(void) {
     return fails;
 }
 
+int test_da_creation(void) {
+    int fails = 0;
+    intDaRes da0 = new_intDa(1);
+    fails += test_ResultType(da0.type, SUCCESS, "can create new dynamic array with cap 1");
+    free(da0.result.ptr);
+
+    intDaRes da1 = new_intDa(SIZE_MAX);
+    fails += test_ResultType(da1.type, FAILURE, "can't create new dynamic array with cap > ram space");
+    return fails;
+}
+
+int test_da_insertion(void) {
+    int fails = 0;
+    const intDa da0 = new_intDa(16).result;
+    fails += test_size_t(da0.count, 0, "new dynamic arrays are empty");
+    fails += test_size_t(da0.size, sizeof(int), "new dynamic arrays have the element size gets correctly inferred");
+    fails += test_size_t(da0.capacity, 16, "new dynamic arrays have the given capacity");
+    free(da0.ptr);
+
+    const charDa da1 = new_charDa(0).result;
+    fails += test_size_t(da1.capacity, 0, "new dynamic arrays can be empty");
+    charDaRes suc = insert_charDa(da1, '0');
+    fails += test_ResultType(suc.type, SUCCESS, "Inserting into empty DA succeeds");
+    size_t zero = 0;
+    fails += test_Compareable(cmp_size_t(&suc.result.capacity, &zero), GREATER, "inserting into empty DA increases capacity");
+    free(suc.result.ptr);
+
+    charDa da2 = new_charDa(1).result;
+    charDa da2a = insert_charDa(da2, '0').result;
+    fails += test_size_t(da2a.capacity, 1, "inserting into DA while not at full capacity doesn't increase capacity");
+    charDa da2b = insert_charDa(da2a, '1').result;
+    size_t one = 1;
+    fails += test_Compareable(cmp_size_t(&da2b.capacity, &one), GREATER, "inserting into DA while at full capacity increases capacity");
+    fails += test_char(da2b.ptr[0], '0', "capacity increase doesn't modify old data");
+    fails += test_char(da2b.ptr[1], '1', "capacity increase inserts correctly");
+    free(da2b.ptr);
+
+    // this will be invalid and pointing to null, ensuring that the new size, will also point to null 
+    charDa da4 = new_charDa(SIZE_MAX / 4).result;
+    da4.count = SIZE_MAX / 4;
+    charDaRes faill = insert_charDa(da4, '0');
+    fails += test_ResultType(faill.type, FAILURE, "Fail if can't allocate new memory for size increase");
+
+    return fails;
+}
+
 int test_dynamic_arrays(void) {
     int fails = 0;
-    {
-        // creating
-        intDaRes da0 = new_intDa(1);
-        fails += test_ResultType(da0.type, SUCCESS, "can create new dynamic array with cap 1");
-        intDaRes da1 = new_intDa(SIZE_MAX);
-        fails += test_ResultType(da1.type, FAILURE, "can't create new dynamic array with cap > ram space");
-    }
-    {  // inserting
-        intDa da0 = new_intDa(16).result;
-        fails += test_size_t(da0.count, 0, "new dynamic arrays are empty");
-        fails += test_size_t(da0.size, sizeof(int), "new dynamic arrays have the element size gets correctly inferred");
-        fails += test_size_t(da0.capacity, 16, "new dynamic arrays have the given capacity");
-
-        charDa da1 = new_charDa(0).result;
-        fails += test_size_t(da1.capacity, 0, "new dynamic arrays can be empty");
-        charDaRes suc = insert_charDa(da1, '0');
-        fails += test_ResultType(suc.type, SUCCESS, "Inserting into empty DA succeeds");
-        size_t zero = 0;
-        fails += test_Compareable(cmp_size_t(&suc.result.capacity, &zero), GREATER, "inserting into empty DA increases capacity");
-
-        charDa da2 = new_charDa(1).result;
-        da2 = insert_charDa(da2, '0').result;
-        fails += test_size_t(da2.capacity, 1, "inserting into DA while not at full capacity doesn't increase capacity");
-        da2 = insert_charDa(da2, '1').result;
-        size_t one = 1;
-        fails += test_Compareable(cmp_size_t(&suc.result.capacity, &one), GREATER, "inserting into DA while at full capacity increases capacity");
-        fails += test_char(suc.result.ptr[0], '0', "capacity increase doesn't modify old data");
-
-        // this will be invalid and pointing to null, ensuring that the new size, will also point to null 
-        charDa da4 = new_charDa(SIZE_MAX / 4).result;
-        da4.count = SIZE_MAX / 4;
-        charDaRes faill = insert_charDa(da4, '0');
-        fails += test_ResultType(faill.type, FAILURE, "Fail if can't allocate new memory for size increase");
-    }
+    fails += test_da_creation();
+    fails += test_da_insertion();
     { // for_each
         intDa da0 = new_intDa(8).result;
         da0.count = 8;
         for_each_intDa(da0, inc_counter);
         fails += test_int(counter_, 8, "for each DA executes the right amount of times");
+        free(da0.ptr);
+    } 
+    {  // all
+        charDa da0 = new_charDa(8).result;
+
     }
 
     return fails;
