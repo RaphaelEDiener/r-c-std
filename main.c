@@ -53,6 +53,13 @@ void inc_counter(int* _ignore) {
     (void)_ignore;
     counter_++;
 }
+char to_zero(char* ignore) {
+    (void)ignore;
+    return 0;
+}
+char is_zero(char* x) {
+    return 0 == *x;
+}
 
 
 int test_array_macros(void) {
@@ -217,23 +224,42 @@ int test_da_insertion(void) {
 
     return fails;
 }
+int test_da_for_each(void) {
+    int fails = 0;
+    intDa da0 = new_intDa(8).result;
+    da0.count = 8;
+    for_each_intDa(da0, inc_counter);
+    fails += test_int(counter_, 8, "for each DA executes the right amount of times");
+    free(da0.ptr);
+    return fails;
+} 
+int test_da_all(void) {
+    int fails = 0;
+
+    charDa da0 = new_charDa(8).result;
+    da0.count = 8;
+    mapip_charDa(da0, to_zero);
+    fails += test_char(all_charDa(da0, is_zero), 1, "all finds all cases");
+
+    charDa da1 = new_charDa(8).result;
+    da1.count = 8;
+    mapip_charDa(da1, to_zero);
+    da1.ptr[4] = 123;
+    fails += test_char(all_charDa(da1, is_zero), 0, "all fails if one doesn't fit");
+
+    charDa da2 = new_charDa(0).result;
+    fails += test_char(all_charDa(da2, is_zero), 1, "all succeeds for the empty case");
+
+    free(da0.ptr);
+    return fails;
+} 
 
 int test_dynamic_arrays(void) {
     int fails = 0;
     fails += test_da_creation();
     fails += test_da_insertion();
-    { // for_each
-        intDa da0 = new_intDa(8).result;
-        da0.count = 8;
-        for_each_intDa(da0, inc_counter);
-        fails += test_int(counter_, 8, "for each DA executes the right amount of times");
-        free(da0.ptr);
-    } 
-    {  // all
-        charDa da0 = new_charDa(8).result;
-
-    }
-
+    fails += test_da_for_each();
+    fails += test_da_all();
     return fails;
 }
 
