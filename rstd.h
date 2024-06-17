@@ -122,7 +122,8 @@
  * char        all_<type>Sa(wptr, fn(<type>*)->char)
  * char        any_<type>Da(wptr, fn(<type>*)->char)
  * char        any_<type>Sa(wptr, fn(<type>*)->char)
- * char        in_<type>Da(wptr, elem*, fn(<type>*,<type>*)->char)
+ * char        in_<type>Da(const wptr, const elem*, const fn(<type>*,<type>*)->char)
+ * char        pin_<type>Da(cosnt wptr, const elem*) -> primitive in
  * char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
  * <type>DaRes unique_<type>Da(const wptr, const equality(<type>*,<type>*)->char)
  * void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place

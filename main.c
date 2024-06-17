@@ -6,7 +6,7 @@ void add1p(int* x) {
 int add2(int x) {
     return x+2;
 }
-int add2p(int* x) {
+int add2p(const int* x) {
     return (*x)+2;
 }
 char eq1(int x) {
@@ -15,50 +15,53 @@ char eq1(int x) {
 char false(int x) {
     return 0 && (char) x;
 }
-char eq1p(int* x) {
+char eq1p(const int* x) {
     return *x == 1;
 }
-char falsep(int* x) {
+char falsep(const int* x) {
     return 0 && (char) *x;
 }
 char positive(int x) {
     return x >= 0;
 }
-char positivep(int* x) {
+char positivep(const int* x) {
     return *x >= 0;
 }
 char negative(int x) {
     return x <= 0;
 }
-char negativep(int* x) {
+char negativep(const int* x) {
     return *x <= 0;
 }
 uchar int_to_uchar(int x) {
     return (char) (x % 256);
 }
-uchar intp_to_uchar(int* x) {
+uchar intp_to_uchar(const int* x) {
     return (char) ((*x) % 256);
 }
 int add(int x, int y) {
     return x + y;
 }
-int addp(int x, int* y) {
+int addp(int x, const int* y) {
     return x + (*y);
 }
-int addpp(int* x, int* y) {
+int addpp(const int* x, const int* y) {
     return (*x) + (*y);
 }
 static int counter_ = 0;
-void inc_counter(int* _ignore) {
+void inc_counter(const int* _ignore) {
     (void)_ignore;
     counter_++;
 }
-char to_zero(char* ignore) {
+char to_zero(const char* ignore) {
     (void)ignore;
     return 0;
 }
-char is_zero(char* x) {
+char is_zero(const char* x) {
     return 0 == *x;
+}
+char is_one(const char* x) {
+    return 1 == *x;
 }
 
 
@@ -239,7 +242,7 @@ int test_da_all(void) {
     charDa da0 = new_charDa(8).result;
     da0.count = 8;
     mapip_charDa(da0, to_zero);
-    fails += test_char(all_charDa(da0, is_zero), 1, "all finds all cases");
+    fails += test_char(all_charDa(da0, is_zero), 1, "all succeeds if it finds all cases");
 
     charDa da1 = new_charDa(8).result;
     da1.count = 8;
@@ -254,12 +257,78 @@ int test_da_all(void) {
     return fails;
 }
 int test_da_any(void) {
-    int fails = 1;
+    int fails = 0;
+
+    charDa da0 = new_charDa(8).result;
+    da0.count = 8;
+    mapip_charDa(da0, to_zero);
+    da0.ptr[7] = 1;
+    fails += test_char(any_charDa(da0, is_one), 1, "any succeeds if it finds one case");
+    free(da0.ptr);
+
+    charDa da1 = new_charDa(8).result;
+    da1.count = 8;
+    mapip_charDa(da1, to_zero);
+    fails += test_char(any_charDa(da1, is_one), 0, "any fails if all don't fit");
+    free(da1.ptr);
+
+    charDa da2 = new_charDa(0).result;
+    fails += test_char(any_charDa(da2, is_zero), 0, "any fails for the empty case");
+
+    return fails;
+}
+
+int test_da_pin(void) {
+    int fails = 0;
+    const char seven = 7;
+    const char ten = 10;
+
+    charDa da0 = new_charDa(8).result;
+    da0.count = 8;
+    for (size_t i = 0; i < da0.count; i++) {
+        da0.ptr[i] = i;
+    }
+    fails += test_char(pin_charDa(da0, &seven), 1, "pin finds element in da");
+    free(da0.ptr);
+    
+    charDa da1 = new_charDa(8).result;
+    da1.count = 8;
+    for (size_t i = 0; i < da1.count; i++) {
+        da1.ptr[i] = i;
+    }
+    fails += test_char(pin_charDa(da1, &ten), 0, "pin can't find element that are not in da");
+    free(da1.ptr);
+    
+    charDa da2 = new_charDa(0).result;
+    fails += test_char(pin_charDa(da2, &ten), 0, "pin can't find element in the empty da");
+    free(da2.ptr);
 
     return fails;
 }
 int test_da_in(void) {
-    int fails = 1;
+    int fails = 0;
+    const char seven = 7;
+    const char ten = 10;
+
+    charDa da0 = new_charDa(8).result;
+    da0.count = 8;
+    for (size_t i = 0; i < da0.count; i++) {
+        da0.ptr[i] = i;
+    }
+    fails += test_char(in_charDa(da0, &seven, cmp_char), 1, "in finds element in da");
+    free(da0.ptr);
+    
+    charDa da1 = new_charDa(8).result;
+    da1.count = 8;
+    for (size_t i = 0; i < da1.count; i++) {
+        da1.ptr[i] = i;
+    }
+    fails += test_char(in_charDa(da1, &ten, cmp_char), 0, "in can't find element that are not in da");
+    free(da1.ptr);
+    
+    charDa da2 = new_charDa(0).result;
+    fails += test_char(in_charDa(da2, &ten, cmp_char), 0, "in can't find element in the empty da");
+    free(da2.ptr);
 
     return fails;
 }
@@ -302,6 +371,7 @@ int test_dynamic_arrays(void) {
     fails += test_da_all();
     fails += test_da_any();
     fails += test_da_in();
+    fails += test_da_pin();
     fails += test_da_unique();
     fails += test_da_sort();
     fails += test_da_radix();

@@ -103,28 +103,28 @@
             char res = (*fn) ((type*) ptr.ptr+i); \
             if ( res ) return 1; \
         } \
-        return 1; \
+        return 0; \
     } \
     char any_##type##Sa(type##Sa ptr, _da_truthy_##type##_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) ((type*) ptr.ptr+i); \
             if ( res ) return 1; \
         } \
-        return 1; \
+        return 0; \
     } 
 
 #define _DA_DEFINE_IN(type) \
-    char in_##type##Da(type##Da ptr, type* elem, _da_##type##_equality_fn fn) { \
+    char in_##type##Da(const type##Da ptr, const type* elem, const _da_comperator_##type fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) (elem, (type*) ptr.ptr+i); \
-            if ( res ) return 1; \
+            if ( res == EQUAL ) return 1; \
         } \
         return 0; \
     } \
-    char in_##type##Sa(type##Sa ptr, type* elem, _da_##type##_equality_fn fn) { \
+    char in_##type##Sa(const type##Sa ptr, const type* elem, const _da_comperator_##type fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) (elem, (type*) ptr.ptr+i); \
-            if ( res ) return 1; \
+            if ( res == EQUAL ) return 1; \
         } \
         return 0; \
     } 
@@ -162,11 +162,11 @@
     }
 
 #define _DA_DEFINE_MAP_SIG(from_t, to_t) \
-    typedef to_t (*_da_sig_##from_t##_to_##to_t)(from_t*); \
+    typedef to_t (*_da_sig_##from_t##_to_##to_t)(const from_t*); \
     to_t##DaRes map_##from_t##Da_to_##to_t##Da(const from_t##Da from_ptr, const _da_sig_##from_t##_to_##to_t fn);
 
 #define _DA_DEFINE_MAP(from_t, to_t) \
-    typedef to_t (*_da_##from_t##_to_##to_t)(from_t*); \
+    typedef to_t (*_da_##from_t##_to_##to_t)(const from_t*); \
     to_t##DaRes map_##from_t##Da_to_##to_t##Da(const from_t##Da from_ptr, const _da_##from_t##_to_##to_t fn) { \
         to_t##DaRes ans = new_##to_t##Da(from_ptr.count); \
         if (ans.type == FAILURE) return ans; \
@@ -276,12 +276,12 @@
     voidRes insert_##type##Sa(type##Sa arr, const type elem); \
     void for_each_##type##Da(type##Da wptr, _da_##type##_to_void fn); \
     void for_each_##type##Das(type##Sa wptr, _da_##type##_to_void fn); \
-    char all_##type##Da(type##Da ptr, _da_truthy_##type##_fn fn); \
-    char all_##type##Sa(type##Sa ptr, _da_truthy_##type##_fn fn); \
-    char any_##type##Da(type##Da ptr, _da_truthy_##type##_fn fn); \
-    char any_##type##Sa(type##Sa ptr, _da_truthy_##type##_fn fn); \
-    char in_##type##Da(type##Da ptr, type* elem, _da_##type##_equality_fn fn); \
-    char in_##type##Sa(type##Sa ptr, type* elem, _da_##type##_equality_fn fn); \
+    char all_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn); \
+    char all_##type##Sa(const type##Sa ptr, const _da_truthy_##type##_fn fn); \
+    char any_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn); \
+    char any_##type##Sa(const type##Sa ptr, const _da_truthy_##type##_fn fn); \
+    char in_##type##Da(const type##Da ptr, const type* elem, const _da_comperator_##type fn); \
+    char in_##type##Sa(const type##Sa ptr, const type* elem, const _da_comperator_##type fn); \
     void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn); \
     void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn); \
     type##DaRes unique_##type##Da(const type##Da wptr, const _da_##type##_equality_fn fn); \
@@ -304,11 +304,11 @@
         type* ptr; \
     } type##Sa; \
     DEFINE_RESULT(type##Da); \
-    typedef char (*_da_##type##_equality_fn)(type*, type*); \
-    typedef void (*_da_##type##_to_void)(type*) ; \
-    typedef type (*_da_##type##_to_##type)(type*) ; \
-    typedef Compareable (*_da_comperator_##type)(type*, type*); \
-    typedef char (*_da_truthy_##type##_fn)(type*);
+    typedef char (*_da_##type##_equality_fn)(const type*, const type*); \
+    typedef void (*_da_##type##_to_void)(const type*) ; \
+    typedef type (*_da_##type##_to_##type)(const type*) ; \
+    typedef Compareable (*_da_comperator_##type)(const type*, const type*); \
+    typedef char (*_da_truthy_##type##_fn)(const type*);
 
 #define DEFINE_DA(type) \
     _DA_DEFINE_TYPE_SIGS(type) \
@@ -328,9 +328,13 @@
     DEFAULT_TTYPES(_DA_DEFINE_MAP, type); \
     _DA_DEFINE_RADIX(type);
 
+#define _DEFINE_DA_PRIMITIVE_IN(type) \
+    char pin_##type##Da(type##Da ptr, const type* elem); \
+    char pin_##type##Sa(type##Sa ptr, const type* elem);
 
 DEFAULT_TYPES(_DA_DEFINE_TYPE_SIGS);
 DEFAULT_TYPES(_DA_DEFINE_FN_SIGS);
+DEFAULT_TYPES(_DEFINE_DA_PRIMITIVE_IN);
 
 #endif
 
