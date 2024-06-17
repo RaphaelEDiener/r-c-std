@@ -82,14 +82,14 @@
     }
 
 #define _DA_DEFINE_ALL(type) \
-    char all_##type##Da(type##Da ptr, _da_truthy_##type##_fn fn) { \
+    char all_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) ((type*) ptr.ptr+i); \
             if ( !res ) return 0; \
         } \
         return 1; \
     } \
-    char all_##type##Sa(type##Sa ptr, _da_truthy_##type##_fn fn) { \
+    char all_##type##Sa(const type##Sa ptr, const _da_truthy_##type##_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) ((type*) ptr.ptr+i); \
             if ( !res ) return 0; \
@@ -98,14 +98,14 @@
     }
 
 #define _DA_DEFINE_ANY(type) \
-    char any_##type##Da(type##Da ptr, _da_truthy_##type##_fn fn) { \
+    char any_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) ((type*) ptr.ptr+i); \
             if ( res ) return 1; \
         } \
         return 0; \
     } \
-    char any_##type##Sa(type##Sa ptr, _da_truthy_##type##_fn fn) { \
+    char any_##type##Sa(const type##Sa ptr, const _da_truthy_##type##_fn fn) { \
         for (size_t i = 0; i < ptr.count; i++){ \
             char res = (*fn) ((type*) ptr.ptr+i); \
             if ( res ) return 1; \
@@ -130,35 +130,37 @@
     } 
 
 #define _DA_DEFINE_MAPIP(type) \
-    void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn) { \
+    void mapip_##type##Da(type##Da wptr, const _da_##type##_to_##type fn) { \
         for (size_t i = 0; i < wptr.count; i++){\
             wptr.ptr[i] = (*fn) (wptr.ptr+i);\
         }\
     } \
-    void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn) { \
+    void mapip_##type##Sa(type##Sa wptr, const _da_##type##_to_##type fn) { \
         for (size_t i = 0; i < wptr.count; i++){\
             wptr.ptr[i] = (*fn) (wptr.ptr+i);\
         }\
     }
 
 #define _DA_DEFINE_FOLD_SIG(from_t, to_t) \
-    typedef to_t (*_da_sig_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
-    to_t fold_##from_t##Da_to_##to_t(from_t##Da wptr, _da_sig_collapse_##from_t##_to_##to_t fn, to_t start); \
-    to_t fold_##from_t##Sa_to_##to_t(from_t##Sa wptr, _da_sig_collapse_##from_t##_to_##to_t fn, to_t start);
+    typedef to_t (*_da_sig_collapse_##from_t##_to_##to_t)(const to_t*, const from_t*); \
+    to_t fold_##from_t##Da_to_##to_t(const from_t##Da wptr, const _da_sig_collapse_##from_t##_to_##to_t fn, const to_t start); \
+    to_t fold_##from_t##Sa_to_##to_t(const from_t##Sa wptr, const _da_sig_collapse_##from_t##_to_##to_t fn, const to_t start);
 
 #define _DA_DEFINE_FOLD(from_t, to_t) \
-    typedef to_t (*_da_collapse_##from_t##_to_##to_t)(to_t*, from_t*); \
-    to_t fold_##from_t##Da_to_##to_t(from_t##Da wptr, _da_collapse_##from_t##_to_##to_t fn, to_t start){ \
+    typedef to_t (*_da_collapse_##from_t##_to_##to_t)(const to_t*, const from_t*); \
+    to_t fold_##from_t##Da_to_##to_t(const from_t##Da wptr, const _da_collapse_##from_t##_to_##to_t fn, const to_t start){ \
+        to_t res = start; \
         for (size_t i = 0; i < wptr.count; i++) { \
-            start = (*fn) (&start, wptr.ptr+i); \
+            res = (*fn) (&res, wptr.ptr+i); \
         } \
-        return start; \
+        return res; \
     } \
-    to_t fold_##from_t##Sa_to_##to_t(from_t##Sa wptr, _da_collapse_##from_t##_to_##to_t fn, to_t start){ \
+    to_t fold_##from_t##Sa_to_##to_t(const from_t##Sa wptr, const _da_collapse_##from_t##_to_##to_t fn, const to_t start){ \
+        to_t res = start; \
         for (size_t i = 0; i < wptr.count; i++) { \
-            start = (*fn) (&start, wptr.ptr+i); \
+            res = (*fn) (&res, wptr.ptr+i); \
         } \
-        return start; \
+        return res; \
     }
 
 #define _DA_DEFINE_MAP_SIG(from_t, to_t) \
@@ -204,7 +206,7 @@
 
 #define _DA_DEFINE_SORT(type) \
     DEFINE_SWAP(type) \
-    void _quick_sort_##type(type* arr, size_t low, size_t high, _da_comperator_##type cmp) { \
+    void _quick_sort_##type(type* arr, const size_t low, const size_t high, const _da_comperator_##type cmp) { \
         if (high <= low) return; \
         size_t p = high-low/2; \
         size_t h = high; \
@@ -224,7 +226,7 @@
         _quick_sort_##type(arr, low, save_sub(p,1), cmp); \
         _quick_sort_##type(arr, save_add(p,1), high, cmp); \
     } \
-    void sort_##type##Da(type##Da arr, _da_comperator_##type cmp){ \
+    void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp){ \
         if (arr.count == 0) return; \
         _quick_sort_##type(arr.ptr, 0, arr.count-1, cmp); \
     }
@@ -274,18 +276,18 @@
     type##DaRes new_##type##Da(const size_t capacity); \
     type##DaRes insert_##type##Da(const type##Da arr, const type elem); \
     voidRes insert_##type##Sa(type##Sa arr, const type elem); \
-    void for_each_##type##Da(type##Da wptr, _da_##type##_to_void fn); \
-    void for_each_##type##Das(type##Sa wptr, _da_##type##_to_void fn); \
+    void for_each_##type##Da(type##Da wptr, const _da_##type##_to_void fn); \
+    void for_each_##type##Das(type##Sa wptr, const _da_##type##_to_void fn); \
     char all_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn); \
     char all_##type##Sa(const type##Sa ptr, const _da_truthy_##type##_fn fn); \
     char any_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn); \
     char any_##type##Sa(const type##Sa ptr, const _da_truthy_##type##_fn fn); \
     char in_##type##Da(const type##Da ptr, const type* elem, const _da_comperator_##type fn); \
     char in_##type##Sa(const type##Sa ptr, const type* elem, const _da_comperator_##type fn); \
-    void mapip_##type##Da(type##Da wptr, _da_##type##_to_##type fn); \
-    void mapip_##type##Sa(type##Sa wptr, _da_##type##_to_##type fn); \
+    void mapip_##type##Da(type##Da wptr, const _da_##type##_to_##type fn); \
+    void mapip_##type##Sa(type##Sa wptr, const _da_##type##_to_##type fn); \
     type##DaRes unique_##type##Da(const type##Da wptr, const _da_##type##_equality_fn fn); \
-    void sort_##type##Da(type##Da arr, _da_comperator_##type cmp); \
+    void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type); \
     void radix_##type##DA(type##Da arr);

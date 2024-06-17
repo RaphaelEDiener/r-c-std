@@ -113,28 +113,28 @@
  *
  * new_sa(name, type, capacity) -> create stack array
  * 
- * <type>DaRes insert_<type>Da(const wprt, const elem)
  * <type>DaRes new_<type>Da(const size_t capacity)
+ * <type>DaRes insert_<type>Da(const wprt, const elem)
  * voidRes     insert_<type>Sa(wprt, const elem)
- * void        for_each_<type>Da(wptr, fn(<type>*)->void)
- * void        for_each_<type>Sa(wptr, fn(<type>*)->void)
- * char        all_<type>Da(wptr, fn(<type>*)->char)
- * char        all_<type>Sa(wptr, fn(<type>*)->char)
- * char        any_<type>Da(wptr, fn(<type>*)->char)
- * char        any_<type>Sa(wptr, fn(<type>*)->char)
+ * void        for_each_<type>Da(wptr, const fn(<type>*)->void)
+ * void        for_each_<type>Sa(wptr, const fn(<type>*)->void)
+ * char        all_<type>Da(wptr, const fn(<type>*)->char)
+ * char        all_<type>Sa(wptr, const fn(<type>*)->char)
+ * char        any_<type>Da(wptr, const fn(<type>*)->char)
+ * char        any_<type>Sa(wptr, const fn(<type>*)->char)
  * char        in_<type>Da(const wptr, const elem*, const fn(<type>*,<type>*)->char)
- * char        pin_<type>Da(cosnt wptr, const elem*) -> primitive in
- * char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
+ * char        pin_<type>Da(const wptr, const elem*) -> primitive in
+ * char        in_<type>Sa(const wptr, const elem*, const fn(<type>*,<type>*)->char)
  * <type>DaRes unique_<type>Da(const wptr, const equality(<type>*,<type>*)->char)
- * void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place
+ * void        sort_<type>Da(wptr, const comperator(<type>*,<type>*)->Compareable) -> quick sort in place
  * void        radix_<type>Da(wptr) -> implements generic radix for arbitrary data. 
  *                                     sorts in place with 4 buffers
- * void        mapip_<type>Da(wptr, fn(<type>*)-><type>)
- * void        mapip_<type>Sa(wptr, fn(<type>*)-><type>)
- * <to_t>Da    map_<from_t>Da_to_<to_t>Da(from_wptr, fn(<from_t>*)-><to_t>)
+ * void        mapip_<type>Da(wptr, const fn(<type>*)-><type>)
+ * void        mapip_<type>Sa(wptr, const fn(<type>*)-><type>)
+ * <to_t>Da    map_<from_t>Da_to_<to_t>Da(from_wptr, const fn(<from_t>*)-><to_t>)
  * !err!       map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
- * <to_t>      fold_<from_t>Da_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
- * <to_t>      fold_<from_t>Sa_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
+ * <to_t>      fold_<from_t>Da_to_<to_t>(const from_wptr, const fn(<to_t>*, <from_t>*)-><to_t>, const start)
+ * <to_t>      fold_<from_t>Sa_to_<to_t>(const from_wptr, const fn(<to_t>*, <from_t>*)-><to_t>, const start)
  * 
  * ------------------------------
  * Lists (lists.h):

@@ -334,16 +334,29 @@ int test_da_in(void) {
 }
 int test_da_unique(void) {
     int fails = 1;
+    // "removes dulpicates";
+    // "resulting size equals unique elements";
+    // "unique da's return a copy of it";
 
     return fails;
 }
 int test_da_sort(void) {
     int fails = 1;
 
+    // "reverse da becomes sorted";
+    // "sorted da stays sorted";
+    // "sorts shuffeled da";
+    // "sorts 'random' da";
+
     return fails;
 }
 int test_da_radix(void) {
     int fails = 1;
+    
+    // "reverse da becomes sorted";
+    // "sorted da stays sorted";
+    // "sorts shuffeled da";
+    // "sorts 'random' da";
 
     return fails;
 }
