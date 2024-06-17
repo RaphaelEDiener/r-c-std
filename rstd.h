@@ -130,8 +130,8 @@
  *                                     sorts in place with 4 buffers
  * void        mapip_<type>Da(wptr, fn(<type>*)-><type>)
  * void        mapip_<type>Sa(wptr, fn(<type>*)-><type>)
- * <to_t>Da    (from_wptr, fn(<from_t>*)-><to_t>)
- * !err!       map_<from_t>Da_to_<to_t>Da -> !use array utils instead!
+ * <to_t>Da    map_<from_t>Da_to_<to_t>Da(from_wptr, fn(<from_t>*)-><to_t>)
+ * !err!       map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
  * <to_t>      fold_<from_t>Da_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
  * <to_t>      fold_<from_t>Sa_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
  * 

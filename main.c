@@ -252,7 +252,47 @@ int test_da_all(void) {
 
     free(da0.ptr);
     return fails;
-} 
+}
+int test_da_any(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_in(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_unique(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_sort(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_radix(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_mapip(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_map(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_da_fold(void) {
+    int fails = 1;
+
+    return fails;
+}
 
 int test_dynamic_arrays(void) {
     int fails = 0;
@@ -260,6 +300,91 @@ int test_dynamic_arrays(void) {
     fails += test_da_insertion();
     fails += test_da_for_each();
     fails += test_da_all();
+    fails += test_da_any();
+    fails += test_da_in();
+    fails += test_da_unique();
+    fails += test_da_sort();
+    fails += test_da_radix();
+    fails += test_da_mapip();
+    fails += test_da_map();
+    fails += test_da_fold();
+    return fails;
+}
+
+int test_save_sub(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_save_add(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_math(void) {
+    int fails = 0;
+    fails += test_save_sub();
+    fails += test_save_add();
+    return fails;
+}
+
+
+int test_skip_whitespace(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_peak(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_is_lower(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_is_upper(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_string_operations(void) {
+    int fails = 0;
+    fails += test_is_upper();
+    fails += test_is_lower();
+    fails += test_peak();
+    fails += test_skip_whitespace();
+
+    return fails;
+}
+
+int test_list_append(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_list_prepend(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_list_get(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_list_remove(void) {
+    int fails = 1;
+
+    return fails;
+}
+int test_lists(void) {
+    int fails = 0;
+    fails += test_list_remove();
+    fails += test_list_get();
+    fails += test_list_append();
+    fails += test_list_prepend();
     return fails;
 }
 
@@ -271,6 +396,9 @@ int main(void) {
     fails += test_array_macros();
     fails += test_cmp();
     fails += test_dynamic_arrays();
+    fails += test_math();
+    fails += test_string_operations();
+    fails += test_lists();
 
     if (fails > 0) {redln("%d\tFAILED TESTS", fails)}
     else {greenln("\tTESTS PASSES!")};
