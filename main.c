@@ -363,15 +363,25 @@ int test_da_radix(void) {
 int test_da_mapip(void) {
     int fails = 1;
 
+    // "maps all elements correctly"
+    // "empty ampip works"
+
     return fails;
 }
 int test_da_map(void) {
     int fails = 1;
 
+    // "maps all elements correctly"
+    // "doesn't alter original da"
+    // "empty map works"
+
     return fails;
 }
 int test_da_fold(void) {
     int fails = 1;
+
+    // "empty fold works"
+    // "correctly folds"
 
     return fails;
 }
@@ -395,13 +405,15 @@ int test_dynamic_arrays(void) {
 }
 
 int test_save_sub(void) {
-    int fails = 1;
-
+    int fails = 0;
+    fails += test_size_t(save_sub(10, 20), 0, "save sub doesn't go's bellow zero");
+    fails += test_size_t(save_sub(20, 10), 10, "save subbing inside bound works normally");
     return fails;
 }
 int test_save_add(void) {
-    int fails = 1;
-
+    int fails = 0;
+    fails += test_size_t(save_add(SIZE_MAX - 10, 20), SIZE_MAX, "save add doesn't go's above max");
+    fails += test_size_t(save_add(20, 10), 30, "save adding inside bound works");
     return fails;
 }
 int test_math(void) {
@@ -445,26 +457,57 @@ int test_string_operations(void) {
 int test_list_append(void) {
     int fails = 1;
 
+    // "appending ll into empty list succeeds"
+    // "appending ll into full list increases capacity"
+    // "appending ll adds into the back"
+    // "appending ll doesn't alter previous elements"
+
     return fails;
 }
 int test_list_prepend(void) {
     int fails = 1;
+    
+    // "prepending ll into empty list succeeds"
+    // "prepending ll into full list increases capacity"
+    // "prepending ll adds into the back"
+    // "prepending ll doesn't alter previous elements"
 
     return fails;
 }
 int test_list_get(void) {
     int fails = 1;
 
+    // "getting ll element from the front works"
+    // "getting ll element from the back works"
+    // "getting ll element outside of length fails"
+    // "getting ll element from empty list fails"
+
     return fails;
 }
 int test_list_remove(void) {
     int fails = 1;
+
+    // "removing ll from position outside of range fails"
+    // "removing ll from existing forward index works"
+    // "removing ll from existing backward index works"
+    // "removing ll from empty list fails"
+
+    return fails;
+}
+int test_list_delete(void) {
+    int fails = 1;
+
+    // "ll deletes the element"
+    // "ll deletes only the first element"
+    // "del ll fails if element was not found"
+    // "del ll fails on empty list"
 
     return fails;
 }
 int test_lists(void) {
     int fails = 0;
     fails += test_list_remove();
+    fails += test_list_delete();
     fails += test_list_get();
     fails += test_list_append();
     fails += test_list_prepend();

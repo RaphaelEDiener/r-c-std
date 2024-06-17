@@ -153,6 +153,8 @@
  *                                     works with negative numbers for backwards traversal.
  * voidRes   rem_<type>LL(<type>LL list, size_t i) -> removes the element at a given position.
  *                                     works with negative numbers for backwards traversal.
+ * voidRes   del_<type>LL(<type>LL list, <type> elem) -> removes the first element found,
+ *                                     that matches the given element.
  * 
  * ------------------------------
  * Result (result.h):
