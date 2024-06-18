@@ -57,14 +57,14 @@
         type##DaRes ans2 = {SUCCESS, new_arr}; \
         return ans2; \
     } \
-    voidRes insert_##type##Sa(type##Sa arr, const type elem) { \
+    voidRes insert_##type##Sa(type##Sa* arr, const type elem) { \
         voidRes ans = {FAILURE}; \
-        if (arr.count == arr.capacity) { \
+        if (arr->count == arr->capacity) { \
             err_redln("Tried to inser into max size and full array!"); \
             return ans; \
         } \
-        arr.ptr[arr.count] = elem; \
-        arr.count++; \
+        arr->ptr[arr->count] = elem; \
+        arr->count++; \
         voidRes ans2 = {SUCCESS}; \
         return ans2; \
     }
@@ -233,7 +233,7 @@
     }
 
 #define _DA_DEFINE_RADIX(type) \
-    void radix_##type##DA(type##Da arr) { \
+    void radix_##type##Da(type##Da arr) { \
         size_t size = sizeof(type); \
         new_sa(buff0, type, arr.count); \
         new_sa(buff1, type, arr.count); \
@@ -248,17 +248,33 @@
                     byte >>= 2 * shift; \
                     uchar masked = byte & 3; \
                     switch (masked) { \
-                        case 0: insert_##type##Sa(buff0, elem); break; \
-                        case 1: insert_##type##Sa(buff1, elem); break; \
-                        case 2: insert_##type##Sa(buff2, elem); break; \
-                        case 3: insert_##type##Sa(buff3, elem); break; \
+                        case 0: insert_##type##Sa(&buff0, elem); break; \
+                        case 1: insert_##type##Sa(&buff1, elem); break; \
+                        case 2: insert_##type##Sa(&buff2, elem); break; \
+                        case 3: insert_##type##Sa(&buff3, elem); break; \
                     } \
                 } \
                 arr.count = 0; \
-                for (size_t i = 0; i < buff0.count; i++) insert_##type##Da(arr, buff0.ptr[i]); \
-                for (size_t i = 0; i < buff1.count; i++) insert_##type##Da(arr, buff1.ptr[i]); \
-                for (size_t i = 0; i < buff2.count; i++) insert_##type##Da(arr, buff2.ptr[i]); \
-                for (size_t i = 0; i < buff3.count; i++) insert_##type##Da(arr, buff3.ptr[i]); \
+                for (size_t i = 0; i < buff0.count; i++) { \
+                    type##Da res = insert_##type##Da(arr, buff0.ptr[i]).result; \
+                    arr.ptr = res.ptr; \
+                    arr.count = res.count; \
+                } \
+                for (size_t i = 0; i < buff1.count; i++) { \
+                    type##Da res = insert_##type##Da(arr, buff1.ptr[i]).result; \
+                    arr.ptr = res.ptr; \
+                    arr.count = res.count; \
+                } \
+                for (size_t i = 0; i < buff2.count; i++) { \
+                    type##Da res = insert_##type##Da(arr, buff2.ptr[i]).result; \
+                    arr.ptr = res.ptr; \
+                    arr.count = res.count; \
+                } \
+                for (size_t i = 0; i < buff3.count; i++) { \
+                    type##Da res = insert_##type##Da(arr, buff3.ptr[i]).result; \
+                    arr.ptr = res.ptr; \
+                    arr.count = res.count; \
+                } \
                 buff0.count = 0; \
                 buff1.count = 0; \
                 buff2.count = 0; \
@@ -276,7 +292,7 @@
 #define _DA_DEFINE_FN_SIGS(type) \
     type##DaRes new_##type##Da(const size_t capacity); \
     type##DaRes insert_##type##Da(const type##Da arr, const type elem); \
-    voidRes insert_##type##Sa(type##Sa arr, const type elem); \
+    voidRes insert_##type##Sa(type##Sa* arr, const type elem); \
     void for_each_##type##Da(type##Da wptr, const _da_##type##_to_void fn); \
     void for_each_##type##Das(type##Sa wptr, const _da_##type##_to_void fn); \
     char all_##type##Da(const type##Da ptr, const _da_truthy_##type##_fn fn); \
@@ -291,7 +307,7 @@
     void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type); \
-    void radix_##type##DA(type##Da arr);
+    void radix_##type##Da(type##Da arr);
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
     typedef struct { \
