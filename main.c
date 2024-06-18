@@ -79,7 +79,7 @@ int test_array_macros(void) {
     uchar yes = 0;
     ANY(arr1, 10, eq1, yes = 1;);
     fails += test_char(yes, 1, "ANY finds matching value in array");
-    
+
     int arr2[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     ANY(arr2, 10, false, yes = 1;);
@@ -89,7 +89,7 @@ int test_array_macros(void) {
     yes = 0;
     ANYP(arr3, 10, eq1p, yes = 1;);
     fails += test_char(yes, 1, "ANYP finds matching value in array");
-    
+
     int arr4[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     ANYP(arr4, 10, falsep, yes = 1;);
@@ -99,27 +99,27 @@ int test_array_macros(void) {
     yes = 0;
     ALL(arr5, 10, positive, yes = 1;);
     fails += test_char(yes, 1, "ALL finds everything it should");
-    
+
     int arr6[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     ALLP(arr6, 10, positivep, yes = 1;);
     fails += test_char(yes, 1, "ALLP finds everything it should");
-    
+
     int arr7[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     ALL(arr7, 10, negative, yes = 1;);
     fails += test_char(yes, 0, "ALL doesn't find things it should't");
-    
+
     int arr8[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     ALLP(arr8, 10, negativep, yes = 1;);
     fails += test_char(yes, 0, "ALLP doesn't find things it shouldn't");
-    
+
     int arr9[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     IN(arr9, 10, 10, yes = 1;);
     fails += test_char(yes, 0, "IN doesn't find things it shouldn't");
-    
+
     int arr10[10] = {0,1,2,3,4,5,6,7,8,9};
     yes = 0;
     IN(arr10, 10, 9, yes = 1;);
@@ -139,7 +139,7 @@ int test_array_macros(void) {
         test_char(target1[i], (char) i, "MAPP transforms the element in the new array");
         test_int(arr11[i], 256 + (int) i, "MAPP doesn't alter the original array");
     }
-    
+
     int arr13[10] = {0,1,2,3,4,5,6,7,8,9};
     MAP_IP(arr13, 10, add2);
     for (size_t i = 0; i < 10; i++) {
@@ -290,7 +290,7 @@ int test_da_pin(void) {
     }
     fails += test_char(pin_charDa(da0, &seven), 1, "pin finds element in da");
     free(da0.ptr);
-    
+
     charDa da1 = new_charDa(8).result;
     da1.count = 8;
     for (size_t i = 0; i < da1.count; i++) {
@@ -298,7 +298,7 @@ int test_da_pin(void) {
     }
     fails += test_char(pin_charDa(da1, &ten), 0, "pin can't find element that are not in da");
     free(da1.ptr);
-    
+
     charDa da2 = new_charDa(0).result;
     fails += test_char(pin_charDa(da2, &ten), 0, "pin can't find element in the empty da");
     free(da2.ptr);
@@ -317,7 +317,7 @@ int test_da_in(void) {
     }
     fails += test_char(in_charDa(da0, &seven, cmp_char), 1, "in finds element in da");
     free(da0.ptr);
-    
+
     charDa da1 = new_charDa(8).result;
     da1.count = 8;
     for (size_t i = 0; i < da1.count; i++) {
@@ -325,7 +325,7 @@ int test_da_in(void) {
     }
     fails += test_char(in_charDa(da1, &ten, cmp_char), 0, "in can't find element that are not in da");
     free(da1.ptr);
-    
+
     charDa da2 = new_charDa(0).result;
     fails += test_char(in_charDa(da2, &ten, cmp_char), 0, "in can't find element in the empty da");
     free(da2.ptr);
@@ -333,7 +333,7 @@ int test_da_in(void) {
     return fails;
 }
 int test_da_unique(void) {
-    int fails = 1;
+    int fails = 0;
 
     charDa da0 = new_charDa(8).result;
     for (size_t i = 0; i < 7; i++) {
@@ -378,18 +378,123 @@ int test_da_unique(void) {
     return fails;
 }
 int test_da_sort(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "reverse da becomes sorted";
-    // "sorted da stays sorted";
-    // "sorts shuffeled da";
-    // "sorts 'random' da";
+    ucharDa da0 = new_ucharDa(128).result;
+    da0.count = 128;
+    for (uchar i = 0; i < 128; i++) {
+        da0.ptr[i] = 127-i;
+    }
+    sort_ucharDa(da0, cmp_uchar);
+    uchar sorted0 = 0;
+    for (uchar i = 0; i < 128; i++) {
+        sorted0 += da0.ptr[(size_t)i] == i;
+    }
+    fails += test_uchar(sorted0, 128, "reverse da becomes sorted");
+    fails += test_size_t(da0.count, 128, "sorting doesn't impact size");
+    fails += test_size_t(da0.capacity, 128, "sorting doesn't impact capacity");
+    free(da0.ptr);
+
+    ucharDa da1 = new_ucharDa(0).result;
+    sort_ucharDa(da1, cmp_uchar);
+    fails += test_uchar(da1.capacity, 0, "sorting empty da leaves it empty");
+    fails += test_uchar(da1.count, 0, "sorting empty da leaves it empty");
+    free(da1.ptr);
+
+    ucharDa da2 = new_ucharDa(8).result;
+    da2.count = 8;
+    for (uchar i = 0; i < 8; i++) {
+        da2.ptr[i] = 7-i;
+    }
+    sort_ucharDa(da2, cmp_uchar);
+    uchar contains = 0;
+    for (uchar i = 0; i < 8; i++) {
+        contains += pin_ucharDa(da2, &i);
+    }
+    fails += test_uchar(contains, 8, "sorting contains the same elements as before");
+    free(da2.ptr);
+
+    ucharDa da3 = new_ucharDa(128).result;
+    da3.count = 128;
+    for (uchar i = 0; i < 128; i++) {
+        da3.ptr[i] = i;
+    }
+    sort_ucharDa(da3, cmp_uchar);
+    uchar sorted3 = 0;
+    for (uchar i = 0; i < 128; i++) {
+        sorted3 += da3.ptr[(size_t)i] == i;
+    }
+    fails += test_uchar(sorted3, 128, "sorted da stays sorted");
+    free(da3.ptr);
+
+    ucharDa da4 = new_ucharDa(128).result;
+    da4.count = 128;
+    free(da4.ptr); // cursed but easiest way to test
+    uchar arr0[128] = {
+        55, 82, 107, 44, 83, 12, 110, 67, 10, 7, 89, 62, 21, 65, 111, 69, 52, 27, 34, 117, 105,
+        70, 19, 72, 121, 38, 14, 46, 23, 79, 41, 47, 35, 85, 43, 118, 122, 64, 54, 114, 80, 56,
+        9, 81, 104, 66, 87, 32, 127, 1, 84, 68, 22, 8, 73, 99, 125, 45, 48, 4, 20, 94, 6, 58,
+        75, 102, 74, 115, 108, 42, 16, 17, 86, 113, 106, 101, 50, 120, 112, 96, 33, 60, 91, 30,
+        0, 40, 37, 59, 15, 100, 126, 28, 57, 2, 31, 123, 61, 36, 116, 51, 5, 95, 93, 92, 103, 78, 
+        88, 24, 29, 63, 71, 90, 3, 13, 77, 124, 97, 25, 53, 49, 98, 109, 119, 11, 18, 76, 26, 39
+    };
+    da4.ptr = arr0;
+    sort_ucharDa(da4, cmp_uchar);
+    uchar sorted4 = 0;
+    for (uchar i = 0; i < 128; i++) {
+        sorted4 += da4.ptr[(size_t)i] == i;
+    }
+    fails += test_uchar(sorted4, 128, "sorts 'random' da 0");
+    uchar arr1[128] = {
+        28, 64, 38, 106, 62, 4, 75, 108, 111, 45, 117, 50, 109, 85, 82, 90, 101, 66, 31, 33, 10,
+        13, 60, 69, 79, 46, 51, 93, 119, 53, 121, 37, 72, 91, 115, 43, 97, 88, 73, 20, 120, 27, 126,
+        112, 5, 25, 67, 83, 48, 57, 2, 70, 42, 58, 100, 124, 107, 29, 7, 39, 56, 81, 36, 89, 34,
+        11, 123, 59, 127, 21, 9, 114, 49, 122, 18, 65, 125, 87, 76, 103, 54, 99, 74, 41, 61, 23, 
+        84, 16, 6, 32, 8, 95, 96, 19, 52, 77, 26, 110, 3, 71, 40, 113, 105, 30, 104, 68, 102, 14,
+        55, 92, 24, 118, 94, 80, 44, 63, 22, 12, 47, 0, 98, 86, 15, 78, 17, 116, 35, 1 
+    };
+    da4.ptr = arr1;
+    sort_ucharDa(da4, cmp_uchar);
+    sorted4 = 0;
+    for (uchar i = 0; i < 128; i++) {
+        sorted4 += da4.ptr[(size_t)i] == i;
+    }
+    fails += test_uchar(sorted4, 128, "sorts 'random' da 1");
+    uchar arr2[128] = {
+        79, 121, 83, 35, 33, 73, 18, 20, 67, 90, 105, 66, 111, 106, 8, 57, 120, 114, 42, 77, 23,
+        85, 55, 63, 69, 86, 95, 24, 11, 82, 74, 127, 103, 89, 60, 84, 81, 110, 115, 112, 6, 9, 126,
+        119, 43, 97, 80, 15, 102, 71, 64, 123, 39, 98, 44, 61, 49, 92, 72, 29, 5, 51, 117, 125, 3,
+        25, 32, 54, 107, 16, 45, 53, 4, 70, 36, 10, 88, 26, 75, 91, 17, 13, 56, 14, 108, 47, 19, 122,
+        48, 65, 113, 22, 34, 94, 58, 76, 78, 87, 12, 96, 41, 2, 62, 68, 116, 100, 46, 0, 30, 59,
+        31, 52, 7, 118, 38, 124, 28, 104, 37, 50, 109, 101, 21, 27, 99, 1, 40, 93 
+    };
+    da4.ptr = arr2;
+    sort_ucharDa(da4, cmp_uchar);
+    sorted4 = 0;
+    for (uchar i = 0; i < 128; i++) {
+        sorted4 += da4.ptr[(size_t)i] == i;
+    }
+    fails += test_uchar(sorted4, 128, "sorts 'random' da 2");
+
+    ucharDa da5 = new_ucharDa(16).result;
+    da5.count = 16;
+    free(da5.ptr); // cursed but easiest way to test
+    uchar arr5[16] = {
+        15, 0, 14, 1, 13, 2, 12, 3, 11, 4, 10, 5, 9, 6, 8, 7
+    };
+    da5.ptr = arr5;
+    sort_ucharDa(da5, cmp_uchar);
+    uchar sorted5 = 0;
+    for (uchar i = 0; i < 16; i++) {
+        sorted5 += da5.ptr[(size_t)i] == i;
+    }
+    fails += test_uchar(sorted5, 16, "sorts shuffeled da");
 
     return fails;
 }
 int test_da_radix(void) {
     int fails = 1;
-    
+
     // "reverse da becomes sorted";
     // "sorted da stays sorted";
     // "sorts shuffeled da";
@@ -503,7 +608,7 @@ int test_list_append(void) {
 }
 int test_list_prepend(void) {
     int fails = 1;
-    
+
     // "prepending ll into empty list succeeds"
     // "prepending ll into full list increases capacity"
     // "prepending ll adds into the back"
