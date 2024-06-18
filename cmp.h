@@ -14,6 +14,9 @@ typedef enum {
 #define DEFINE_CMP(type) \
     Compareable cmp_##type(const type* x, const type* y);
 
+#define DEFINE_EQ(type) \
+    char eq_##type(const type* x, const type* y);
+
 #define _IMPL_PRIM_CMP(type) \
     Compareable cmp_##type(const type* x, const type* y) { \
         if (*x > *y) return GREATER; \
@@ -21,6 +24,12 @@ typedef enum {
         else return EQUAL; \
     }
 
+#define _IMPL_PRIM_EQ(type) \
+    char eq_##type(const type* x, const type* y) { \
+        return (*x == *y);  \
+    }
+
 DEFAULT_TYPES(DEFINE_CMP);
+DEFAULT_TYPES(DEFINE_EQ);
 
 #endif

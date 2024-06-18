@@ -180,7 +180,7 @@
     }
 
 #define _DA_DEFINE_UNIQUE(t) \
-    t##DaRes unique_##t##Da(const t##Da wptr, const _da_##t##_equality_fn fn) { \
+    t##DaRes unique_##t##Da(const t##Da wptr, const _da_##t##_equality_fn eq) { \
         const t##DaRes failure = {FAILURE, wptr}; \
         size_t count = 0; \
         t* vals = malloc(wptr.count * sizeof(t)); \
@@ -188,13 +188,14 @@
         for (size_t i = 0; i < wptr.count; i++) { \
             char in = 0; \
             for (size_t v = 0; v < count; v++) { \
-                if (fn(vals+v, wptr.ptr+i)) { \
+                if (eq(vals+v, wptr.ptr+i)) { \
                     in = 1;  \
                     break; \
                 } \
             } \
             if (!in) { \
                 vals[count] = wptr.ptr[i]; \
+                count++; \
             } \
         } \
         t* new_ptr = realloc(vals, count * sizeof(t)); \

@@ -334,9 +334,46 @@ int test_da_in(void) {
 }
 int test_da_unique(void) {
     int fails = 1;
-    // "removes dulpicates";
-    // "resulting size equals unique elements";
-    // "unique da's return a copy of it";
+
+    charDa da0 = new_charDa(8).result;
+    for (size_t i = 0; i < 7; i++) {
+        da0.ptr[i] = i;
+    }
+    da0.ptr[7] = 1;
+    da0.count = 8;
+    charDa un0 = unique_charDa(da0, eq_char).result;
+    fails += test_size_t(un0.count, 7, "unique removes dulpicates");
+    for (char i = 0; i < 7; i++) {
+        fails += test_char(un0.ptr[(size_t)i], i, "unique preseves unique elements");
+    }
+    free(da0.ptr);
+
+    charDa da1 = new_charDa(8).result;
+    for (size_t i = 0; i < 7; i++) {
+        da1.ptr[i] = i;
+    }
+    da1.ptr[7] = 1;
+    da1.count = 8;
+    charDa un1 = unique_charDa(da1, eq_char).result;
+    fails += test_size_t(
+        un1.capacity, 
+        7, 
+        "when making unique, resulting capacity equals unique elements"
+    );
+    free(da1.ptr);
+
+    charDa da2 = new_charDa(8).result;
+    da2.ptr[2] = 1;
+    da2.count = 4;
+    charDa un2 = unique_charDa(da2, eq_char).result;
+    fails += test_char((da2.ptr != un2.ptr), 1, "unique da's return a copy of it");
+    free(da2.ptr);
+
+    charDa da3 = new_charDa(0).result;
+    charDa un3 = unique_charDa(da3, eq_char).result;
+    fails += test_size_t(un3.capacity, 0, "unique da elements of the empty da is also empty");
+    fails += test_size_t(un3.count, 0, "unique da elements of the empty da is also empty");
+    free(da3.ptr);
 
     return fails;
 }
