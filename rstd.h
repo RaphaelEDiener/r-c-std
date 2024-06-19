@@ -49,21 +49,10 @@
  *
  * Compareable = {LESS | EQUAL | GREATER}
  *
- * cmp_char       (const char*, const char*)
- * cmp_schar      (const schar, const schar)
- * cmp_uchar      (const uchar*, const uchar*)
- * cmp_short      (const short*, const short*)
- * cmp_ushort     (const ushort*, const ushort*)
- * cmp_int        (const int*, const int*)
- * cmp_uint       (const uint*, const uint*)
- * cmp_long       (const long*, const long*)
- * cmp_ulong      (const ulong*, const ulong*)
- * cmp_long_long  (const long_long*, const long_long*)
- * cmp_ulong_long (const ulong_long*, const ulong_long*)
- * cmp_float      (const float*, const float*)
- * cmp_double     (const double*, const double*)
- * cmp_long_double(const long_double*, const long_double*)
- * cmp_size_t     (const size_t*, const size_t*)
+ * Compareable cmp_<type> (const <type>*, const <type>*)
+ * char        eq_<type>  (const <type>*, const <type>*)
+ *
+ * => for all default types
  *
  * ------------------------------
  * Printing (color_print.h):
@@ -116,28 +105,25 @@
  * <type>DaRes new_<type>Da(const size_t capacity)
  * <type>DaRes insert_<type>Da(const wprt, const elem)
  * voidRes     insert_<type>Sa(wprt, const elem)
- * void        for_each_<type>Da(wptr, fn(<type>*)->void)
- * void        for_each_<type>Sa(wptr, fn(<type>*)->void)
- * char        all_<type>Da(wptr, fn(<type>*)->char)
- * char        all_<type>Sa(wptr, fn(<type>*)->char)
- * char        any_<type>Da(wptr, fn(<type>*)->char)
- * char        any_<type>Sa(wptr, fn(<type>*)->char)
- * char        in_<type>Da(wptr, elem*, fn(<type>*,<type>*)->char)
- * char        pin_<type>Da(const wptr, const elem*) 
- *             -> !only for primitive data types!
- * char        pin_<type>Sa(const wptr, const elem*) 
- *             -> !only for primitive data types!
- * char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
- * <type>DaRes unique_<type>Da(const wptr, const equality(<type>*,<type>*)->char)
- * void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place
+ * void        for_each_<type>Da(wptr, const fn(<type>*)->void)
+ * void        for_each_<type>Sa(wptr, const fn(<type>*)->void)
+ * char        all_<type>Da(wptr, const fn(const <type>*)->char)
+ * char        all_<type>Sa(wptr, const fn(const <type>*)->char)
+ * char        any_<type>Da(wptr, const fn(const <type>*)->char)
+ * char        any_<type>Sa(wptr, const fn(const <type>*)->char)
+ * char        in_<type>Da(const wptr, const elem*, const eq(const <type>*, const <type>*)->char)
+ * char        in_<type>Sa(const wptr, const elem*, const eq(const <type>*, const <type>*)->char)
+ * char        pin_<type>Da(const wptr, const elem*) -> primitive in
+ * <type>DaRes unique_<type>Da(const wptr, const eq(const <type>*, const <type>*)->char)
+ * void        sort_<type>Da(wptr, const cmp(const <type>*, const <type>*)->Compareable) -> quick sort in place
  * void        radix_<type>Da(wptr) -> implements generic radix for arbitrary data. 
  *                                     sorts in place with 4 buffers
- * void        mapip_<type>Da(wptr, fn(<type>*)-><type>)
- * void        mapip_<type>Sa(wptr, fn(<type>*)-><type>)
- * <to_t>Da    (from_wptr, fn(<from_t>*)-><to_t>)
- * !err!       map_<from_t>Da_to_<to_t>Da -> !use array utils instead!
- * <to_t>      fold_<from_t>Da_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
- * <to_t>      fold_<from_t>Sa_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
+ * void        mapip_<type>Da(wptr, const fn(const <type>*)-><type>)
+ * void        mapip_<type>Sa(wptr, const fn(const <type>*)-><type>)
+ * <to_t>Da    map_<from_t>Da_to_<to_t>Da(from_wptr, const fn(const <from_t>*)-><to_t>)
+ * !err!       map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
+ * <to_t>      fold_<from_t>Da_to_<to_t>(const from_wptr, const fn(const <to_t>*, const <from_t>*)-><to_t>, const start)
+ * <to_t>      fold_<from_t>Sa_to_<to_t>(const from_wptr, const fn(const <to_t>*, const <from_t>*)-><to_t>, const start)
  * 
  * ------------------------------
  * Lists (lists.h):
@@ -156,6 +142,8 @@
  *                                     works with negative numbers for backwards traversal.
  * voidRes   rem_<type>LL(<type>LL list, size_t i) -> removes the element at a given position.
  *                                     works with negative numbers for backwards traversal.
+ * voidRes   del_<type>LL(<type>LL list, <type> elem) -> removes the first element found,
+ *                                     that matches the given element.
  * 
  * ------------------------------
  * Result (result.h):

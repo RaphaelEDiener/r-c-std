@@ -1,4 +1,5 @@
 #include "double_ended_da.h"
+#include "array_utils.h"
 
 intDdaRes new_intDda(const size_t capacity) { 
     intDda ans = {
@@ -34,7 +35,7 @@ intDdaRes append_intDda(const intdDa arr, const type elem) {
             return ans; 
         } 
         memcpy(new_ptr+arr.front_i, prev+arr.front_i, count_intDda(arr) * sizeof(type)); 
-        free(prev); 
+        FREE(prev); 
         new_arr.ptr = new_ptr; 
         new_arr.capacity = new_cap; 
     } 
@@ -57,7 +58,7 @@ intDdaRes prepend_intDda(const intdDa arr, const type elem) {
             return ans; 
         } 
         memcpy(new_ptr+increase, prev, count_intDda(arr) * sizeof(type)); 
-        free(prev); 
+        FREE(prev); 
         new_arr.front_i = increase;
         new_arr.ptr = new_ptr; 
         new_arr.capacity = new_cap; 
