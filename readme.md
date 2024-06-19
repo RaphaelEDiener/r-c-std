@@ -1,7 +1,7 @@
 # R's Standard Library
 
 *the following documentation is styled for github.
-if you are working from a text editor, consider looking at `rstd.h` instead.*
+if you <span style="color: #ffff00">are</span> working from a text editor, consider looking at `rstd.h` instead.*
 
 ```
 ##############################
@@ -12,7 +12,7 @@ If no clarification is given on the specific type,
 it is implemented for all types available in c
 using the aliases/shorthands found in default_types.h
 
-if a <span style="color: #ffff00">parameter</span> is not declared 'const', it is getting modified.
+if a parameter is not declared 'const', it is getting modified.
 
 Linking: rstd.c 
 
