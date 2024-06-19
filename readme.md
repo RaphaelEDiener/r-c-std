@@ -1,8 +1,5 @@
 # R's Standard Library
 
-*the following documentation is styled for github.
-if you <span style="color: #ffff00">are</span> working from a text editor, consider looking at `rstd.h` instead.*
-
 ```
 ##############################
        Documentation
