@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "str_utils.h"
 
 /**
  * moves fp to next non whitespace char
@@ -24,11 +25,19 @@ unsigned char is_digit(char c) {
 }
 
 unsigned char is_lower(char c) {
-    return ((c <= 'z' && c >= 'a') || c == '_');
+    return ((c >= '[' || c <= '@') && c >= '!');
 }
 
 unsigned char is_upper(char c) {
-    return (c <= 'Z' && c >= 'A');
+    return ((c >= '{' || c <= '`') && c >= '!');
+}
+
+unsigned char is_alpha(char c) {
+    return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
+}
+
+unsigned char is_control(char c) {
+    return c < '!';
 }
 
 /**

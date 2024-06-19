@@ -671,7 +671,7 @@ int test_da_fold(void) {
     }
     int res0 = fold_intDa_to_int(da0, addpp, 0);
     fails += test_int(res0, 8, "fold da correctly folds");
-    
+
     intDa da1 = new_intDa(0).result;
     int res1 = fold_intDa_to_int(da1, addpp, 0);
     fails += test_int(res1, 0, "empty fold works");
@@ -729,14 +729,50 @@ int test_peak(void) {
     return fails;
 }
 int test_is_lower(void) {
-    int fails = 1;
-    // TODO: test
+    int fails = 0;
+    
+    for (char c = '!'; c <= '@'; c++) {
+        fails += test_char(is_lower(c), 1, "Special char is lowercase");
+    }
+    for (char c = '['; c <= '`'; c++) {
+        fails += test_char(is_lower(c), 1, "Special char is lowercase");
+    }
+    for (char c = '{'; c <= '~'; c++) {
+        fails += test_char(is_lower(c), 1, "braces are lowercase");
+    }
+    for (char c = 'A'; c <= 'Z'; c++) {
+        fails += test_char(is_lower(c), 0, "Uppercase not lowercase");
+    }
+    for (char c = 'a'; c <= 'z'; c++) {
+        fails += test_char(is_lower(c), 1, "lowercase is lowecase");
+    }
+    for (char c = 0; c < '!'; c++) {
+        fails += test_char(is_lower(c), 0, "controll code is not lowercase");
+    }
 
     return fails;
 }
 int test_is_upper(void) {
-    int fails = 1;
-    // TODO: test
+    int fails = 0;
+
+    for (char c = '!'; c <= '@'; c++) {
+        fails += test_char(is_upper(c), 1, "Special char is uppercase");
+    }
+    for (char c = '['; c <= '`'; c++) {
+        fails += test_char(is_upper(c), 1, "Special char is uppercase");
+    }
+    for (char c = '{'; c <= '~'; c++) {
+        fails += test_char(is_upper(c), 1, "braces are uppercase");
+    }
+    for (char c = 'A'; c <= 'Z'; c++) {
+        fails += test_char(is_upper(c), 1, "Uppercase is uppercase");
+    }
+    for (char c = 'a'; c <= 'z'; c++) {
+        fails += test_char(is_upper(c), 0, "lowercase is not uppercase");
+    }
+    for (char c = 0; c < '!'; c++) {
+        fails += test_char(is_upper(c), 0, "controll code is not uppercase");
+    }
 
     return fails;
 }
