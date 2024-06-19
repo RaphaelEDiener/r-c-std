@@ -673,21 +673,24 @@ int test_math(void) {
 
 int test_skip_whitespace(void) {
     int fails = 1;
-
+    // TODO: test
     return fails;
 }
 int test_peak(void) {
     int fails = 1;
+    // TODO: test
 
     return fails;
 }
 int test_is_lower(void) {
     int fails = 1;
+    // TODO: test
 
     return fails;
 }
 int test_is_upper(void) {
     int fails = 1;
+    // TODO: test
 
     return fails;
 }
