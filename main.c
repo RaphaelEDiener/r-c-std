@@ -590,6 +590,7 @@ int test_da_radix(void) {
         sorted4 += da4.ptr[(size_t)i] == i;
     }
     fails += test_uchar(sorted4, 128, "radix sorts 'random' da 2");
+    // free(da4.ptr); <- local array = no free!
 
     ucharDa da5 = new_ucharDa(16).result;
     da5.count = 16;
@@ -604,31 +605,76 @@ int test_da_radix(void) {
         sorted5 += da5.ptr[(size_t)i] == i;
     }
     fails += test_uchar(sorted5, 16, "radix sorts shuffeled da");
+    // free(da5.ptr); <- local array = no free!
 
     return fails;
 }
 int test_da_mapip(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "maps all elements correctly"
-    // "empty ampip works"
+    intDa da0 = new_intDa(8).result;
+    da0.count = 8;
+    int* op = da0.ptr;
+    mapip_intDa(da0, add2p);
+    uchar is_twos = 0;
+    for (size_t i = 0; i < 8; i++) { 
+        is_twos += da0.ptr[i] == 2;
+    }
+    fails += test_uchar(is_twos, 8, "mapip's all elements correctly");
+    fails += test_char(op == da0.ptr, 1, "in place mapping is in place");
+    free(da0.ptr);
+
+    intDa da1 = new_intDa(0).result;
+    mapip_intDa(da1, add2p);
+    fails += test_size_t(da1.count, 0, "empty mapip works");
 
     return fails;
 }
 int test_da_map(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "maps all elements correctly"
-    // "doesn't alter original da"
-    // "empty map works"
+    intDa da0 = new_intDa(8).result;
+    for (size_t i = 0; i < 8; i++) {
+        da0 = insert_intDa(da0, (int) i).result;
+    }
+    intDa res0 = map_intDa_to_intDa(da0, add2p).result;
+    for (size_t i = 0; i < 8; i++) { 
+        fails += test_int(res0.ptr[i], 2 + (int) i, "Da maps all elements correctly within same type");
+    }
+    fails += test_char(res0.ptr[1] == da0.ptr[1], 0 , "map da doesn't alter original da");
+    free(da0.ptr);
+    free(res0.ptr);
+
+    intDa da1 = new_intDa(8).result;
+    for (size_t i = 0; i < 8; i++) {
+        da1 = insert_intDa(da1, (int) i).result;
+    }
+    ucharDa res1 = map_intDa_to_ucharDa(da0, intp_to_uchar).result;
+    for (size_t i = 0; i < 8; i++) {
+        fails += test_uchar(res1.ptr[i], (uchar) i, "maps all elements correctly within different types");
+    }
+    free(da1.ptr);
+    free(res1.ptr);
+
+    intDa da2 = new_intDa(0).result;
+    intDa res2 = map_intDa_to_intDa(da2, add2p).result;
+    fails += test_size_t(res2.count, 0, "empty map da works");
 
     return fails;
 }
 int test_da_fold(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "empty fold works"
-    // "correctly folds"
+    intDa da0 = new_intDa(8).result;
+    for (size_t i = 0; i < 8; i++) {
+        da0 = insert_intDa(da0, 1).result;
+    }
+    int res0 = fold_intDa_to_int(da0, addpp, 0);
+    fails += test_int(res0, 8, "fold da correctly folds");
+    
+    intDa da1 = new_intDa(0).result;
+    int res1 = fold_intDa_to_int(da1, addpp, 0);
+    fails += test_int(res1, 0, "empty fold works");
 
     return fails;
 }

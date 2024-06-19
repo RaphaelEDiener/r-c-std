@@ -311,8 +311,8 @@
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
     typedef struct { \
-        const size_t capacity; \
-        const size_t size; \
+        size_t capacity; \
+        size_t size; \
         size_t count; \
         type* ptr; \
     } type##Da; \

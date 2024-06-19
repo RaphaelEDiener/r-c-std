@@ -50,7 +50,7 @@
  * Compareable = {LESS | EQUAL | GREATER}
  *
  * Compareable cmp_<type> (const <type>*, const <type>*)
- * <type>      eq_<type>  (const <type>*, const <type>*)
+ * char        eq_<type>  (const <type>*, const <type>*)
  *
  * => for all default types
  *
