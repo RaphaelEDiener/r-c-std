@@ -140,8 +140,9 @@ Result (result.h):
 
 ResultType = {SUCCESS, FAILURE}
 <t>Res -> {type: SUCCESS | FAILURE; result: t}
-DEFINE_RESULT(type) -> creates new Result wrapper
 voidRes -> {type: SUCCESS | FAILURE}
+
+DEFINE_RESULT(type) -> creates new Result wrapper
 
 ------------------------------
 String Operations (str_utils.h):
@@ -152,6 +153,8 @@ String Operations (str_utils.h):
  uchar is_digit(char c);
  uchar is_lower(char c);
  uchar is_upper(char c);
+ uchar is_alpha  (char c);
+ uchar is_control(char c);
 
 ------------------------------
 Math (rmath.h):
@@ -212,14 +215,11 @@ test_size_t     (size_t, size_t, message)
 # TODO
 
 *  Test...
-    *  dynamic arrays
     *  lists
     *  string ops
-    *  math
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
 *  TODO: Split
-*  TODO: default and correct quicksort for all default data types
 *  TODO: Curry
     *  Needs to be done at runtime with a struct maintaining stuff.
     *  But how do I pass that stuff into the function pointer?
@@ -232,6 +232,7 @@ test_size_t     (size_t, size_t, message)
 *  TODO: universalize del for DA, SA, LL
 *  TODO: impl filter for DA, SA, LL
 *  TODO: reduce
+*  TODO: copy for all structs
  
 ```
 // join("hi", "my", "name", "is")
