@@ -22,7 +22,7 @@
  *
  * if a parameter is not declared 'const', it is getting modified.
  *
- * Linking: cmp.c rmath.c str_utils.c dynamic_array.c testing.c 
+ * Linking: rstd.c 
  *
  * ------------------------------
  * Working with Arrays (array_utils.h):

@@ -1,5 +1,8 @@
 # R's Standard Library
 
+*the following documentation is styled for github.
+if you are working from a text editor, consider looking at `rstd.h` instead.*
+
 ```
 ##############################
        Documentation
@@ -9,28 +12,28 @@ If no clarification is given on the specific type,
 it is implemented for all types available in c
 using the aliases/shorthands found in default_types.h
 
-Linking: cmp.c rmath.c str_utils.c dynamic_array.c testing.c 
+if a <span style="color: #ffff00">parameter</span> is not declared 'const', it is getting modified.
 
-In that order
+Linking: rstd.c 
 
 ------------------------------
 Working with Arrays (array_utils.h):
 ------------------------------
 
-FOR_EACH(arr, len, fn) : fn(t)->void
-FOR_EACHP(arr, len, fn) : fn(t*)->void
-ANY(arr, len, fn, expr) : fn(t)->char
-ANYP(arr, len, fn, expr) : fn(t*)->char
-ALL(arr, len, fn, exp) : fn(t)->char
-ALLP(arr, len, fn, expr) : fn(t*)->char
-IN(arr, len, elem, expr) 
-MAP(from, len, fn, target) : fn(t1)->t2
-MAPP(from, len, fn, target) : fn(t1*)->t2
-MAP_IP(arr, len, fn) : fn(t)->t
-MAP_IPP(arr, len, fn) : fn(t*)->t
-FOLD(arr, len, fn, type, name, start) : fn(start, type)->start
-FOLDP(arr, len, fn, type, name, start) : fn(start, type*)->start
-FOLDPP(arr, len, fn, type, name, start) : fn(start*, type*)->start
+FOR_EACH (arr, len, fn)                    : fn(t)->void
+FOR_EACHP(arr, len, fn)                    : fn(t*)->void
+ANY      (arr, len, fn, expr)              : fn(t)->char
+ANYP     (arr, len, fn, expr)              : fn(t*)->char
+ALL      (arr, len, fn, exp)               : fn(t)->char
+ALLP     (arr, len, fn, expr)              : fn(t*)->char
+IN       (arr, len, elem, expr) 
+MAP      (from, len, fn, target)           : fn(t1)->t2
+MAPP     (from, len, fn, target)           : fn(t1*)->t2
+MAP_IP   (arr, len, fn)                    : fn(t)->t
+MAP_IPP  (arr, len, fn)                    : fn(t*)->t
+FOLD     (arr, len, fn, type, name, start) : fn(start, type)->start
+FOLDP    (arr, len, fn, type, name, start) : fn(start, type*)->start
+FOLDPP   (arr, len, fn, type, name, start) : fn(start*, type*)->start
 
 ------------------------------
 Comparing (cmp.h):
@@ -38,20 +41,10 @@ Comparing (cmp.h):
 
 Compareable = {LESS | EQUAL | GREATER}
 
-cmp_char(char*, char*)
-cmp_schar(schar, schar)
-cmp_uchar(uchar*, uchar*)
-cmp_short(short*, short*)
-cmp_ushort(ushort*, ushort*)
-cmp_int(int*, int*)
-cmp_uint(uint*, uint*)
-cmp_long(long*, long*)
-cmp_ulong(ulong*, ulong*)
-cmp_long_long(long_long*, long_long*)
-cmp_ulong_long(ulong_long*, ulong_long*)
-cmp_float(float*, float*)
-cmp_double(double*, double*)
-cmp_long_double(long_double*, long_double*)
+Compareable cmp_<type> (const <type>*, const <type>*)
+char        eq_<type>  (const <type>*, const <type>*)
+
+=> for all default types
 
 ------------------------------
 Printing (color_print.h):
@@ -99,29 +92,30 @@ IMPL_DA(type)     -> Implements the functionality that was defined previously
 
 DA / SA = {capacity; size; count; ptr}
 
-new_da(name, type, capacity) -> create heap array
 new_sa(name, type, capacity) -> create stack array
 
-<type>DaRes insert_<type>Da(wprt, elem)
-voidRes     insert_<type>Sa(wprt, elem)
-void        for_each_<type>Da(wptr, fn(<type>*)->void)
-void        for_each_<type>Sa(wptr, fn(<type>*)->void)
-char        all_<type>Da(wptr, fn(<type>*)->char)
-char        all_<type>Sa(wptr, fn(<type>*)->char)
-char        any_<type>Da(wptr, fn(<type>*)->char)
-char        any_<type>Sa(wptr, fn(<type>*)->char)
-char        in_<type>Da(wptr, elem*, fn(<type>*,<type>*)->char)
-char        in_<type>Sa(wptr, elem*, fn(<type>*,<type>*)->char)
-<type>Da    unique_<type>Da(wptr, equality(<type>*,<type>*)->char)
-void        sort_<type>Da(wptr, comperator(<type>*,<type>*)->Compareable) -> quick sort in place
+<type>DaRes new_<type>Da(const size_t capacity)
+<type>DaRes insert_<type>Da(const wprt, const elem)
+voidRes     insert_<type>Sa(wprt, const elem)
+void        for_each_<type>Da(wptr, const fn(<type>*)->void)
+void        for_each_<type>Sa(wptr, const fn(<type>*)->void)
+char        all_<type>Da(wptr, const fn(const <type>*)->char)
+char        all_<type>Sa(wptr, const fn(const <type>*)->char)
+char        any_<type>Da(wptr, const fn(const <type>*)->char)
+char        any_<type>Sa(wptr, const fn(const <type>*)->char)
+char        in_<type>Da(const wptr, const elem*, const eq(const <type>*, const <type>*)->char)
+char        in_<type>Sa(const wptr, const elem*, const eq(const <type>*, const <type>*)->char)
+char        pin_<type>Da(const wptr, const elem*) -> primitive in
+<type>DaRes unique_<type>Da(const wptr, const eq(const <type>*, const <type>*)->char)
+void        sort_<type>Da(wptr, const cmp(const <type>*, const <type>*)->Compareable) -> quick sort in place
 void        radix_<type>Da(wptr) -> implements generic radix for arbitrary data. 
                                     sorts in place with 4 buffers
-void        mapip_<type>Da(wptr, fn(<type>*)-><type>)
-void        mapip_<type>Sa(wptr, fn(<type>*)-><type>)
-<to_t>Da    (from_wptr, fn(<from_t>*)-><to_t>)
-!err!       map_<from_t>Da_to_<to_t>Da -> !use array utils instead!
-<to_t>      fold_<from_t>Da_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
-<to_t>      fold_<from_t>Sa_to_<to_t>(from_wptr, fn(<to_t>*, <from_t>*)-><to_t>, start)
+void        mapip_<type>Da(wptr, const fn(const <type>*)-><type>)
+void        mapip_<type>Sa(wptr, const fn(const <type>*)-><type>)
+<to_t>Da    map_<from_t>Da_to_<to_t>Da(from_wptr, const fn(const <from_t>*)-><to_t>)
+!err!       map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
+<to_t>      fold_<from_t>Da_to_<to_t>(const from_wptr, const fn(const <to_t>*, const <from_t>*)-><to_t>, const start)
+<to_t>      fold_<from_t>Sa_to_<to_t>(const from_wptr, const fn(const <to_t>*, const <from_t>*)-><to_t>, const start)
 
 ------------------------------
 Lists (lists.h):
@@ -140,6 +134,8 @@ size_tRes prepend_<type>LL(<type>LL list, t elem) -> appends in front
                                     works with negative numbers for backwards traversal.
 voidRes   rem_<type>LL(<type>LL list, size_t i) -> removes the element at a given position.
                                     works with negative numbers for backwards traversal.
+voidRes   del_<type>LL(<type>LL list, <type> elem) -> removes the first element found,
+                                    that matches the given element.
 
 ------------------------------
 Result (result.h):
@@ -213,6 +209,7 @@ test_double     (double, double, message)
 test_long_double(long_double, long_double, message)
 test_Compareable(Compareable, Compareable, message)
 test_size_t     (size_t, size_t, message)
+
 ```
 
 # TODO
