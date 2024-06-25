@@ -716,18 +716,6 @@ int test_math(void) {
     return fails;
 }
 
-
-int test_skip_whitespace(void) {
-    int fails = 1;
-    // TODO: test
-    return fails;
-}
-int test_peak(void) {
-    int fails = 1;
-    // TODO: test
-
-    return fails;
-}
 int test_is_lower(void) {
     int fails = 0;
     
@@ -780,19 +768,28 @@ int test_string_operations(void) {
     int fails = 0;
     fails += test_is_upper();
     fails += test_is_lower();
-    fails += test_peak();
-    fails += test_skip_whitespace();
 
     return fails;
 }
 
 int test_list_append(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "appending ll into empty list succeeds"
-    // "appending ll into full list increases capacity"
-    // "appending ll adds into the back"
-    // "appending ll doesn't alter previous elements"
+    charLl ll0 = new_charLl();
+    fails += test_size_t(ll0.count, 0, "new ll are empty");
+    charLlRes res0 = append_charLl(ll0, 42);
+    fails += test_char(res0.type == SUCCESS, 1, "appending ll into empty succeeds");
+    fails += test_size_t(res0.result.count, 1, "appending ll increases count");
+    charRes get0 = get_charLl(res0.result, 0);
+    fails += test_char(get0.type == SUCCESS, 1, "ll getting just inserted element works");
+    fails += test_char(get0.result, 42, "appending into ll insertes element");
+
+    charLl ll1 = res0.result;
+    charLlRes res1 = append_charLl(ll1, 24);
+    fails += test_char(res1.type == SUCCESS, 1, "appending ll into filled succeeds");
+    fails += test_size_t(res1.result.count, 2, "appending ll increases count");
+    fails += test_char(get_charLl(res1.result, 0).result, 42, "appending into ll doesn't alter other lements");
+    fails += test_char(get_charLl(res1.result, 1).result, 24, "appending into ll insertes element in the back");
 
     return fails;
 }

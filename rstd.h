@@ -8,6 +8,7 @@
 #include "result.h"
 #include "testing.h"
 #include "str_utils.h"
+#include "lists.h"
 
 #endif
 
