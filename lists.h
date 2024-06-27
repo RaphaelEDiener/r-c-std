@@ -3,6 +3,8 @@
 #include "default_types.h"
 #include "result.h"
 #include "rmath.h"
+#include "rmath.h"
+#include "color_print.h"
 
 #ifndef DEFINE_DLlist
 #define DEFINE_DLlist(type) \
@@ -19,7 +21,7 @@
     DEFINE_RESULT(type##Ll); \
     type##Ll new_##type##Ll(void); \
     type##LlRes append_##type##Ll(type##Ll list, const type elem); \
-    size_tRes prepend_##type##Ll(type##Ll list, const type elem); \
+    type##LlRes prepend_##type##Ll(type##Ll list, const type elem); \
     type##Res get_##type##Ll(type##Ll list, long long i); \
     voidRes del_##type##Ll(type##Ll list, type elem); \
     voidRes rem_##type##Ll(type##Ll list, size_t i);
@@ -46,15 +48,16 @@ DEFAULT_TYPES(DEFINE_DLlist);
             list.first->prev = e; \
             list.last = e; \
         } \
+        e->val = elem; \
         list.count++; \
         ans.result = list; \
         ans.type = SUCCESS; \
         return ans; \
     } \
-    size_tRes prepend_##t##Ll(t##Ll list, const t elem) { \
-        size_tRes ans = {FAILURE, 0}; \
-        if (list.count == SIZE_MAX) return ans; \
+    t##LlRes prepend_##t##Ll(t##Ll list, const t elem) { \
+        t##LlRes ans = {FAILURE, list}; \
         t##LlNode* e = (t##LlNode*) malloc(sizeof(t##LlNode)); \
+        if (e == NULL) return ans; \
         if (list.count == 0) { \
             list.last = e; \
             list.first = e; \
@@ -66,14 +69,16 @@ DEFAULT_TYPES(DEFINE_DLlist);
             list.first->prev = e; \
             list.first = e; \
         } \
+        e->val = elem; \
         list.count++; \
+        ans.result = list; \
         ans.type = SUCCESS; \
         return ans; \
     } \
     t##Res get_##t##Ll(t##Ll list, long long i) { \
         t##Res ans = {FAILURE, 0}; \
         long long max_i = (long long) save_sub(list.count, 1); \
-        if (i > max_i || -i > max_i-1 || list.count == 0) return ans; \
+        if (i > max_i || i+1 < -max_i || list.count == 0) return ans; \
         t##LlNode* res = list.first; \
         while (i != 0) { \
             if (i > 0) { \
@@ -85,6 +90,7 @@ DEFAULT_TYPES(DEFINE_DLlist);
             } \
         } \
         ans.result = res->val; \
+        ans.type = SUCCESS; \
         return ans; \
     } \
     voidRes del_##t##Ll(t##Ll list, t elem) { \

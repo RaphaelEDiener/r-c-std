@@ -794,22 +794,64 @@ int test_list_append(void) {
     return fails;
 }
 int test_list_prepend(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "prepending ll into empty list succeeds"
-    // "prepending ll into full list increases capacity"
-    // "prepending ll adds into the back"
-    // "prepending ll doesn't alter previous elements"
+    charLl ll0 = new_charLl();
+    charLlRes res0 = prepend_charLl(ll0, 42);
+    fails += test_char(res0.type == SUCCESS, 1, "prepending ll into empty succeeds");
+    fails += test_size_t(res0.result.count, 1, "prepending ll increases count");
+    charRes get0 = get_charLl(res0.result, 0);
+    fails += test_char(get0.type == SUCCESS, 1, "ll getting just inserted element works");
+    fails += test_char(get0.result, 42, "prepending into ll insertes element");
+
+    charLl ll1 = res0.result;
+    charLlRes res1 = prepend_charLl(ll1, 24);
+    fails += test_char(res1.type == SUCCESS, 1, "prepending ll into filled succeeds");
+    fails += test_size_t(res1.result.count, 2, "prepending ll increases count");
+    fails += test_char(get_charLl(res1.result, -1).result, 42, "prepending into ll doesn't alter other lements");
+    fails += test_char(get_charLl(res1.result, 0).result, 24, "prepending into ll insertes element in the front");
 
     return fails;
 }
 int test_list_get(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "getting ll element from the front works"
-    // "getting ll element from the back works"
-    // "getting ll element outside of length fails"
-    // "getting ll element from empty list fails"
+    charLl ll0 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll0 = append_charLl(ll0, (char) i).result;
+    }
+
+    charRes get0 = get_charLl(ll0, 0);
+    fails += test_char(get0.type == SUCCESS, 1, "get 0 in 10 length ll works");
+    fails += test_char(get0.result, 0, "get 0 in 10 length returns correct value");
+    charRes get1 = get_charLl(ll0, 1);
+    fails += test_char(get1.type == SUCCESS, 1, "get 1 in 10 length ll works");
+    fails += test_char(get1.result, 1, "get 1 in 10 length returns correct value");
+    charRes get2 = get_charLl(ll0, 9);
+    fails += test_char(get2.type == SUCCESS, 1, "get 9 in 10 length ll works");
+    fails += test_char(get2.result, 9, "get 9 in 10 length returns correct value");
+    
+    charRes get9 = get_charLl(ll0, -1);
+    fails += test_char(get9.type == SUCCESS, 1, "get -1 in 10 length ll works");
+    fails += test_char(get9.result, 9, "get -1 in 10 length returns correct value");
+    charRes get8 = get_charLl(ll0, -2);
+    fails += test_char(get8.type == SUCCESS, 1, "get -2 in 10 length ll works");
+    fails += test_char(get8.result, 8, "get -2 in 10 length returns correct value");
+    charRes get7 = get_charLl(ll0, -10);
+    fails += test_char(get7.type == SUCCESS, 1, "get -10 in 10 length ll works");
+    fails += test_char(get7.result, 0, "get -10 in 10 length returns correct value");
+    
+    charRes get10 = get_charLl(ll0, 10);
+    fails += test_char(get10.type == FAILURE, 1, "get 10 in 10 length ll fails");
+    charRes get_11 = get_charLl(ll0, -11);
+    fails += test_char(get_11.type == FAILURE, 1, "get -11 in 10 length ll fails");
+    
+    charLl ll1 = new_charLl();
+    charRes get_not0 = get_charLl(ll1, 0);
+    fails += test_char(get_not0.type == FAILURE, 1, "get 0 in 0 length ll fails");
+    charRes get_not1 = get_charLl(ll1, -1);
+    fails += test_char(get_not1.type == FAILURE, 1, "get -1 in 0 length ll fails");
+
 
     return fails;
 }
