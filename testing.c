@@ -22,7 +22,7 @@
 
 char test_costume(const void* real, const void* expected, const truthy equals, const stringify to_str, const char* message){
     if (equals(real, expected)) {
-        printf("\x1B[32m%s\x1B[0m\n", message);
+        // printf("\x1B[32m%s\x1B[0m\n", message);
         return 0;
     } else {
         printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", to_str(expected), to_str(real), message);
@@ -33,7 +33,6 @@ char test_costume(const void* real, const void* expected, const truthy equals, c
 #define DEFINE_TEST_INT(type) \
     char test_##type(const type real, const type expected, const char* message){ \
         if (real == expected) { \
-            printf("\x1B[32m%s\x1B[0m\n", message); \
             return 0; \
         } else { \
             printf("\x1B[31mexpected: %d\nreceived: %d\n%s\x1B[0m\n", expected, real, message); \
@@ -47,7 +46,6 @@ DEFINE_TEST_INT(uint)
 #define DEFINE_TEST_LONG(type) \
     char test_##type(const type real, const type expected, const char* message){ \
         if (real == expected) { \
-            printf("\x1B[32m%s\x1B[0m\n", message); \
             return 0; \
         } else { \
             printf("\x1B[31mexpected: %ld\nreceived: %ld\n%s\x1B[0m\n", expected, real, message); \
@@ -61,7 +59,6 @@ DEFINE_TEST_LONG(ulong)
 #define DEFINE_TEST_LONG_LONG(type) \
     char test_##type(const type real, const type expected, const char* message){ \
         if (real == expected) { \
-            printf("\x1B[32m%s\x1B[0m\n", message); \
             return 0; \
         } else { \
             printf("\x1B[31mexpected: %lld\nreceived: %lld\n%s\x1B[0m\n", expected, real, message); \
@@ -75,7 +72,6 @@ DEFINE_TEST_LONG_LONG(ulong_long)
 #define DEFINE_TEST_SHORT(type) \
     char test_##type(const type real, const type expected, const char* message){ \
         if (real == expected) { \
-            printf("\x1B[32m%s\x1B[0m\n", message); \
             return 0; \
         } else { \
             printf("\x1B[31mexpected: %hd\nreceived: %hd\n%s\x1B[0m\n", expected, real, message); \
@@ -89,7 +85,6 @@ DEFINE_TEST_SHORT(ushort)
 #define DEFINE_TEST_CHAR(type) \
     char test_##type(const type real, const type expected, const char* message){ \
         if (real == expected) { \
-            printf("\x1B[32m%s\x1B[0m\n", message); \
             return 0; \
         } else { \
             printf("\x1B[31mexpected: %d\nreceived: %d\n%s\x1B[0m\n", expected, real, message); \
@@ -104,7 +99,6 @@ DEFINE_TEST_CHAR(schar);
 char test_float(const float real, const float expected, const char* message){ 
     float diff = real - expected; 
     if (-0.0001 <= diff && diff <= 0.0001) { 
-        printf("\x1B[32m%s\x1B[0m\n", message); 
         return 0; 
     } else { 
         printf("\x1B[31mexpected: %f\nreceived: %f\n%s\x1B[0m\n", expected, real, message); 
@@ -115,7 +109,6 @@ char test_float(const float real, const float expected, const char* message){
 char test_double(const double real, const double expected, const char* message){ 
     double diff = real - expected; 
     if (-0.00000001 <= diff && diff <= 0.00000001) { 
-        printf("\x1B[32m%s\x1B[0m\n", message); 
         return 0; 
     } else { 
         printf("\x1B[31mexpected: %f\nreceived: %f\n%s\x1B[0m\n", expected, real, message); 
@@ -126,7 +119,6 @@ char test_double(const double real, const double expected, const char* message){
 char test_long_double(const long_double real, const long_double expected, const char* message){ 
     long_double diff = real - expected; 
     if (-0.00000001 <= diff && diff <= 0.00000001) { 
-        printf("\x1B[32m%s\x1B[0m\n", message); 
         return 0; 
     } else { 
         printf("\x1B[31mexpected: %Lf\nreceived: %Lf\n%s\x1B[0m\n", expected, real, message); 
@@ -136,7 +128,6 @@ char test_long_double(const long_double real, const long_double expected, const 
 
 char test_Compareable(const Compareable real, const Compareable expected, const char* message) {
     if (real == expected) {
-        printf("\x1B[32m%s\x1B[0m\n", message); 
         return 0; 
     } else {
         char* exp_s = expected == LESS ? "LESS" : (expected == EQUAL) ? "EQUAL" : "GREATER";
@@ -148,7 +139,6 @@ char test_Compareable(const Compareable real, const Compareable expected, const 
 
 char test_size_t(const size_t real, const size_t expected, const char* message) {
     if (real == expected) {
-        printf("\x1B[32m%s\x1B[0m\n", message); 
         return 0; 
     } else {
         printf("\x1B[31mexpected: %zu\nreceived: %zu\n%s\x1B[0m\n", expected, real, message); 
@@ -158,7 +148,6 @@ char test_size_t(const size_t real, const size_t expected, const char* message) 
 
 char test_ResultType(const ResultType real, const ResultType expected, const char* message) {
     if (real == expected) {
-        printf("\x1B[32m%s\x1B[0m\n", message); 
         return 0; 
     } else {
         char* exp_s = expected == SUCCESS ? "SUCCESS" : "FAILURE";
