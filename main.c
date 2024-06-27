@@ -783,6 +783,7 @@ int test_list_append(void) {
     charRes get0 = get_charLl(res0.result, 0);
     fails += test_ResultType(get0.type, SUCCESS, "ll getting just inserted element works");
     fails += test_char(get0.result, 42, "appending into ll insertes element");
+    // free_charLl(ll0);
 
     charLl ll1 = res0.result;
     charLlRes res1 = append_charLl(ll1, 24);
@@ -790,6 +791,7 @@ int test_list_append(void) {
     fails += test_size_t(res1.result.count, 2, "appending ll increases count");
     fails += test_char(get_charLl(res1.result, 0).result, 42, "appending into ll doesn't alter other lements");
     fails += test_char(get_charLl(res1.result, 1).result, 24, "appending into ll insertes element in the back");
+    // free_charLl(ll1);
 
     return fails;
 }
@@ -803,6 +805,7 @@ int test_list_prepend(void) {
     charRes get0 = get_charLl(res0.result, 0);
     fails += test_ResultType(get0.type, SUCCESS, "ll getting just inserted element works");
     fails += test_char(get0.result, 42, "prepending into ll insertes element");
+    // free_charLl(ll0);
 
     charLl ll1 = res0.result;
     charLlRes res1 = prepend_charLl(ll1, 24);
@@ -810,6 +813,7 @@ int test_list_prepend(void) {
     fails += test_size_t(res1.result.count, 2, "prepending ll increases count");
     fails += test_char(get_charLl(res1.result, -1).result, 42, "prepending into ll doesn't alter other lements");
     fails += test_char(get_charLl(res1.result, 0).result, 24, "prepending into ll insertes element in the front");
+    // free_charLl(ll1);
 
     return fails;
 }
@@ -846,27 +850,57 @@ int test_list_get(void) {
     charRes get_11 = get_charLl(ll0, -11);
     fails += test_ResultType(get_11.type, FAILURE, "get -11 in 10 length ll fails");
     
+    // free_charLl(ll0);
+
     charLl ll1 = new_charLl();
     charRes get_not0 = get_charLl(ll1, 0);
     fails += test_ResultType(get_not0.type, FAILURE, "get 0 in 0 length ll fails");
     charRes get_not1 = get_charLl(ll1, -1);
     fails += test_ResultType(get_not1.type, FAILURE, "get -1 in 0 length ll fails");
 
-
     return fails;
 }
 int test_list_remove(void) {
-    int fails = 1;
+    int fails = 0;
 
-    // "removing ll from position outside of range fails"
-    // "removing ll from existing forward index works"
-    // "removing ll from existing backward index works"
+    charLl ll0 = new_charLl();
+
+    fails += test_size_t(ll0.count, 0, "empy ll are empty");
+
     // "removing ll from empty list fails"
+    charLlRes res0 = rem_charLl(ll0, 0);
+    fails += test_ResultType(res0.type, FAILURE, "removing ll from empty list fails");
+    charLlRes res1 = rem_charLl(ll0, -1);
+    fails += test_ResultType(res1.type, FAILURE, "removing ll from empty list fails");
+    // "removing ll from position outside of range fails"
+    charLl ll1 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll1 = append_charLl(ll0, (char) i).result;
+    }
+    charLlRes res2 = rem_charLl(ll1, 99);
+    fails += test_ResultType(res2.type, FAILURE, "removing ll from position outside of range fails");
+    charLlRes res3 = rem_charLl(ll1, -99);
+    fails += test_ResultType(res3.type, FAILURE, "removing ll from position outside of range fails");
+    // free_charLl(ll1);
+
+    charLl ll2 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll2 = append_charLl(ll2, (char) i).result;
+    }
+    fails += test_size_t(ll2.count, 10, "correct amount fo items in ll");
+    charLlRes res4 = rem_charLl(ll2, 5);
+    fails += test_ResultType(res4.type, SUCCESS, "removing ll from existing forward index works");
+    fails += test_size_t(res4.result.count, 9, "removing ll from existing forward index works");
+
+    // "removing ll first element"
+    // "removing ll last element"
+    // "removing ll from existing backward index works"
+    // "emptying list through remove works"
 
     return fails;
 }
 int test_list_delete(void) {
-    int fails = 1;
+    int fails = 0;
 
     // "ll deletes the element"
     // "ll deletes only the first element"

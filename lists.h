@@ -24,7 +24,8 @@
     type##LlRes prepend_##type##Ll(type##Ll list, const type elem); \
     type##Res get_##type##Ll(type##Ll list, long long i); \
     voidRes del_##type##Ll(type##Ll list, type elem); \
-    voidRes rem_##type##Ll(type##Ll list, size_t i);
+    void free_##type##Ll(type##Ll list); \
+    type##LlRes rem_##type##Ll(type##Ll list, long long i);
 
 DEFAULT_TYPES(DEFINE_DLlist);
 
@@ -108,18 +109,40 @@ DEFAULT_TYPES(DEFINE_DLlist);
         } \
         return ans; \
     } \
-    voidRes rem_##t##Ll(t##Ll list, size_t i) { \
-        voidRes ans = {FAILURE}; \
-        size_t target = save_sub(list.count,1); \
-        if (i > target || list.count == 0) return ans; \
-        t##LlNode* cur = list.first; \
-        for (size_t i = 0; i < list.count; i++) { \
-            cur = cur->next; \
+    t##LlRes rem_##t##Ll(t##Ll list, long long i) { \
+        t##LlRes ans = {FAILURE, list}; \
+        long long max_i = (long long) save_sub(list.count, 1); \
+        if (i > max_i || i+1 < -max_i || list.count == 0) return ans; \
+        if (list.count == 1) { \
+            t##LlNode* res = list.first; \
+            list.first = NULL; \
+            list.last = NULL; \
+            free(res); \
+        } else { \
+            t##LlNode* cur = list.first; \
+            while (i != 0) { \
+                if (i > 0) { \
+                    cur = cur->next; \
+                    i--; \
+                } else { \
+                    cur = cur->prev; \
+                    i++; \
+                } \
+            } \
+            cur->prev->next = cur->next; \
+            cur->next->prev = cur->prev; \
+            if (list.first == cur) {list.first = cur->next;}; \
+            if (list.last == cur) {list.last = cur->prev;}; \
+            free(cur); \
         } \
         ans.type = SUCCESS; \
-        cur->prev->next = cur->next; \
-        cur->next->prev = cur->prev; \
+        ans.result.count--; \
         return ans; \
+    } \
+    void free_##t##Ll(t##Ll list) { \
+        while (list.count > 0) { \
+            list = rem_##t##Ll(list, 0).result; \
+        } \
     }
 
 #endif
