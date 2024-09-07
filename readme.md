@@ -219,6 +219,7 @@ test_size_t     (size_t, size_t, message)
     *  string ops
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
+*  TODO: Drain da into other da
 *  TODO: Split
 *  TODO: Curry
     *  Needs to be done at runtime with a struct maintaining stuff.
