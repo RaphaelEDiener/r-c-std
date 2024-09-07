@@ -220,6 +220,7 @@ test_size_t     (size_t, size_t, message)
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
 *  TODO: Drain da into other da
+*  TODO: clear da util func
 *  TODO: Split
 *  TODO: Curry
     *  Needs to be done at runtime with a struct maintaining stuff.
