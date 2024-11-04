@@ -117,19 +117,44 @@
  * char        all_<type>Sa(wptr, const fn(const <type>*)->char)
  * char        any_<type>Da(wptr, const fn(const <type>*)->char)
  * char        any_<type>Sa(wptr, const fn(const <type>*)->char)
- * char        in_<type>Da(const wptr, const elem*, const eq(const <type>*, const <type>*)->char)
- * char        in_<type>Sa(const wptr, const elem*, const eq(const <type>*, const <type>*)->char)
+ * char        in_<type>Da(
+ *                 const wptr, 
+ *                 const elem*, 
+ *                 const eq(const <type>*, const <type>*)->char
+ *             )
+ * char        in_<type>Sa(
+ *                 const wptr, 
+ *                 const elem*, 
+ *                 const eq(const <type>*, const <type>*)->char
+ *             )
  * char        pin_<type>Da(const wptr, const elem*) -> primitive in
- * <type>DaRes unique_<type>Da(const wptr, const eq(const <type>*, const <type>*)->char)
- * void        sort_<type>Da(wptr, const cmp(const <type>*, const <type>*)->Compareable) -> quick sort in place
+ * <type>DaRes unique_<type>Da(
+ *                 const wptr, 
+ *                 const eq(const <type>*, const <type>*)->char
+ *             )
+ * void        sort_<type>Da(
+ *                 wptr, 
+ *                 const cmp(const <type>*, const <type>*)->Compareable
+ *             ) -> quick sort in place
  * void        radix_<type>Da(wptr) -> implements generic radix for arbitrary data. 
  *                                     sorts in place with 4 buffers
  * void        mapip_<type>Da(wptr, const fn(const <type>*)-><type>)
  * void        mapip_<type>Sa(wptr, const fn(const <type>*)-><type>)
- * <to_t>Da    map_<from_t>Da_to_<to_t>Da(from_wptr, const fn(const <from_t>*)-><to_t>)
+ * <to_t>Da    map_<from_t>Da_to_<to_t>Da(
+ *                 from_wptr, 
+ *                 const fn(const <from_t>*)-><to_t>
+ *             )
  * !err!       map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
- * <to_t>      fold_<from_t>Da_to_<to_t>(const from_wptr, const fn(const <to_t>*, const <from_t>*)-><to_t>, const start)
- * <to_t>      fold_<from_t>Sa_to_<to_t>(const from_wptr, const fn(const <to_t>*, const <from_t>*)-><to_t>, const start)
+ * <to_t>      fold_<from_t>Da_to_<to_t>(
+ *                 const from_wptr, 
+ *                 const fn(const <to_t>*, const <from_t>*)-><to_t>, 
+ *                 const start
+ *             )
+ * <to_t>      fold_<from_t>Sa_to_<to_t>(
+ *                 const from_wptr, 
+ *                 const fn(const <to_t>*, const <from_t>*)-><to_t>, 
+ *                 const start
+ *             )
  * 
  * ------------------------------
  * Lists (lists.h):
