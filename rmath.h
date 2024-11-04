@@ -62,15 +62,77 @@ size_t save_add(size_t x, size_t y);
         return ans; \
     };
 
+#define _VEC_DEF_SUB(type) \
+    type##Vec2 sub_##type##Vec2(const type##Vec2* a, const type##Vec2* b); \
+    type##Vec3 sub_##type##Vec3(const type##Vec3* a, const type##Vec3* b); \
+    type##Vec4 sub_##type##Vec4(const type##Vec4* a, const type##Vec4* b);
+
+#define _VEC_IMPL_SUB(type) \
+    type##Vec2 sub_##type##Vec2(const type##Vec2* a, const type##Vec2* b) { \
+        type##Vec2 ans = {a->x - b->x, a->y - b->y}; \
+        return ans; \
+    } \
+    type##Vec3 sub_##type##Vec3(const type##Vec3* a, const type##Vec3* b) { \
+        type##Vec3 ans = {a->x - b->x, a->y - b->y, a->z - b->z}; \
+        return ans; \
+    } \
+    type##Vec4 sub_##type##Vec4(const type##Vec4* a, const type##Vec4* b) { \
+        type##Vec4 ans = {a->x - b->x, a->y - b->y, a->z - b->z, a->w - b->w}; \
+        return ans; \
+    };
+
+#define _VEC_DEF_MUL(type) \
+    type##Vec2 mul_##type##Vec2(const type##Vec2* a, const type##Vec2* b); \
+    type##Vec3 mul_##type##Vec3(const type##Vec3* a, const type##Vec3* b); \
+    type##Vec4 mul_##type##Vec4(const type##Vec4* a, const type##Vec4* b);
+
+#define _VEC_IMPL_MUL(type) \
+    type##Vec2 mul_##type##Vec2(const type##Vec2* a, const type##Vec2* b) { \
+        type##Vec2 ans = {a->x * b->x, a->y * b->y}; \
+        return ans; \
+    } \
+    type##Vec3 mul_##type##Vec3(const type##Vec3* a, const type##Vec3* b) { \
+        type##Vec3 ans = {a->x * b->x, a->y * b->y, a->z * b->z}; \
+        return ans; \
+    } \
+    type##Vec4 mul_##type##Vec4(const type##Vec4* a, const type##Vec4* b) { \
+        type##Vec4 ans = {a->x * b->x, a->y * b->y, a->z * b->z, a->w * b->w}; \
+        return ans; \
+    };
+
+#define _VEC_DEF_DIV(type) \
+    type##Vec2 div_##type##Vec2(const type##Vec2* a, const type##Vec2* b); \
+    type##Vec3 div_##type##Vec3(const type##Vec3* a, const type##Vec3* b); \
+    type##Vec4 div_##type##Vec4(const type##Vec4* a, const type##Vec4* b);
+
+#define _VEC_IMPL_DIV(type) \
+    type##Vec2 div_##type##Vec2(const type##Vec2* a, const type##Vec2* b) { \
+        type##Vec2 ans = {a->x * b->x, a->y * b->y}; \
+        return ans; \
+    } \
+    type##Vec3 div_##type##Vec3(const type##Vec3* a, const type##Vec3* b) { \
+        type##Vec3 ans = {a->x * b->x, a->y * b->y, a->z * b->z}; \
+        return ans; \
+    } \
+    type##Vec4 div_##type##Vec4(const type##Vec4* a, const type##Vec4* b) { \
+        type##Vec4 ans = {a->x * b->x, a->y * b->y, a->z * b->z, a->w * b->w}; \
+        return ans; \
+    };
 
 #define DEFINE_VEC(type) \
     _VEC_DEF_VEC2(type) \
     _VEC_DEF_VEC3(type) \
     _VEC_DEF_VEC4(type) \
-    _VEC_DEF_ADD(type)
+    _VEC_DEF_ADD(type) \
+    _VEC_DEF_MUL(type) \
+    _VEC_DEF_DIV(type) \
+    _VEC_DEF_SUB(type)
 
 #define IMPL_VEC(type) \
-    _VEC_IMPL_ADD(type)
+    _VEC_IMPL_ADD(type) \
+    _VEC_IMPL_MUL(type) \
+    _VEC_IMPL_DIV(type) \
+    _VEC_IMPL_SUB(type)
 
 DEFAULT_TYPES(DEFINE_VEC);
 

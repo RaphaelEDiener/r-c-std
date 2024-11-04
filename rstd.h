@@ -220,6 +220,9 @@
  * <type>Mat { type* ptr; size_t x; size_t y; size_t z; size_t w; }
  *
  * add_<type>Vec<n>(const <type>Vec<n>* a, const <type>Vec<n>* b)
+ * sub_<type>Vec<n>(const <type>Vec<n>* a, const <type>Vec<n>* b)
+ * mul_<type>Vec<n>(const <type>Vec<n>* a, const <type>Vec<n>* b)
+ * div_<type>Vec<n>(const <type>Vec<n>* a, const <type>Vec<n>* b)
  *   
  * ------------------------------
  * Testing (testing.h):
