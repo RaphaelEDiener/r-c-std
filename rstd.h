@@ -202,13 +202,13 @@
  * -- Costume --
  *
  * IMPL_SWAP(type)  -> implements a swap in place function for a given datadype
- *                  -> swap_<type>(<type>*, <type>*)
  * DEFINE_VEC2(type) 
  * DEFINE_VEC3(type) 
  * DEFINE_VEC4(type) 
  *
  * -- Predefined -- 
  *
+ * void   swap_<type>(<type>*, <type>*)
  * size_t save_sub(size_t x, size_t y)  -> caps at 0
  * size_t save_add(size_t x, size_t y) -> caps out at MAX_SIZE
  *
@@ -218,6 +218,8 @@
  * <type>Mat { type* ptr; size_t x; size_t y; }
  * <type>Mat { type* ptr; size_t x; size_t y; size_t z; }
  * <type>Mat { type* ptr; size_t x; size_t y; size_t z; size_t w; }
+ *
+ * add_<type>Vec<n>(const <type>Vec<n>* a, const <type>Vec<n>* b)
  *   
  * ------------------------------
  * Testing (testing.h):

@@ -17,6 +17,8 @@ size_t save_add(size_t x, size_t y) {
     return max < x ? SIZE_MAX : max;
 }
 
+DEFAULT_TYPES(IMPL_VEC);
+
 // wip
 // char brk(double curr, double target){
 //     return (curr >= target);
