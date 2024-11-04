@@ -29,19 +29,19 @@
  * Working with Arrays (array_utils.h):
  * ------------------------------
  * 
- * FOR_EACH (arr, len, fn)                    : fn(t)->void
+ * FOR_EACH (arr, len, fn)                    : fn(t )->void
  * FOR_EACHP(arr, len, fn)                    : fn(t*)->void
- * ANY      (arr, len, fn, expr)              : fn(t)->char
+ * ANY      (arr, len, fn, expr)              : fn(t )->char
  * ANYP     (arr, len, fn, expr)              : fn(t*)->char
- * ALL      (arr, len, fn, exp)               : fn(t)->char
+ * ALL      (arr, len, fn, exp)               : fn(t )->char
  * ALLP     (arr, len, fn, expr)              : fn(t*)->char
  * IN       (arr, len, elem, expr) 
- * MAP      (from, len, fn, target)           : fn(t1)->t2
+ * MAP      (from, len, fn, target)           : fn(t1 )->t2
  * MAPP     (from, len, fn, target)           : fn(t1*)->t2
- * MAP_IP   (arr, len, fn)                    : fn(t)->t
+ * MAP_IP   (arr, len, fn)                    : fn(t )->t
  * MAP_IPP  (arr, len, fn)                    : fn(t*)->t
- * FOLD     (arr, len, fn, type, name, start) : fn(start, type)->start
- * FOLDP    (arr, len, fn, type, name, start) : fn(start, type*)->start
+ * FOLD     (arr, len, fn, type, name, start) : fn(start , type )->start
+ * FOLDP    (arr, len, fn, type, name, start) : fn(start , type*)->start
  * FOLDPP   (arr, len, fn, type, name, start) : fn(start*, type*)->start
  *
  * ------------------------------
@@ -52,6 +52,8 @@
  *
  * Compareable cmp_<type> (const <type>*, const <type>*)
  * char        eq_<type>  (const <type>*, const <type>*)
+ * char        lt_<type>  (const <type>*, const <type>*)
+ * char        gt_<type>  (const <type>*, const <type>*)
  *
  * => for all default types
  *
@@ -71,20 +73,20 @@
  * Type Definitions (default_types.h):
  * ------------------------------
  *
- * typedef signed char schar;
- * typedef unsigned char uchar;
- * typedef unsigned short ushort;
- * typedef unsigned int uint;
- * typedef unsigned long ulong;
- * typedef long long long_long;
- * typedef unsigned long long ulong_long;
- * typedef long double long_double;
+ * typedef signed   char      schar;
+ * typedef unsigned char      uchar;
+ * typedef unsigned short     ushort;
+ * typedef unsigned int       uint;
+ * typedef unsigned long      ulong;
+ * typedef long     long      llong;
+ * typedef unsigned long long ullong;
+ * typedef long     double    ldouble;
  *
- * DEFAULT_TYPES(macro) -> macro(t1) \ macro(t2) \ ...
- * DEFAULT_TTYPES(macro, type) -> macro(type, t1) \ ...
- * DEFAULT_FOR_TTYPES(macro) -> DEFAULT_TTYPES(macro, t1) \ ...
- * DEFAULT_TTTYPES(macro, type, epyt) -> macro(epyt, type, t1) \ ...
- * DEFAULT_FOR_TTTYPES(macro) -> DEFAULT_TTTYPES(macro, t1, t1) \ ...
+ * DEFAULT_TYPES      (macro)             -> macro(t1) \ macro(t2) \ ...
+ * DEFAULT_TTYPES     (macro, type)       -> macro(type, t1) \ ...
+ * DEFAULT_FOR_TTYPES (macro)             -> DEFAULT_TTYPES(macro, t1) \ ...
+ * DEFAULT_TTTYPES    (macro, type, epyt) -> macro(epyt, type, t1) \ ...
+ * DEFAULT_FOR_TTTYPES(macro)             -> DEFAULT_TTTYPES(macro, t1, t1) \...
  *
  * ------------------------------
  * Dynamic Arrays (dynamic_array.h):
@@ -94,8 +96,10 @@
  *
  * DEFINE_MAPDA(type)  -> Defines a map from type to type
  * DEFINE_FOLDDA(type) -> Defines a fold from type to type
- * DEFINE_DA(type)     -> Defines a dynamic- and stack array with most of the associated functions
- * IMPL_DA(type)     -> Implements the functionality that was defined previously
+ * DEFINE_DA(type)     -> Defines a dynamic- and stack array 
+ *                        with most of the associated functions
+ * IMPL_DA(type)       -> Implements the functionality 
+ *                        that was defined previously
  *
  * -- Predefined -- 
  *
@@ -211,12 +215,12 @@
  * test_uint       (uint, uint, message)
  * test_long       (long, long, message)
  * test_ulong      (ulong, ulong, message)
- * test_long_long  (long_long, long_long, message)
- * test_ulong_long (ulong_long, ulong_long, message)
+ * test_llong      (llong, llong, message)
+ * test_ullong     (ullong, ullong, message)
  * ! float operations round to 4 and double to 8 level precission !
  * test_float      (float, float, message)
  * test_double     (double, double, message)
- * test_long_double(long_double, long_double, message)
+ * test_ldouble    (ldouble, ldouble, message)
  * test_Compareable(Compareable, Compareable, message)
  * test_size_t     (size_t, size_t, message)
  * 

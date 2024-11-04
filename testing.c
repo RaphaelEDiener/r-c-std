@@ -3,22 +3,7 @@
 */
 #include <stdio.h>
 #include "testing.h"
-#include "rstd.h"
 
-// char
-// signed_char
-// uchar
-// short
-// ushort
-// int
-// uint
-// long
-// ulong
-// long_long
-// ulong_long
-// float
-// double
-// long_double
 
 char test_costume(const void* real, const void* expected, const truthy equals, const stringify to_str, const char* message){
     if (equals(real, expected)) {
@@ -66,8 +51,8 @@ DEFINE_TEST_LONG(ulong)
         } \
     }
 
-DEFINE_TEST_LONG_LONG(long_long)
-DEFINE_TEST_LONG_LONG(ulong_long)
+DEFINE_TEST_LONG_LONG(llong)
+DEFINE_TEST_LONG_LONG(ullong)
 
 #define DEFINE_TEST_SHORT(type) \
     char test_##type(const type real, const type expected, const char* message){ \
@@ -116,8 +101,8 @@ char test_double(const double real, const double expected, const char* message){
     } 
 }
 
-char test_long_double(const long_double real, const long_double expected, const char* message){ 
-    long_double diff = real - expected; 
+char test_long_double(const ldouble real, const ldouble expected, const char* message){ 
+    ldouble diff = real - expected; 
     if (-0.00000001 <= diff && diff <= 0.00000001) { 
         return 0; 
     } else { 
@@ -130,8 +115,8 @@ char test_Compareable(const Compareable real, const Compareable expected, const 
     if (real == expected) {
         return 0; 
     } else {
-        char* exp_s = expected == LESS ? "LESS" : (expected == EQUAL) ? "EQUAL" : "GREATER";
-        char* real_s = real == LESS ? "LESS" : (real == EQUAL) ? "EQUAL" : "GREATER";
+        char* exp_s  = expected == LESS ? "LESS" : (expected == EQUAL) ? "EQUAL" : "GREATER";
+        char* real_s = real     == LESS ? "LESS" : (real     == EQUAL) ? "EQUAL" : "GREATER";
         printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", exp_s, real_s, message); 
         return 1; 
     }
@@ -150,8 +135,8 @@ char test_ResultType(const ResultType real, const ResultType expected, const cha
     if (real == expected) {
         return 0; 
     } else {
-        char* exp_s = expected == SUCCESS ? "SUCCESS" : "FAILURE";
-        char* real_s = real == SUCCESS ? "SUCCESS" : "FAILURE";
+        char* exp_s  = expected == SUCCESS ? "SUCCESS" : "FAILURE";
+        char* real_s = real     == SUCCESS ? "SUCCESS" : "FAILURE";
         printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", exp_s, real_s, message); 
         return 1; 
     }

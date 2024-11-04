@@ -16,6 +16,10 @@ typedef enum {
 
 #define DEFINE_EQ(type) \
     char eq_##type(const type* x, const type* y);
+#define DEFINE_GT(type) \
+    char gt_##type(const type* x, const type* y);
+#define DEFINE_LT(type) \
+    char lt_##type(const type* x, const type* y);
 
 #define _IMPL_PRIM_CMP(type) \
     Compareable cmp_##type(const type* x, const type* y) { \
@@ -28,8 +32,18 @@ typedef enum {
     char eq_##type(const type* x, const type* y) { \
         return (*x == *y);  \
     }
+#define _IMPL_PRIM_LT(type) \
+    char gt_##type(const type* x, const type* y) { \
+        return (*x  < *y);  \
+    }
+#define _IMPL_PRIM_GT(type) \
+    char lt_##type(const type* x, const type* y) { \
+        return (*x  > *y);  \
+    }
 
 DEFAULT_TYPES(DEFINE_CMP);
 DEFAULT_TYPES(DEFINE_EQ);
+DEFAULT_TYPES(DEFINE_GT);
+DEFAULT_TYPES(DEFINE_LT);
 
 #endif

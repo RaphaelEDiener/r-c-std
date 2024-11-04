@@ -11,7 +11,7 @@
 #ifndef TEST_SIGNATURES
 #define TEST_SIGNATURES
 
-typedef char (*truthy)(const void*, const void*);
+typedef char  (*truthy)   (const void*, const void*);
 typedef char* (*stringify)(const void*);
 
 char test_costume(
