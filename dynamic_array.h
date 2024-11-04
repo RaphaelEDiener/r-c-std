@@ -283,6 +283,15 @@
         } \
     }
 
+#define _DA_DEFINE_REVERSE(type) \
+    void reverse_##type##Da(type##Da arr);
+
+#define _DA_IMPL_REVERSE(type) \
+    void reverse_##type##Da(type##Da arr) { \
+        for (size_t i = 0; i < (arr.count / 2); i++) { \
+            swap_##type(arr.ptr + i, arr.ptr + arr.capacity - i); \
+        } \
+    }
 
 // Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, if he needs that (basically solved in the array utils)
@@ -307,6 +316,7 @@
     void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp); \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD_SIG, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP_SIG, type); \
+    _DA_DEFINE_REVERSE(type) \
     void radix_##type##Da(type##Da arr);
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
@@ -345,6 +355,7 @@
     _DA_DEFINE_SORT(type) \
     DEFAULT_TTYPES(_DA_DEFINE_FOLD, type); \
     DEFAULT_TTYPES(_DA_DEFINE_MAP, type); \
+    _DA_IMPL_REVERSE(type) \
     _DA_DEFINE_RADIX(type);
 
 #define _DEFINE_DA_PRIMITIVE_IN(type) \

@@ -108,6 +108,7 @@
  * voidRes     insert_<type>Sa(wprt, const elem)
  * void        for_each_<type>Da(wptr, const fn(<type>*)->void)
  * void        for_each_<type>Sa(wptr, const fn(<type>*)->void)
+ * void        reverse_<type>Da(wptr)
  * char        all_<type>Da(wptr, const fn(const <type>*)->char)
  * char        all_<type>Sa(wptr, const fn(const <type>*)->char)
  * char        any_<type>Da(wptr, const fn(const <type>*)->char)

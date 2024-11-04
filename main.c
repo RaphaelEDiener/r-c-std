@@ -37,7 +37,7 @@ uchar int_to_uchar(int x) {
     return (char) (x % 256);
 }
 uchar intp_to_uchar(const int* x) {
-    return (char) ((*x) % 256);
+    return (uchar) ((*x) % 256);
 }
 int add(int x, int y) {
     return x + y;
@@ -236,6 +236,35 @@ int test_da_for_each(void) {
     free(da0.ptr);
     return fails;
 } 
+
+int test_da_reverse(void) {
+    int fails = 0;
+    intDa da0 = new_intDa(8).result;
+    for (size_t i = 0; i < da0.capacity; i++) {
+        insert_intDa(da0, (int) i);
+    }
+    reverse_intDa(da0);
+    for (size_t i = 0; i < da0.capacity; i++) {
+        fails += test_int(da0.ptr[i], 7-i, "reverses da for even number of entries");
+    }
+    free(da0.ptr);
+    
+    intDa da1 = new_intDa(7).result;
+    for (size_t i = 0; i < da1.capacity; i++) {
+        insert_intDa(da1, (int) i);
+    }
+    reverse_intDa(da1);
+    for (size_t i = 0; i < da1.capacity; i++) {
+        fails += test_int(da1.ptr[i], 6-i, "reverses da for odd number of entries");
+    }
+    free(da1.ptr);
+
+    intDa da2 = new_intDa(8).result;
+    reverse_intDa(da2);
+    fails += test_size_t(da2.count, 0, "reversing an empty da works");
+    return fails;
+} 
+
 int test_da_all(void) {
     int fails = 0;
 
@@ -649,7 +678,7 @@ int test_da_map(void) {
     for (size_t i = 0; i < 8; i++) {
         da1 = insert_intDa(da1, (int) i).result;
     }
-    ucharDa res1 = map_intDa_to_ucharDa(da0, intp_to_uchar).result;
+    ucharDa res1 = map_intDa_to_ucharDa(da1, intp_to_uchar).result;
     for (size_t i = 0; i < 8; i++) {
         fails += test_uchar(res1.ptr[i], (uchar) i, "maps all elements correctly within different types");
     }

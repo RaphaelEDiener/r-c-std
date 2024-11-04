@@ -229,6 +229,7 @@ test_size_t     (size_t, size_t, message)
 *  TODO: Iterator
 *  TODO: Reduce
 *  TODO: Hashmaps
+*  TODO: Deque
 *  TODO: Hashsets
 *  TODO: Arraysets
 *  TODO: universalize del for DA, SA, LL
