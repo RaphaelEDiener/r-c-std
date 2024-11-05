@@ -107,15 +107,15 @@ size_t save_add(size_t x, size_t y);
 
 #define _VEC_IMPL_DIV(type) \
     type##Vec2 div_##type##Vec2(const type##Vec2* a, const type##Vec2* b) { \
-        type##Vec2 ans = {a->x * b->x, a->y * b->y}; \
+        type##Vec2 ans = {a->x / b->x, a->y / b->y}; \
         return ans; \
     } \
     type##Vec3 div_##type##Vec3(const type##Vec3* a, const type##Vec3* b) { \
-        type##Vec3 ans = {a->x * b->x, a->y * b->y, a->z * b->z}; \
+        type##Vec3 ans = {a->x / b->x, a->y / b->y, a->z / b->z}; \
         return ans; \
     } \
     type##Vec4 div_##type##Vec4(const type##Vec4* a, const type##Vec4* b) { \
-        type##Vec4 ans = {a->x * b->x, a->y * b->y, a->z * b->z, a->w * b->w}; \
+        type##Vec4 ans = {a->x / b->x, a->y / b->y, a->z / b->z, a->w / b->w}; \
         return ans; \
     };
 
