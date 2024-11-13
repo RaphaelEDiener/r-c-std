@@ -270,6 +270,8 @@ test_size_t     (size_t, size_t, message)
 *  TODO: impl filter for DA, SA, LL
 *  TODO: reduce
 *  TODO: copy for all structs
+*  TODO: rings
+*  TODO: fold from same type
  
 ```
 // join("hi", "my", "name", "is")
