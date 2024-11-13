@@ -9,6 +9,7 @@
 #include "testing.h"
 #include "str_utils.h"
 #include "lists.h"
+#include "rings.h"
 
 #endif
 

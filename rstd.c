@@ -4,3 +4,4 @@
 #include "dynamic_array.c"
 #include "testing.c"
 #include "lists.c"
+#include "rings.c"
