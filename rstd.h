@@ -111,13 +111,13 @@
  * <type>DaRes new_<type>Da(const size_t capacity)
  * <type>DaRes insert_<type>Da(const wprt, const elem)
  * voidRes     insert_<type>Sa(wprt, const elem)
- * void        for_each_<type>Da(wptr, const fn(<type>*)->void)
- * void        for_each_<type>Sa(wptr, const fn(<type>*)->void)
+ * void        for_each_<type>Da(cons wptr, const fn(<type>*)->void)
+ * void        for_each_<type>Sa(const wptr, const fn(<type>*)->void)
  * void        reverse_<type>Da(wptr)
- * char        all_<type>Da(wptr, const fn(const <type>*)->char)
- * char        all_<type>Sa(wptr, const fn(const <type>*)->char)
- * char        any_<type>Da(wptr, const fn(const <type>*)->char)
- * char        any_<type>Sa(wptr, const fn(const <type>*)->char)
+ * char        all_<type>Da(const wptr, const fn(const <type>*)->char)
+ * char        all_<type>Sa(const wptr, const fn(const <type>*)->char)
+ * char        any_<type>Da(const wptr, const fn(const <type>*)->char)
+ * char        any_<type>Sa(const wptr, const fn(const <type>*)->char)
  * char        in_<type>Da(
  *                 const wptr, 
  *                 const elem*, 
@@ -142,7 +142,7 @@
  * void        mapip_<type>Da(wptr, const fn(const <type>*)-><type>)
  * void        mapip_<type>Sa(wptr, const fn(const <type>*)-><type>)
  * <to_t>Da    map_<from_t>Da_to_<to_t>Da(
- *                 from_wptr, 
+ *                 const from_wptr, 
  *                 const fn(const <from_t>*)-><to_t>
  *             )
  * !err!       map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
@@ -180,8 +180,8 @@
  * <type>RingRes sinsert_<type>Ring(<type>Ring ring, <type> val) ->
  *                                 only if it doesn't override old values
  * <type>RingRes pop_<type>Ring    (<type>Ring ring)
- * <type>Res     peak_<type>Ring   (const <type>Ring* ring) -> last element
- * size_t        count_<type>Ring  (const <type>Ring* ring) -> amount of elements 
+ * <type>Res     peak_<type>Ring   (const <type>Ring ring) -> last element
+ * size_t        count_<type>Ring  (const <type>Ring ring) -> amount of elements 
  *
  * ------------------------------
  * Lists (lists.h):

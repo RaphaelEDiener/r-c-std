@@ -17,6 +17,12 @@
 
 #define _DA_IMPL_NEW(t) \
     t##DaRes new_##t##Da(const size_t capacity) { \
+        if (capacity < 1) { \
+            err_redln("can't work with empty DA's"); \
+            t##Da ans = {0, 0, 0, NULL}; \
+            t##DaRes res = {FAILURE, ans}; \
+            return res; \
+        } \
         t##Da ans = {capacity, sizeof(t), 0, (t*) calloc(capacity, sizeof(t))}; \
         t##DaRes res = {FAILURE, ans}; \
         if (ans.ptr == NULL) { \
@@ -24,8 +30,8 @@
             return res; \
         } \
         else { \
-        res.type = SUCCESS; \
-        return res; \
+            res.type = SUCCESS; \
+            return res; \
         } \
     }
 
@@ -366,6 +372,20 @@
     void reverse_##type##Da(type##Da arr) { \
         for (size_t i = 0; i < (arr.count / 2); i++) { \
             swap_##type(arr.ptr + i, arr.ptr + arr.capacity - i); \
+        } \
+    }
+
+#define _DA_DEF_GET(type) \
+    type##Res get_##type##Da(const type##Da arr, const size_t i);
+
+#define _DA_IMPL_GET(type) \
+    type##Res get_##type##Da(const type##Da arr, const size_t i) { \
+        type##Res res = {FAILURE, arr.ptr[0]}; \
+        if (i > arr.count - 1) { \
+            return res; \
+        } \
+        if (i < -arr.count) { \
+            return res; \
         } \
     }
 

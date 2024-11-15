@@ -272,6 +272,7 @@ test_size_t     (size_t, size_t, message)
 *  TODO: copy for all structs
 *  TODO: rings
 *  TODO: fold from same type
+*  TODO: linked datastructure with log n lookpups
  
 ```
 // join("hi", "my", "name", "is")

@@ -71,15 +71,15 @@
     }
 
 #define _R_DEF_PEAK(t) \
-    t##Res peak_##t##Ring(const t##Ring* ring);
+    t##Res peak_##t##Ring(const t##Ring ring);
 
 #define _R_IMPL_PEAK(t) \
-    t##Res peak_##t##Ring(const t##Ring* ring) { \
-        if (ring->front == ring->back) { \
-            t##Res res = {FAILURE, (t) 0}; \
+    t##Res peak_##t##Ring(const t##Ring ring) { \
+        if (ring.front == ring.back) { \
+            t##Res res = {FAILURE, ring.ptr[0]}; \
             return res; \
         } else { \
-            t##Res res = {SUCCESS, ring->ptr[ring->back]}; \
+            t##Res res = {SUCCESS, ring.ptr[ring.back]}; \
             return res; \
         } \
     }
@@ -100,14 +100,14 @@
     }
 
 #define _R_DEF_COUNT(t) \
-    size_t count_##t##Ring(const t##Ring* ring);
+    size_t count_##t##Ring(const t##Ring ring);
 
 #define _R_IMPL_COUNT(t) \
-    size_t count_##t##Ring(const t##Ring* ring) { \
-        if (ring->front >= ring->back) { \
-            return ring->front - ring->back; \
+    size_t count_##t##Ring(const t##Ring ring) { \
+        if (ring.front >= ring.back) { \
+            return ring.front - ring.back; \
         } else { \
-            return ring->front + ring->capacity - ring->back; \
+            return ring.front + ring.capacity - ring.back; \
         } \
     }
 

@@ -182,7 +182,7 @@ int test_cmp(void) {
     return fails;
 }
 
-int test_da_creation(void) {
+int test_da_new(void) {
     int fails = 0;
     intDaRes da0 = new_intDa(1);
     fails += test_ResultType(da0.type, SUCCESS, "can create new dynamic array with cap 1");
@@ -190,6 +190,9 @@ int test_da_creation(void) {
 
     intDaRes da1 = new_intDa(SIZE_MAX);
     fails += test_ResultType(da1.type, FAILURE, "can't create new dynamic array with cap > ram space");
+    
+    intDaRes da2 = new_intDa(0);
+    fails += test_ResultType(da2.type, FAILURE, "can't create new dynamic array with cap == 0");
     return fails;
 }
 
@@ -710,7 +713,7 @@ int test_da_fold(void) {
 
 int test_dynamic_arrays(void) {
     int fails = 0;
-    fails += test_da_creation();
+    fails += test_da_new();
     fails += test_da_insertion();
     fails += test_da_for_each();
     fails += test_da_all();
