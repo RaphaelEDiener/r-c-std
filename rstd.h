@@ -156,7 +156,33 @@
  *                 const fn(const <to_t>*, const <from_t>*)-><to_t>, 
  *                 const start
  *             )
- * 
+ *
+ * ------------------------------
+ * Rings (rings.h):
+ * ------------------------------
+ *
+ * -- Costume --
+ *
+ * DEFINE_RING(type) -> Defines a ring structure for a given struct 
+ * IMPL_RING(type)   -> Implements the ring functions for a given struct
+ *                      Requires prior `DEFINE_RING` 
+ *
+ * -- Predefined -- 
+ *
+ * Ring = {capacity; front; back; ptr}
+ * The actual capacity of the ring is always one smaller 
+ * than the given capacity:
+ * given: 8 -> actual: 7 elements at once
+ *
+ * <type>RingRes new_<type>Ring    (const size_t capacity)
+ * <type>Ring    insert_<type>Ring (<type>Ring ring, <type> val) ->
+ *                                 overrides old values if full
+ * <type>RingRes sinsert_<type>Ring(<type>Ring ring, <type> val) ->
+ *                                 only if it doesn't override old values
+ * <type>RingRes pop_<type>Ring    (<type>Ring ring)
+ * <type>Res     peak_<type>Ring   (const <type>Ring* ring) -> last element
+ * size_t        count_<type>Ring  (const <type>Ring* ring) -> amount of elements 
+ *
  * ------------------------------
  * Lists (lists.h):
  * ------------------------------

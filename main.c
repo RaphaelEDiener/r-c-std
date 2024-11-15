@@ -922,6 +922,7 @@ int test_list_remove(void) {
     fails += test_size_t(res4.result.count, 9, "removing ll from existing forward index works");
 
     // "removing ll first element"
+
     // "removing ll last element"
     // "removing ll from existing backward index works"
     // "emptying list through remove works"
@@ -929,7 +930,7 @@ int test_list_remove(void) {
     return fails;
 }
 int test_list_delete(void) {
-    int fails = 0;
+    int fails = 1;
 
     // "ll deletes the element"
     // "ll deletes only the first element"
@@ -948,6 +949,59 @@ int test_lists(void) {
     return fails;
 }
 
+int test_ring_new(void) {
+    int fails = 1;
+    // "new ring gets allocated"
+    // "new rings are distinct"
+    // "new rings with capacity < 2 don't make sense"
+    // "new rings with too large capacity fail"
+    return fails;
+}
+int test_ring_insert(void) {
+    int fails = 1;
+    // "insert inserts"
+    // "back pointer doesn't advance normally"
+    // "overrides old values"
+    // "overrides moves the back pointer"
+    return fails;
+}
+int test_ring_sinsert(void) {
+    int fails = 1;
+    // "insert inserts"
+    // "back pointer doesn't advance normally"
+    // "fails if it would overrides old values"
+    return fails;
+}
+int test_ring_pop(void) {
+    int fails = 1;
+    // "fails on empty rings"
+    // "removes the last element"
+    return fails;
+}
+int test_ring_peak(void) {
+    int fails = 1;
+    // "fails on empty rings"
+    // "shows the last element"
+    return fails;
+}
+int test_ring_count(void) {
+    int fails = 1;
+    // "count in full rings is capacity-1"
+    // "returns correct element count"
+    return fails;
+}
+
+int test_rings(void) {
+    int fails = 0;
+    fails += test_ring_new();
+    fails += test_ring_insert();
+    fails += test_ring_sinsert();
+    fails += test_ring_pop();
+    fails += test_ring_peak();
+    fails += test_ring_count();
+    return fails;
+}
+
 int main(void) {
     int fails = 0;
     fails += test_array_macros();
@@ -956,6 +1010,7 @@ int main(void) {
     fails += test_math();
     fails += test_string_operations();
     fails += test_lists();
+    fails += test_rings();
 
     if (fails > 0) {redln("%d\tFAILED TESTS", fails)}
     else {greenln("\tTESTS PASSES!")};

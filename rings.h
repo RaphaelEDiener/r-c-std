@@ -19,10 +19,18 @@
 #define _R_DEF_NEW(t) \
     t##RingRes new_##t##Ring(const size_t capacity);
 
+// potential overflow caught by the capacity check
 #define _R_IMPL_NEW(t) \
     t##RingRes new_##t##Ring(const size_t capacity) { \
-        t##Ring ans = {capacity, sizeof(t), 0, (t*) calloc(capacity, sizeof(t))}; \
+        t##Ring ans = {capacity, 0, capacity - 1, (t*) calloc(capacity, sizeof(t))}; \
         t##RingRes res = {FAILURE, ans}; \
+        if (capacity < 2) { \
+            err_redln( \
+                "Rings of capacity %zu are to small to exist meaningfully (expected > 2)",  \
+                capacity \
+            ); \
+            return res; \
+        } \
         if (ans.ptr == NULL) { \
             err_redln("failed to allocated for with capacity of %zu", capacity); \
             return res; \
@@ -40,6 +48,9 @@
     t##Ring insert_##t##Ring(t##Ring ring, t val) { \
         ring.ptr[ring.front] = val; \
         ring.front = (ring.front + 1) % ring.capacity; \
+        if (ring.front == ring.back) { \
+            ring.back = (ring.back + 1) % ring.capacity; \
+        } \
         return ring; \
     }
 
