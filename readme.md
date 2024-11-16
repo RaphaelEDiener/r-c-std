@@ -270,9 +270,10 @@ test_size_t     (size_t, size_t, message)
 *  TODO: impl filter for DA, SA, LL
 *  TODO: reduce
 *  TODO: copy for all structs
-*  TODO: rings
+*  TODO: test rings
 *  TODO: fold from same type
 *  TODO: linked datastructure with log n lookpups
+*  TODO: test if get on lists works with empty lists
  
 ```
 // join("hi", "my", "name", "is")
