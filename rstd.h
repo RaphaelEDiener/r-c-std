@@ -149,6 +149,11 @@
  *              const fn(const <from_t>*)-><to_t>
  *          )
  * !err!    map_<from_t>Da_to_<to_t>Sa -> !use array utils instead!
+ * <t>      fold_<t>Da(
+ *              const wptr, 
+ *              const fn(const <t>*, const <t>*)-><t>, 
+ *              const start
+ *          )
  * <to_t>   fold_<from_t>Da_to_<to_t>(
  *              const from_wptr, 
  *              const fn(const <to_t>*, const <from_t>*)-><to_t>, 

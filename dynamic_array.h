@@ -182,7 +182,29 @@
         }\
     }
 
-#define _DA_DEF_FOLD(from_t, to_t) \
+#define _DA_DEF_FOLD(t) \
+    typedef t (*_da_sig_collapse_##t) (const t*, const t*); \
+    t fold_##t##Da( \
+        const t##Da wptr, \
+        const _da_sig_collapse_##t fn, \
+        const t start \
+    );
+
+#define _DA_IMPL_FOLD(t) \
+    typedef t (*_da_collapse_##t) (const t*, const t*); \
+    t fold_##t##Da( \
+        const t##Da wptr, \
+        const _da_sig_collapse_##t fn, \
+        const t start \
+    ){ \
+        t res = start; \
+        for (size_t i = 0; i < wptr.count; i++) { \
+            res = (*fn) (&res, wptr.ptr+i); \
+        } \
+        return res; \
+    }
+
+#define _DA_DEF_FOLD_TO(from_t, to_t) \
     typedef to_t (*_da_sig_collapse_##from_t##_to_##to_t) \
                  (const to_t*, const from_t*); \
     to_t fold_##from_t##Da_to_##to_t( \
@@ -196,7 +218,7 @@
         const to_t start \
     );
 
-#define _DA_IMPL_FOLD(from_t, to_t) \
+#define _DA_IMPL_FOLD_TO(from_t, to_t) \
     typedef to_t (*_da_collapse_##from_t##_to_##to_t) \
                  (const to_t*, const from_t*); \
     to_t fold_##from_t##Da_to_##to_t( \
@@ -408,7 +430,8 @@
     _DA_DEF_ANY(type) \
     _DA_DEF_IN(type) \
     _DA_DEF_MAPIP(type) \
-    DEFAULT_TTYPES(_DA_DEF_FOLD, type); \
+    _DA_DEF_FOLD(type) \
+    DEFAULT_TTYPES(_DA_DEF_FOLD_TO, type); \
     DEFAULT_TTYPES(_DA_DEF_MAP, type); \
     _DA_DEF_UNIQUE(type) \
     _DA_DEF_SORT(type) \
@@ -448,7 +471,8 @@
     _DA_IMPL_ANY(type) \
     _DA_IMPL_IN(type) \
     _DA_IMPL_MAPIP(type) \
-    DEFAULT_TTYPES(_DA_IMPL_FOLD, type); \
+    _DA_IMPL_FOLD(type) \
+    DEFAULT_TTYPES(_DA_IMPL_FOLD_TO, type); \
     DEFAULT_TTYPES(_DA_IMPL_MAP,  type); \
     _DA_IMPL_UNIQUE(type) \
     _DA_IMPL_SORT(type) \
