@@ -90,6 +90,15 @@
  * DEFAULT_FOR_TTTYPES(macro)             -> DEFAULT_TTTYPES(macro, t1, t1) \...
  *
  * ------------------------------
+ * Result (result.h):
+ * ------------------------------
+ * 
+ * ResultType = {SUCCESS, FAILURE}
+ * <t>Res -> {type: SUCCESS | FAILURE; result: t}
+ * DEFINE_RESULT(type) -> creates new Result wrapper
+ * voidRes -> {type: SUCCESS | FAILURE}
+ * 
+ * ------------------------------
  * Dynamic Arrays (dynamic_array.h):
  * ------------------------------
  *
@@ -183,13 +192,13 @@
  * given: 8 -> actual: 7 elements at once
  *
  * <t>RingRes new_<t>Ring    (const size_t capacity)
- * <t>Ring    insert_<t>Ring (<t>Ring ring, <t> val) ->
- *                                 overrides old values if full
- * <t>RingRes sinsert_<t>Ring(<t>Ring ring, <t> val) ->
- *                                 only if it doesn't override old values
- * <t>RingRes pop_<t>Ring    (<t>Ring ring)
+ * <t>Ring    insert_<t>Ring (      <t>Ring ring, <t> val) ->
+ *                overrides old values if full
+ * <t>RingRes sinsert_<t>Ring(      <t>Ring ring, <t> val) ->
+ *                only if it doesn't override old values
+ * <t>RingRes pop_<t>Ring    (      <t>Ring ring)
  * <t>Res     peak_<t>Ring   (const <t>Ring ring) -> last element
- * size_t        count_<t>Ring  (const <t>Ring ring) -> amount of elements 
+ * size_t     count_<t>Ring  (const <t>Ring ring) -> amount of elements 
  *
  * ------------------------------
  * Lists (lists.h):
@@ -215,15 +224,6 @@
  * voidRes   del_<t>LL    (      <t>LL list, const <t> elem) -> 
  *               removes the first element found,
  *               that matches the given element.
- * 
- * ------------------------------
- * Result (result.h):
- * ------------------------------
- * 
- * ResultType = {SUCCESS, FAILURE}
- * <t>Res -> {type: SUCCESS | FAILURE; result: t}
- * DEFINE_RESULT(type) -> creates new Result wrapper
- * voidRes -> {type: SUCCESS | FAILURE}
  *
  * ------------------------------
  * String Operations (str_utils.h):
