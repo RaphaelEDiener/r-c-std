@@ -5,13 +5,14 @@
        Documentation
 ##############################
 
+Including everything: rstd.h
+Linking: rstd.c 
+
 If no clarification is given on the specific type,
 it is implemented for all types available in c
 using the aliases/shorthands found in default_types.h
 
 if a parameter is not declared 'const', it is getting modified.
-
-Linking: rstd.c 
 
 ------------------------------
 Working with Arrays (array_utils.h):
