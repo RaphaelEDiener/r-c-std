@@ -7,33 +7,31 @@
 #include "color_print.h"
 
 #ifndef DEFINE_DLlist
-#define DEFINE_DLlist(type) \
-    typedef struct _##type##_node { \
-        type val; \
-        struct _##type##_node * prev; \
-        struct _##type##_node * next; \
-    } type##LlNode; \
-    typedef struct { \
-        type##LlNode* first; \
-        type##LlNode* last; \
-        size_t count; \
-    } type##Ll; \
-    DEFINE_RESULT(type##Ll); \
-    type##Ll new_##type##Ll(void); \
-    type##LlRes append_##type##Ll(type##Ll list, const type elem); \
-    type##LlRes prepend_##type##Ll(type##Ll list, const type elem); \
-    type##Res get_##type##Ll(type##Ll list, long long i); \
-    voidRes del_##type##Ll(type##Ll list, type elem); \
-    void free_##type##Ll(type##Ll list); \
-    type##LlRes rem_##type##Ll(type##Ll list, long long i);
+#define DEFINE_DLlist
 
-DEFAULT_TYPES(DEFINE_DLlist);
+#define _LL_DEF_NEW(t) \
+    t##Ll new_##t##Ll(void);
 
-#define IMPL_DLlist(t) \
+#define _LL_IMPL_NEW(t) \
     t##Ll new_##t##Ll(void) { \
         t##Ll ans = {NULL, NULL, 0}; \
         return ans; \
-    } \
+    }
+
+#define _LL_DEF_FREE(t) \
+    void free_##t##Ll(t##Ll list);
+
+#define _LL_IMPL_FREE(t) \
+    void free_##t##Ll(t##Ll list) { \
+        while (list.count > 0) { \
+            list = rem_##t##Ll(list, 0).result; \
+        } \
+    }
+
+#define _LL_DEF_APPEND(t) \
+    t##LlRes append_##t##Ll(t##Ll list, const t elem);
+
+#define _LL_IMPL_APPEND(t) \
     t##LlRes append_##t##Ll(t##Ll list, const t elem) { \
         t##LlRes ans = {FAILURE, list}; \
         t##LlNode* e = (t##LlNode*) malloc(sizeof(t##LlNode)); \
@@ -54,7 +52,12 @@ DEFAULT_TYPES(DEFINE_DLlist);
         ans.result = list; \
         ans.type = SUCCESS; \
         return ans; \
-    } \
+    }
+
+#define _LL_DEF_PREPEND(t) \
+    t##LlRes prepend_##t##Ll(t##Ll list, const t elem);
+
+#define _LL_IMPL_PREPEND(t) \
     t##LlRes prepend_##t##Ll(t##Ll list, const t elem) { \
         t##LlRes ans = {FAILURE, list}; \
         t##LlNode* e = (t##LlNode*) malloc(sizeof(t##LlNode)); \
@@ -75,26 +78,37 @@ DEFAULT_TYPES(DEFINE_DLlist);
         ans.result = list; \
         ans.type = SUCCESS; \
         return ans; \
-    } \
-    t##Res get_##t##Ll(t##Ll list, long long i) { \
+    }
+
+#define _LL_DEF_GET(t) \
+    t##Res get_##t##Ll(t##Ll list, llong i);
+
+#define _LL_IMPL_GET(t) \
+    t##Res get_##t##Ll(const t##Ll list, const llong i) { \
         t##Res ans = {FAILURE, 0}; \
-        long long max_i = (long long) save_sub(list.count, 1); \
+        llong max_i = (llong) save_sub(list.count, 1); \
         if (i > max_i || i+1 < -max_i || list.count == 0) return ans; \
         t##LlNode* res = list.first; \
-        while (i != 0) { \
-            if (i > 0) { \
+        llong pos = i; \
+        while (pos != 0) { \
+            if (pos > 0) { \
                 res = res->next; \
-                i--; \
+                pos--; \
             } else { \
                 res = res->prev; \
-                i++; \
+                pos++; \
             } \
         } \
         ans.result = res->val; \
         ans.type = SUCCESS; \
         return ans; \
-    } \
-    voidRes del_##t##Ll(t##Ll list, t elem) { \
+    }
+
+#define _LL_DEF_DEL(t) \
+    voidRes del_##t##Ll(t##Ll list, t elem);
+
+#define _LL_IMPL_DEL(t) \
+    voidRes del_##t##Ll(t##Ll list, const t elem) { \
         voidRes ans = {FAILURE}; \
         t##LlNode* cur = list.first; \
         for (size_t i = 0; i < list.count; i++) { \
@@ -108,10 +122,15 @@ DEFAULT_TYPES(DEFINE_DLlist);
             } \
         } \
         return ans; \
-    } \
-    t##LlRes rem_##t##Ll(t##Ll list, long long i) { \
+    }
+
+#define _LL_DEF_REM(t) \
+    t##LlRes rem_##t##Ll(t##Ll list, llong i);
+
+#define _LL_IMPL_REM(t) \
+    t##LlRes rem_##t##Ll(t##Ll list, const llong i) { \
         t##LlRes ans = {FAILURE, list}; \
-        long long max_i = (long long) save_sub(list.count, 1); \
+        llong max_i = (llong) save_sub(list.count, 1); \
         if (i > max_i || i+1 < -max_i || list.count == 0) return ans; \
         if (list.count == 1) { \
             t##LlNode* res = list.first; \
@@ -120,13 +139,14 @@ DEFAULT_TYPES(DEFINE_DLlist);
             free(res); \
         } else { \
             t##LlNode* cur = list.first; \
-            while (i != 0) { \
-                if (i > 0) { \
+            llong pos = i; \
+            while (pos != 0) { \
+                if (pos > 0) { \
                     cur = cur->next; \
-                    i--; \
+                    pos--; \
                 } else { \
                     cur = cur->prev; \
-                    i++; \
+                    pos++; \
                 } \
             } \
             cur->prev->next = cur->next; \
@@ -139,10 +159,36 @@ DEFAULT_TYPES(DEFINE_DLlist);
         ans.result.count--; \
         return ans; \
     } \
-    void free_##t##Ll(t##Ll list) { \
-        while (list.count > 0) { \
-            list = rem_##t##Ll(list, 0).result; \
-        } \
-    }
+
+#define DEFINE_LL(t) \
+    typedef struct _##t##_node { \
+        t val; \
+        struct _##t##_node * prev; \
+        struct _##t##_node * next; \
+    } t##LlNode; \
+    typedef struct { \
+        t##LlNode* first; \
+        t##LlNode* last; \
+        size_t count; \
+    } t##Ll; \
+    DEFINE_RESULT(t##Ll); \
+    _LL_DEF_NEW(t) \
+    _LL_DEF_FREE(t) \
+    _LL_DEF_APPEND(t) \
+    _LL_DEF_PREPEND(t) \
+    _LL_DEF_GET(t) \
+    _LL_DEF_DEL(t) \
+    _LL_DEF_REM(t)
+
+DEFAULT_TYPES(DEFINE_LL);
+
+#define IMPL_LL(t) \
+    _LL_IMPL_NEW(t) \
+    _LL_IMPL_FREE(t) \
+    _LL_IMPL_APPEND(t) \
+    _LL_IMPL_PREPEND(t) \
+    _LL_IMPL_GET(t) \
+    _LL_IMPL_DEL(t) \
+    _LL_IMPL_REM(t)
 
 #endif

@@ -17,6 +17,12 @@
 
 #define _DA_IMPL_NEW(t) \
     t##DaRes new_##t##Da(const size_t capacity) { \
+        if (capacity < 1) { \
+            err_redln("can't work with empty DA's"); \
+            t##Da ans = {0, 0, 0, NULL}; \
+            t##DaRes res = {FAILURE, ans}; \
+            return res; \
+        } \
         t##Da ans = {capacity, sizeof(t), 0, (t*) calloc(capacity, sizeof(t))}; \
         t##DaRes res = {FAILURE, ans}; \
         if (ans.ptr == NULL) { \
@@ -24,8 +30,8 @@
             return res; \
         } \
         else { \
-        res.type = SUCCESS; \
-        return res; \
+            res.type = SUCCESS; \
+            return res; \
         } \
     }
 
@@ -176,7 +182,29 @@
         }\
     }
 
-#define _DA_DEF_FOLD(from_t, to_t) \
+#define _DA_DEF_FOLD(t) \
+    typedef t (*_da_sig_collapse_##t) (const t*, const t*); \
+    t fold_##t##Da( \
+        const t##Da wptr, \
+        const _da_sig_collapse_##t fn, \
+        const t start \
+    );
+
+#define _DA_IMPL_FOLD(t) \
+    typedef t (*_da_collapse_##t) (const t*, const t*); \
+    t fold_##t##Da( \
+        const t##Da wptr, \
+        const _da_sig_collapse_##t fn, \
+        const t start \
+    ){ \
+        t res = start; \
+        for (size_t i = 0; i < wptr.count; i++) { \
+            res = (*fn) (&res, wptr.ptr+i); \
+        } \
+        return res; \
+    }
+
+#define _DA_DEF_FOLD_TO(from_t, to_t) \
     typedef to_t (*_da_sig_collapse_##from_t##_to_##to_t) \
                  (const to_t*, const from_t*); \
     to_t fold_##from_t##Da_to_##to_t( \
@@ -190,7 +218,7 @@
         const to_t start \
     );
 
-#define _DA_IMPL_FOLD(from_t, to_t) \
+#define _DA_IMPL_FOLD_TO(from_t, to_t) \
     typedef to_t (*_da_collapse_##from_t##_to_##to_t) \
                  (const to_t*, const from_t*); \
     to_t fold_##from_t##Da_to_##to_t( \
@@ -369,6 +397,25 @@
         } \
     }
 
+#define _DA_DEF_GET(type) \
+    type##Res get_##type##Da(const type##Da arr, const llong i);
+
+// Accessing [0] always works since min len == 1
+#define _DA_IMPL_GET(type) \
+    type##Res get_##type##Da(const type##Da arr, const llong i) { \
+        type##Res res = {FAILURE, arr.ptr[0]}; \
+        if ( \
+            (i >= 0 && (size_t) i > arr.count - 1) || \
+            (size_t) (-i) > arr.count \
+        ) { \
+            err_redln("position %llu is out side of bounds. current len is %zu", i, arr.count); \
+            return res; \
+        } \
+        size_t real_i = i >= 0 ? (size_t) i : (size_t) (arr.count + i); \
+        res.result = arr.ptr[real_i]; \
+        return res; \
+    }
+
 // Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, 
 // if he needs that (basically solved in the array utils)
@@ -383,11 +430,13 @@
     _DA_DEF_ANY(type) \
     _DA_DEF_IN(type) \
     _DA_DEF_MAPIP(type) \
-    DEFAULT_TTYPES(_DA_DEF_FOLD, type); \
+    _DA_DEF_FOLD(type) \
+    DEFAULT_TTYPES(_DA_DEF_FOLD_TO, type); \
     DEFAULT_TTYPES(_DA_DEF_MAP, type); \
     _DA_DEF_UNIQUE(type) \
     _DA_DEF_SORT(type) \
     _DA_DEF_RADIX(type) \
+    _DA_DEF_GET(type) \
     _DA_DEF_REVERSE(type)
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
@@ -422,11 +471,13 @@
     _DA_IMPL_ANY(type) \
     _DA_IMPL_IN(type) \
     _DA_IMPL_MAPIP(type) \
-    DEFAULT_TTYPES(_DA_IMPL_FOLD, type); \
+    _DA_IMPL_FOLD(type) \
+    DEFAULT_TTYPES(_DA_IMPL_FOLD_TO, type); \
     DEFAULT_TTYPES(_DA_IMPL_MAP,  type); \
     _DA_IMPL_UNIQUE(type) \
     _DA_IMPL_SORT(type) \
     _DA_IMPL_REVERSE(type) \
+    _DA_IMPL_GET(type) \
     _DA_IMPL_RADIX(type);
 
 #define _DEFINE_DA_PRIMITIVE_IN(type) \

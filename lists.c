@@ -1,5 +1,5 @@
 #include "lists.h"
 
-DEFAULT_TYPES(IMPL_DLlist);
+DEFAULT_TYPES(IMPL_LL);
 
 

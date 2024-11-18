@@ -271,6 +271,10 @@ test_size_t     (size_t, size_t, message)
 *  TODO: impl filter for DA, SA, LL
 *  TODO: reduce
 *  TODO: copy for all structs
+*  TODO: arbitrary long integers
+*  TODO: test rings
+*  TODO: linked datastructure with log n lookpups
+*  TODO: test if get on lists works with empty lists
  
 ```
 // join("hi", "my", "name", "is")
@@ -278,3 +282,34 @@ test_size_t     (size_t, size_t, message)
 // joinwp(wp)
 ```
 
+# Internal Dependencies
+
+```mermaid
+
+str_utils --> default_types
+str_utils --> dynamic_array
+array_utils
+cmp --> default_types
+color_print --> stdio
+default_types --> stddef
+dynamic_array --> stddef
+dynamic_array --> stdlib
+dynamic_array --> string
+dynamic_array --> stdint
+dynamic_array --> assert
+dynamic_array --> result
+dynamic_array --> rmath
+dynamic_array --> default_types
+dynamic_array --> color_print
+dynamic_array --> cmp
+dynamic_array --> array_utils
+lists --> stdint
+lists --> stdlib
+lists --> default_types
+lists --> result
+lists --> rmath
+lists --> rmath
+lists --> color_print
+result --> default_types
+rings --> default_types
+```
