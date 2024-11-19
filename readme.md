@@ -294,6 +294,35 @@ test_size_t     (size_t, size_t, message)
 
 ```
 
+# Using the Lib
+
+First clone the repository.
+It is recomended to create a new folder for this inside your project:
+```
+src
+ |-main.c
+ |-rstd
+   |-...
+```
+
+If you don't want to deal with git submodules, 
+you can always `rm -rf` the `.git` folder.
+
+In theory you can just `#include "rstd.h"` 
+and then compile with `gcc -o main.exe main.c rstd.c` and be good to go.
+But the compile times will be long, since the library makes heavy use 
+of macro expansion to reduce code duplication.
+
+Instead it is recomended to build the lib once and the link with it:
+```
+gcc -Wall -Wextra -c -o rstd.o -O3 -fmax-errors=2 rstd.c
+gcc -o main.exe main.c rstd.o
+```
+
+# Internal Dependencies
+
+![internal_dependencies](internal_dependencies.svg)
+
 # TODO
 
 *  Test...
@@ -331,6 +360,3 @@ test_size_t     (size_t, size_t, message)
 // joinwp(wp)
 ```
 
-# Internal Dependencies
-
-![internal_dependencies](internal_dependencies.svg)
