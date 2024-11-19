@@ -181,6 +181,7 @@
     _LL_DEF_REM(t)
 
 DEFAULT_TYPES(DEFINE_LL);
+MATH_TYPES(DEFINE_LL);
 
 #define IMPL_LL(t) \
     _LL_IMPL_NEW(t) \

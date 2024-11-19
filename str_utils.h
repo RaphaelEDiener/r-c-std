@@ -19,12 +19,14 @@ uchar is_alpha  (char c);
 uchar is_control(char c);
 
 typedef charDa String;
-DEFINE_DA(String);
 DEFINE_RESULT(String);
-DEFINE_RESULT(StringDa);
+DEFINE_DA(String);
 
 String      join_Da(StringDa);
 String      join_with(StringDa, String);
+String      join_uchar(StringDa, uchar);
+String      join_schar(StringDa, schar);
+StringRes   load_file(FILE* fp);
 StringDaRes split_file(FILE* fp);
 StringDa    split(String);
 StringDa    split_at(String, String);

@@ -1,4 +1,7 @@
 #include "default_types.h"
+#include "result.h"
+#include "rmath.h"
+#include "color_print.h"
 
 #ifndef DEFINE_RING
 
@@ -131,5 +134,6 @@
 
 
 DEFAULT_TYPES(DEFINE_RING);
+MATH_TYPES(DEFINE_RING);
 
 #endif

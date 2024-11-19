@@ -251,7 +251,7 @@ test_size_t     (size_t, size_t, message)
 
 *  Test...
     *  lists
-    *  string ops
+    *  glibc ops
 *  TODO: Whidepointer promotions (with typeof)
 *  TODO: Join
 *  TODO: Drain da into other da
@@ -273,6 +273,7 @@ test_size_t     (size_t, size_t, message)
 *  TODO: copy for all structs
 *  TODO: arbitrary long integers
 *  TODO: test rings
+*  TODO: test first_da
 *  TODO: linked datastructure with log n lookpups
 *  TODO: test if get on lists works with empty lists
  
@@ -285,31 +286,39 @@ test_size_t     (size_t, size_t, message)
 # Internal Dependencies
 
 ```mermaid
-
-str_utils --> default_types
-str_utils --> dynamic_array
-array_utils
-cmp --> default_types
-color_print --> stdio
-default_types --> stddef
-dynamic_array --> stddef
-dynamic_array --> stdlib
-dynamic_array --> string
-dynamic_array --> stdint
-dynamic_array --> assert
-dynamic_array --> result
-dynamic_array --> rmath
-dynamic_array --> default_types
-dynamic_array --> color_print
-dynamic_array --> cmp
-dynamic_array --> array_utils
-lists --> stdint
-lists --> stdlib
-lists --> default_types
-lists --> result
-lists --> rmath
-lists --> rmath
-lists --> color_print
-result --> default_types
-rings --> default_types
+flowchart BT 
+  glibc
+  subgraph " "
+    default_types
+    array_utils
+    color_print
+  end
+  str_utils --> default_types
+  str_utils --> dynamic_array
+  array_utils
+  cmp --> default_types
+  color_print --> glibc
+  dynamic_array --> glibc
+  dynamic_array --> result
+  dynamic_array --> rmath
+  dynamic_array --> default_types
+  dynamic_array --> color_print
+  dynamic_array --> cmp
+  dynamic_array --> array_utils
+  lists --> glibc
+  lists --> default_types
+  lists --> result
+  lists --> rmath
+  lists --> color_print
+  result --> default_types
+  rings --> default_types
+  rings --> result
+  rmath --> glibc
+  rmath --> default_types
+  str_utils --> glibc
+  str_utils --> default_types
+  str_utils --> dynamic_array
+  testing --> default_types
+  testing --> cmp
+  testing --> result
 ```

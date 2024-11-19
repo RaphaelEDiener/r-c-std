@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "default_types.h"
+#include "result.h"
 // #include "iterator.h"
 
 #ifndef RMATH
@@ -161,5 +162,51 @@ DEFAULT_TYPES(DEFINE_VEC);
 DEFAULT_TYPES(DEFINE_MATRIX2);
 DEFAULT_TYPES(DEFINE_MATRIX3);
 DEFAULT_TYPES(DEFINE_MATRIX4);
+
+#define MATH_TYPES(macro) \
+    macro(charVec2) \
+    macro(scharVec2) \
+    macro(ucharVec2) \
+    macro(shortVec2) \
+    macro(ushortVec2) \
+    macro(intVec2) \
+    macro(uintVec2) \
+    macro(longVec2) \
+    macro(ulongVec2) \
+    macro(llongVec2) \
+    macro(ullongVec2) \
+    macro(floatVec2) \
+    macro(doubleVec2) \
+    macro(ldoubleVec2) \
+    macro(charVec3) \
+    macro(scharVec3) \
+    macro(ucharVec3) \
+    macro(shortVec3) \
+    macro(ushortVec3) \
+    macro(intVec3) \
+    macro(uintVec3) \
+    macro(longVec3) \
+    macro(ulongVec3) \
+    macro(llongVec3) \
+    macro(ullongVec3) \
+    macro(floatVec3) \
+    macro(doubleVec3) \
+    macro(ldoubleVec3) \
+    macro(charVec4) \
+    macro(scharVec4) \
+    macro(ucharVec4) \
+    macro(shortVec4) \
+    macro(ushortVec4) \
+    macro(intVec4) \
+    macro(uintVec4) \
+    macro(longVec4) \
+    macro(ulongVec4) \
+    macro(llongVec4) \
+    macro(ullongVec4) \
+    macro(floatVec4) \
+    macro(doubleVec4) \
+    macro(ldoubleVec4) 
+
+MATH_TYPES(DEFINE_RESULT);
 
 #endif

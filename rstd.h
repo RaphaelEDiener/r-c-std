@@ -150,7 +150,7 @@
  *              const cmp(const <t>*, const <t>*)->Compareable
  *          ) -> quick sort in place
  * void     radix_<t>Da(wptr) -> implements generic radix for arbitrary data. 
- *                                  sorts in place with 4 buffers
+ *                               sorts in place with 4 buffers
  * void     mapip_<t>Da(wptr, const fn(const <t>*)-><t>)
  * void     mapip_<t>Sa(wptr, const fn(const <t>*)-><t>)
  * <to_t>Da map_<from_t>Da_to_<to_t>Da(

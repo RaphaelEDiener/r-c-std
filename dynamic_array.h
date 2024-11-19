@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <assert.h> 
 #include "result.h"
 #include "rmath.h"
 #include "default_types.h"
@@ -416,6 +415,40 @@
         return res; \
     }
 
+#define _DEFINE_DA_PRIMITIVE_IN(type) \
+    char pin_##type##Da(type##Da ptr, const type* elem); \
+    char pin_##type##Sa(type##Sa ptr, const type* elem);
+
+#define _IMPL_DA_PRIMITIVE_IN(type) \
+    char pin_##type##Da(type##Da ptr, const type* elem) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            if ( *elem == ptr.ptr[i] ) return 1; \
+        } \
+        return 0; \
+    } \
+    char pin_##type##Sa(type##Sa ptr, const type* elem) { \
+        for (size_t i = 0; i < ptr.count; i++){ \
+            if ( *elem == ptr.ptr[i] ) return 1; \
+        } \
+        return 0; \
+    } 
+
+#define _DA_DEF_FIRST(type) \
+    type##Res first_##type##Da(const type##Da arr, const _da_truthy_##type##_fn fn);
+
+#define _DA_IMPL_FIRST(type) \
+    type##Res first_##type##Da(const type##Da arr, const _da_truthy_##type##_fn fn) { \
+        type##Res ans = {FAILURE, 0};\
+        for (size_t i = 0; i < arr.count; i++){ \
+            char found = (*fn) ((type*) arr.ptr+i); \
+            if ( found ) { \
+                ans.result = arr.ptr[i]; \
+                return ans; \
+            }; \
+        } \
+        return ans; \
+    }
+
 // Since I can't define (type -> type) maps without macro collision, 
 // user has to do that manually, 
 // if he needs that (basically solved in the array utils)
@@ -437,6 +470,7 @@
     _DA_DEF_SORT(type) \
     _DA_DEF_RADIX(type) \
     _DA_DEF_GET(type) \
+    _DA_DEF_FIRST(type) \
     _DA_DEF_REVERSE(type)
 
 #define _DA_DEFINE_TYPE_SIGS(type) \
@@ -478,15 +512,13 @@
     _DA_IMPL_SORT(type) \
     _DA_IMPL_REVERSE(type) \
     _DA_IMPL_GET(type) \
+    _DA_IMPL_FIRST(type) \
     _DA_IMPL_RADIX(type);
-
-#define _DEFINE_DA_PRIMITIVE_IN(type) \
-    char pin_##type##Da(type##Da ptr, const type* elem); \
-    char pin_##type##Sa(type##Sa ptr, const type* elem);
 
 DEFAULT_TYPES(_DA_DEFINE_TYPE_SIGS);
 DEFAULT_TYPES(_DA_DEFINE_FN_SIGS);
 DEFAULT_TYPES(_DEFINE_DA_PRIMITIVE_IN);
+MATH_TYPES(DEFINE_DA);
 
 #endif
 
