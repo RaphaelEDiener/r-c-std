@@ -2,14 +2,16 @@
 #define RSTD
 
 #include "array_utils.h"
-#include "color_print.h"
-#include "dynamic_array.h"
 #include "default_types.h"
 #include "result.h"
+#include "cmp.h"
+#include "color_print.h"
+#include "rmath.h"
 #include "testing.h"
-#include "str_utils.h"
 #include "lists.h"
 #include "rings.h"
+#include "dynamic_array.h"
+#include "str_utils.h"
 
 #endif
 
