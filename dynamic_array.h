@@ -438,7 +438,7 @@
 
 #define _DA_IMPL_FIRST(type) \
     type##Res first_##type##Da(const type##Da arr, const _da_truthy_##type##_fn fn) { \
-        type##Res ans = {FAILURE, 0};\
+        type##Res ans = {FAILURE, arr.ptr[0]};\
         for (size_t i = 0; i < arr.count; i++){ \
             char found = (*fn) ((type*) arr.ptr+i); \
             if ( found ) { \

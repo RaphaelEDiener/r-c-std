@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include "default_types.h"
 #include "result.h"
-// #include "iterator.h"
+#include "cmp.h"
 
 #ifndef RMATH
 #define RMATH
@@ -208,5 +208,6 @@ DEFAULT_TYPES(DEFINE_MATRIX4);
     macro(ldoubleVec4) 
 
 MATH_TYPES(DEFINE_RESULT);
+MATH_TYPES(DEFINE_EQ);
 
 #endif

@@ -46,4 +46,16 @@ DEFAULT_TYPES(DEFINE_EQ);
 DEFAULT_TYPES(DEFINE_GT);
 DEFAULT_TYPES(DEFINE_LT);
 
+#define IMPL_EQ(type) \
+    char eq_##type(const type* x, const type* y) { \
+        size_t size = sizeof(type); \
+        uchar* a = (uchar*) x; \
+        uchar* b = (uchar*) y; \
+        for (size_t i = 0; i < size ;i++) { \
+            if (a[i] != b[i]) return 0; \
+        } \
+        return 1;  \
+    }
+
+
 #endif

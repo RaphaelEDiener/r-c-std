@@ -3,7 +3,7 @@
 #include "default_types.h"
 #include "result.h"
 #include "rmath.h"
-#include "rmath.h"
+#include "cmp.h"
 #include "color_print.h"
 
 #ifndef DEFINE_DLlist
@@ -85,7 +85,8 @@
 
 #define _LL_IMPL_GET(t) \
     t##Res get_##t##Ll(const t##Ll list, const llong i) { \
-        t##Res ans = {FAILURE, 0}; \
+        t##Res ans = {0}; \
+        ans.type = FAILURE; \
         llong max_i = (llong) save_sub(list.count, 1); \
         if (i > max_i || i+1 < -max_i || list.count == 0) return ans; \
         t##LlNode* res = list.first; \
@@ -112,7 +113,7 @@
         voidRes ans = {FAILURE}; \
         t##LlNode* cur = list.first; \
         for (size_t i = 0; i < list.count; i++) { \
-            if (cur->val == elem) { \
+            if (eq_##t(&(cur->val), &elem)) { \
                 ans.type = SUCCESS; \
                 cur->prev->next = cur->next; \
                 cur->next->prev = cur->prev; \
