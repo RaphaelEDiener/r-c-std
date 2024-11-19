@@ -263,6 +263,7 @@ test_size_t     (size_t, size_t, message)
     *  Can I construct a curry object with a macro which is tailor made for the function?
 *  TODO: Iterator
 *  TODO: Reduce
+*  TODO: lerp
 *  TODO: Hashmaps
 *  TODO: Deque
 *  TODO: Hashsets
@@ -285,40 +286,4 @@ test_size_t     (size_t, size_t, message)
 
 # Internal Dependencies
 
-```mermaid
-flowchart BT 
-  glibc
-  subgraph " "
-    default_types
-    array_utils
-    color_print
-  end
-  str_utils --> default_types
-  str_utils --> dynamic_array
-  array_utils
-  cmp --> default_types
-  color_print --> glibc
-  dynamic_array --> glibc
-  dynamic_array --> result
-  dynamic_array --> rmath
-  dynamic_array --> default_types
-  dynamic_array --> color_print
-  dynamic_array --> cmp
-  dynamic_array --> array_utils
-  lists --> glibc
-  lists --> default_types
-  lists --> result
-  lists --> rmath
-  lists --> color_print
-  result --> default_types
-  rings --> default_types
-  rings --> result
-  rmath --> glibc
-  rmath --> default_types
-  str_utils --> glibc
-  str_utils --> default_types
-  str_utils --> dynamic_array
-  testing --> default_types
-  testing --> cmp
-  testing --> result
-```
+![internal_dependencies](internal_dependencies.svg)

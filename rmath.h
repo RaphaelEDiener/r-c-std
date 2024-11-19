@@ -29,20 +29,28 @@ size_t save_add(size_t x, size_t y);
     typedef struct { \
         type x; \
         type y; \
-    } type##Vec2; 
+    } type##Vec2; \
+    DEFINE_RESULT(type##Vec2) \
+    DEFINE_CMP(type##Vec2);
+
 #define _VEC_DEF_VEC3(type) \
     typedef struct { \
         type x; \
         type y; \
         type z; \
-    } type##Vec3; 
+    } type##Vec3; \
+    DEFINE_RESULT(type##Vec3) \
+    DEFINE_CMP(type##Vec3);
+
 #define _VEC_DEF_VEC4(type) \
     typedef struct { \
         type x; \
         type y; \
         type z; \
         type w; \
-    } type##Vec4; 
+    } type##Vec4; \
+    DEFINE_RESULT(type##Vec4) \
+    DEFINE_CMP(type##Vec4);
 
 #define _VEC_DEF_ADD(type) \
     type##Vec2 add_##type##Vec2(const type##Vec2* a, const type##Vec2* b); \
@@ -124,6 +132,11 @@ size_t save_add(size_t x, size_t y);
     _VEC_DEF_VEC2(type) \
     _VEC_DEF_VEC3(type) \
     _VEC_DEF_VEC4(type) \
+
+#define _DEFINE_PRIM_VEC(type) \
+    _VEC_DEF_VEC2(type) \
+    _VEC_DEF_VEC3(type) \
+    _VEC_DEF_VEC4(type) \
     _VEC_DEF_ADD(type) \
     _VEC_DEF_MUL(type) \
     _VEC_DEF_DIV(type) \
@@ -135,21 +148,23 @@ size_t save_add(size_t x, size_t y);
     _VEC_IMPL_DIV(type) \
     _VEC_IMPL_SUB(type)
 
-DEFAULT_TYPES(DEFINE_VEC);
+DEFAULT_TYPES(_DEFINE_PRIM_VEC);
 
 #define DEFINE_MATRIX2(type) \
     typedef struct { \
         type* ptr; \
         size_t x; \
         size_t y; \
-    } type##Mat2;
+    } type##Mat2; \
+    DEFINE_RESULT(type##Mat2);
 #define DEFINE_MATRIX3(type) \
     typedef struct { \
         type* ptr; \
         size_t x; \
         size_t y; \
         size_t z; \
-    } type##Mat3;
+    } type##Mat3; \
+    DEFINE_RESULT(type##Mat3);
 #define DEFINE_MATRIX4(type) \
     typedef struct { \
         type* ptr; \
@@ -157,11 +172,15 @@ DEFAULT_TYPES(DEFINE_VEC);
         size_t y; \
         size_t z; \
         size_t w; \
-    } type##Mat4;
+    } type##Mat4; \
+    DEFINE_RESULT(type##Mat4);
 
-DEFAULT_TYPES(DEFINE_MATRIX2);
-DEFAULT_TYPES(DEFINE_MATRIX3);
-DEFAULT_TYPES(DEFINE_MATRIX4);
+#define DEFINE_MATRIX(type) \
+    DEFINE_MATRIX2(type) \
+    DEFINE_MATRIX3(type) \
+    DEFINE_MATRIX4(type) \
+
+DEFAULT_TYPES(DEFINE_MATRIX);
 
 #define MATH_TYPES(macro) \
     macro(charVec2) \
@@ -206,8 +225,5 @@ DEFAULT_TYPES(DEFINE_MATRIX4);
     macro(floatVec4) \
     macro(doubleVec4) \
     macro(ldoubleVec4) 
-
-MATH_TYPES(DEFINE_RESULT);
-MATH_TYPES(DEFINE_EQ);
 
 #endif

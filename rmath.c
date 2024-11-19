@@ -19,7 +19,7 @@ size_t save_add(size_t x, size_t y) {
 }
 
 DEFAULT_TYPES(IMPL_VEC);
-MATH_TYPES(IMPL_EQ);
+MATH_TYPES(IMPL_CMP);
 
 // wip
 // char brk(double curr, double target){

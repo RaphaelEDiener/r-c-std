@@ -49,6 +49,8 @@
  * Comparing (cmp.h):
  * ------------------------------
  *
+ * -- Predefined -- 
+ *
  * Compareable = {LESS | EQUAL | GREATER}
  *
  * Compareable cmp_<t> (const <t>*, const <t>*)
@@ -57,6 +59,11 @@
  * char        gt_<t>  (const <t>*, const <t>*)
  *
  * => for all default types
+ *
+ * -- Costume --
+ *
+ * DEFINE_CMP(t)
+ * IMPL_CMP(t)
  *
  * ------------------------------
  * Printing (color_print.h):
@@ -140,11 +147,12 @@
  *              const elem*, 
  *              const eq(const <t>*, const <t>*)->char
  *          )
- * char     pin_<t>Da(const wptr, const elem*) -> primitive in
+ * char     pin_<t>Da( const wptr, const elem*) -> primitive in
+ * <t>Res   first<t>Da(const wptr, const fn(const <t>*)->char)
  * <t>DaRes unique_<t>Da(
  *              const wptr, 
  *              const eq(const <t>*, const <t>*)->char
- *          )
+ *          ) -> creates new Da with each element being unique 
  * void     sort_<t>Da(
  *              wptr, 
  *              const cmp(const <t>*, const <t>*)->Compareable
@@ -238,13 +246,16 @@
  * ------------------------------
  * Math (rmath.h):
  * ------------------------------
- *
+ * 
+ * All predefined 
+ * 
  * -- Costume --
  *
- * IMPL_SWAP(type)  -> implements a swap in place function for a given datadype
- * DEFINE_VEC2(type) 
- * DEFINE_VEC3(type) 
- * DEFINE_VEC4(type) 
+ * IMPL_SWAP(type)     -> implements a swap in place function 
+ *                        for a given datatype
+ * DEFINE_VEC(type)    -> <type>Vec2, ...
+ * DEFINE_MATRIX(type) -> <type>Mat2, ...
+ * MATH_TYPES(macro)   -> macro(<t>Vec2), macro(<t>Vec3), ... 
  *
  * -- Predefined -- 
  *
@@ -255,9 +266,9 @@
  * <t>Vec2 {x;y}
  * <t>Vec3 {x;y;z} 
  * <t>Vec4 {x;y;z;w} 
- * <t>Mat { type* ptr; size_t x; size_t y; }
- * <t>Mat { type* ptr; size_t x; size_t y; size_t z; }
- * <t>Mat { type* ptr; size_t x; size_t y; size_t z; size_t w; }
+ * <t>Mat2 { type* ptr; size_t x; size_t y; }
+ * <t>Mat3 { type* ptr; size_t x; size_t y; size_t z; }
+ * <t>Mat4 { type* ptr; size_t x; size_t y; size_t z; size_t w; }
  *
  * add_<t>Vec<n>(const <t>Vec<n>* a, const <t>Vec<n>* b)
  * sub_<t>Vec<n>(const <t>Vec<n>* a, const <t>Vec<n>* b)
