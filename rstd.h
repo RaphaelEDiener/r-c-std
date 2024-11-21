@@ -24,9 +24,26 @@
  * it is implemented for all types available in c
  * using the aliases/shorthands found in default_types.h
  *
- * if a parameter is not declared 'const', it is getting modified.
+ * If a parameter is not declared 'const', it is getting modified.
+ * Parameters are preferably passed by reference, 
+ * since 03 can turn small references into values, 
+ * but not vise versa for large values (reliably acros compilers).
  *
- * Linking: rstd.c 
+ * -- Building --
+ * 
+ * gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o
+ *
+ * -- Linking --
+ *
+ * gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o
+ *
+ * It is recommended to use `-fmax-errors=2`,
+ * since the library is heavily dependant on macros,
+ * that can quickly result in compiler diarrhea.
+ *
+ * -- Using --
+ *
+ * `#include "rstd.h"`
  *
  * ------------------------------
  * Working with Arrays (array_utils.h):
@@ -50,6 +67,8 @@
  * ------------------------------
  * Comparing (cmp.h):
  * ------------------------------
+ *
+ * The macros for costume implementation work for any struct.
  *
  * -- Predefined -- 
  *

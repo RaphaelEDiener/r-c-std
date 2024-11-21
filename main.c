@@ -64,6 +64,11 @@ char is_one(const char* x) {
     return 1 == *x;
 }
 
+typedef struct {
+    int x;
+    int y;
+} CmpStruct;
+
 
 int test_array_macros(void) {
     int fails = 0;
@@ -167,18 +172,38 @@ int test_array_macros(void) {
     return fails;
 }
 
-
+DEFINE_CMP(CmpStruct)
+IMPL_CMP(CmpStruct)
 int test_cmp(void) {
     int fails = 0;
     char x0 = '0';
     char y0 = '9';
-    test_Compareable(cmp_char(&x0, &y0), LESS, "0 is less than 9");
+    fails += test_Compareable(cmp_char(&x0, &y0), LESS, "0 is less than 9");
     char x1 = '0';
     char y1 = '0';
-    test_Compareable(cmp_char(&x1, &y1), EQUAL, "0 equal 0");
+    fails += test_Compareable(cmp_char(&x1, &y1), EQUAL, "0 equal 0");
     char x2 = '9';
     char y2 = '0';
-    test_Compareable(cmp_char(&x2, &y2), GREATER, "9 is greater than 0");
+    fails += test_Compareable(cmp_char(&x2, &y2), GREATER, "9 is greater than 0");
+
+    CmpStruct x3 = {0,0};
+    CmpStruct y3 = {1,0};
+    fails += test_Compareable(cmp_CmpStruct(&x3, &y3), LESS, "Less on Structs works");
+    CmpStruct x4 = {0,1};
+    CmpStruct y4 = {1,0};
+    fails += test_Compareable(cmp_CmpStruct(&x4, &y4), LESS, "Comparisson on structs uses byteorder");
+    CmpStruct x5 = {1,0};
+    CmpStruct y5 = {1,1};
+    fails += test_Compareable(cmp_CmpStruct(&x5, &y5), LESS, "Comparisson on structs uses byteorder 2");
+    CmpStruct x6 = {1,0};
+    CmpStruct y6 = {0,1};
+    fails += test_Compareable(cmp_CmpStruct(&x6, &y6), GREATER, "Greater on structs works");
+    CmpStruct x7 = {1,1};
+    CmpStruct y7 = {1,1};
+    fails += test_Compareable(cmp_CmpStruct(&x7, &y7), EQUAL, "EQUAL on structs works");
+    CmpStruct x8 = {0};
+    CmpStruct y8 = {0};
+    fails += test_Compareable(cmp_CmpStruct(&x8, &y8), EQUAL, "EQUAL on empty structs works");
     return fails;
 }
 
