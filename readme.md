@@ -9,9 +9,26 @@ If no clarification is given on the specific type,
 it is implemented for all types available in c
 using the aliases/shorthands found in default_types.h
 
-if a parameter is not declared 'const', it is getting modified.
+If a parameter is not declared 'const', it is getting modified.
+Parameters are preferably passed by reference, 
+since 03 can turn small references into values, 
+but not vise versa for large values (reliably acros compilers).
 
-Linking: rstd.c 
+-- Building --
+
+gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o
+
+-- Linking --
+
+gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o
+
+It is recommended to use `-fmax-errors=2`,
+since the library is heavily dependant on macros,
+that can quickly result in compiler diarrhea.
+
+-- Using --
+
+`#include "rstd.h"`
 
 ------------------------------
 Working with Arrays (array_utils.h):
@@ -36,14 +53,20 @@ FOLDPP   (arr, len, fn, type, name, start) : fn(start*, type*)->start
 Comparing (cmp.h):
 ------------------------------
 
+The macros for costume implementation work for any struct.
+
 -- Predefined -- 
 
 Compareable = {LESS | EQUAL | GREATER}
 
-Compareable cmp_<t> (const <t>*, const <t>*)
-char        eq_<t>  (const <t>*, const <t>*)
-char        lt_<t>  (const <t>*, const <t>*)
-char        gt_<t>  (const <t>*, const <t>*)
+Compareable  cmp_<t> (const <t> , const <t> )
+char         eq_<t>  (const <t> , const <t> )
+char         lt_<t>  (const <t> , const <t> )
+char         gt_<t>  (const <t> , const <t> )
+Compareable pcmp_<t> (const <t>*, const <t>*)
+char        peq_<t>  (const <t>*, const <t>*)
+char        plt_<t>  (const <t>*, const <t>*)
+char        pgt_<t>  (const <t>*, const <t>*)
 
 => for all default types
 
@@ -96,9 +119,12 @@ voidRes -> {type: SUCCESS | FAILURE}
 Dynamic Arrays (dynamic_array.h):
 ------------------------------
 
+Arrays hold a size, 
+since some types can't deduce their size with `sizeof()`
+
 -- Costume --
 
-DEFINE_MAPDA(type)  -> Defines a map from type to type
+DEFINE_MAPDA(type)  -> Defines a map  from type to type
 DEFINE_FOLDDA(type) -> Defines a fold from type to type
 DEFINE_DA(type)     -> Defines a dynamic- and stack array 
                        with most of the associated functions
@@ -112,8 +138,10 @@ DA / SA = {capacity; size; count; ptr}
 new_sa(name, type, capacity) -> create stack array
 
 <t>DaRes new_<t>Da(const size_t capacity)
-<t>DaRes insert_<t>Da(const wprt, const elem)
-voidRes  insert_<t>Sa(wprt, const elem)
+<t>DaRes insert_<t>Da (const da*, const <t>  elem)
+voidRes  insert_<t>Sa (      sa*, const <t>  elem)
+<t>DaRes pinsert_<t>Da(const da*, const <t>* elem)
+voidRes  pinsert_<t>Sa(      sa*, const <t>* elem)
 <t>Res   get_<t>DA(const <t>DA list, const llong i) -> 
                  returns element at position. 
                  works with negative numbers for backwards traversal.
@@ -291,13 +319,18 @@ test_double     (double, double, message)
 test_ldouble    (ldouble, ldouble, message)
 test_Compareable(Compareable, Compareable, message)
 test_size_t     (size_t, size_t, message)
-
 ```
 
 # Using the Lib
 
 First clone the repository.
+
+```
+git clone -b clean -–depth 1 git@github.com:RaphaelEDiener/r-c-std.git
+```
+
 It is recomended to create a new folder for this inside your project:
+
 ```
 src
  |-main.c
