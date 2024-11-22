@@ -74,10 +74,14 @@
  *
  * Compareable = {LESS | EQUAL | GREATER}
  *
- * Compareable cmp_<t> (const <t>*, const <t>*)
- * char        eq_<t>  (const <t>*, const <t>*)
- * char        lt_<t>  (const <t>*, const <t>*)
- * char        gt_<t>  (const <t>*, const <t>*)
+ * Compareable  cmp_<t> (const <t> , const <t> )
+ * char         eq_<t>  (const <t> , const <t> )
+ * char         lt_<t>  (const <t> , const <t> )
+ * char         gt_<t>  (const <t> , const <t> )
+ * Compareable pcmp_<t> (const <t>*, const <t>*)
+ * char        peq_<t>  (const <t>*, const <t>*)
+ * char        plt_<t>  (const <t>*, const <t>*)
+ * char        pgt_<t>  (const <t>*, const <t>*)
  *
  * => for all default types
  *
@@ -130,9 +134,12 @@
  * Dynamic Arrays (dynamic_array.h):
  * ------------------------------
  *
+ * Arrays hold a size, 
+ * since some types can't deduce their size with `sizeof()`
+ * 
  * -- Costume --
  *
- * DEFINE_MAPDA(type)  -> Defines a map from type to type
+ * DEFINE_MAPDA(type)  -> Defines a map  from type to type
  * DEFINE_FOLDDA(type) -> Defines a fold from type to type
  * DEFINE_DA(type)     -> Defines a dynamic- and stack array 
  *                        with most of the associated functions
@@ -146,8 +153,10 @@
  * new_sa(name, type, capacity) -> create stack array
  * 
  * <t>DaRes new_<t>Da(const size_t capacity)
- * <t>DaRes insert_<t>Da(const wprt, const elem)
- * voidRes  insert_<t>Sa(wprt, const elem)
+ * <t>DaRes insert_<t>Da (const da*, const <t>  elem)
+ * voidRes  insert_<t>Sa (      sa*, const <t>  elem)
+ * <t>DaRes pinsert_<t>Da(const da*, const <t>* elem)
+ * voidRes  pinsert_<t>Sa(      sa*, const <t>* elem)
  * <t>Res   get_<t>DA(const <t>DA list, const llong i) -> 
  *                  returns element at position. 
  *                  works with negative numbers for backwards traversal.

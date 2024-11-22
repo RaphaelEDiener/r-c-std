@@ -52,4 +52,5 @@ int peak(FILE* fp) {
     return ans;
 }
 
-
+IMPL_SWAP(String)
+IMPL_DA(String)

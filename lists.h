@@ -113,7 +113,7 @@
         voidRes ans = {FAILURE}; \
         t##LlNode* cur = list.first; \
         for (size_t i = 0; i < list.count; i++) { \
-            if (eq_##t(&(cur->val), &elem)) { \
+            if (eq_##t(cur->val, elem)) { \
                 ans.type = SUCCESS; \
                 cur->prev->next = cur->next; \
                 cur->next->prev = cur->prev; \

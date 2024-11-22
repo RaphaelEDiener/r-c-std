@@ -340,6 +340,8 @@ gcc -o main.exe main.c rstd.o
 *  TODO: Iterator
 *  TODO: Reduce
 *  TODO: lerp
+*  TODO: DA radix should also use DA's to avoid stack overflows!
+*  TODO: radix should not need to go through the heavily checked insert functions
 *  TODO: Hashmaps
 *  TODO: Deque
 *  TODO: Hashsets

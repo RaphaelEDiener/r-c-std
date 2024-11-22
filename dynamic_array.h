@@ -39,8 +39,10 @@
     type##Sa name = {capacity, sizeof(type), 0, _##name};
 
 #define _DA_DEF_INSERT(type) \
-    type##DaRes insert_##type##Da(const type##Da arr, const type elem); \
-    voidRes insert_##type##Sa(type##Sa* arr, const type elem);
+    type##DaRes insert_##type##Da (const type##Da* arr, const type  elem); \
+    voidRes     insert_##type##Sa (      type##Sa* arr, const type  elem); \
+    type##DaRes pinsert_##type##Da(const type##Da* arr, const type* elem); \
+    voidRes     pinsert_##type##Sa(      type##Sa* arr, const type* elem);
 
 /**
  * I've removed checking for inserting into something which reached its
@@ -49,23 +51,23 @@
  * Not hitting zetabyre ram sticks anytime soon~
  */
 #define _DA_IMPL_INSERT(type) \
-    type##DaRes insert_##type##Da(const type##Da arr, const type elem) { \
-        size_t new_cap = arr.capacity; \
-        type* new_ptr = arr.ptr; \
-        type##DaRes failure = {FAILURE, {new_cap, sizeof(type), arr.count+1, new_ptr}}; \
-        if (arr.count == arr.capacity) { \
-            type* prev = arr.ptr; \
-            new_cap = (arr.capacity == 0) ? 8 : arr.capacity * 2; \
-            new_ptr = (type*) calloc(new_cap, sizeof(type)); \
+    type##DaRes insert_##type##Da(const type##Da* arr, const type elem) { \
+        size_t new_cap = arr->capacity; \
+        type*  new_ptr = arr->ptr; \
+        type##DaRes failure = {FAILURE, {new_cap, arr->size, arr->count+1, new_ptr}}; \
+        if (arr->count == arr->capacity) { \
+            type* prev = arr->ptr; \
+            new_cap = (arr->capacity == 0) ? 8 : arr->capacity * 2; \
+            new_ptr = (type*) calloc(new_cap, arr->size); \
             if (new_ptr == NULL) { \
                 err_redln("failed to allocated for new capacity of %zu", new_cap); \
                 return failure; \
             } \
-            memcpy(new_ptr, prev, arr.capacity * sizeof(type)); \
+            memcpy(new_ptr, prev, arr->capacity * arr->size); \
             FREE(prev); \
         } \
-        new_ptr[arr.count] = elem; \
-        type##Da new_arr = {new_cap, sizeof(type), arr.count+1, new_ptr}; \
+        new_ptr[arr->count] = elem; \
+        type##Da new_arr = {new_cap, arr->size, arr->count+1, new_ptr}; \
         type##DaRes ans2 = {SUCCESS, new_arr}; \
         return ans2; \
     } \
@@ -79,19 +81,25 @@
         arr->count++; \
         voidRes ans2 = {SUCCESS}; \
         return ans2; \
-    }
+    } \
+    inline type##DaRes pinsert_##type##Da(const type##Da* arr, const type* elem) { \
+        return insert_##type##Da(arr, *elem); \
+    } \
+    inline voidRes     pinsert_##type##Sa(      type##Sa* arr, const type* elem) { \
+        return insert_##type##Sa(arr, *elem); \
+    } ;
 
 #define _DA_DEF_FOR_EACH(type) \
     void for_each_##type##Da(const type##Da wptr, const _da_##type##_to_void fn); \
     void for_each_##type##Sa(const type##Sa wptr, const _da_##type##_to_void fn);
 
 #define _DA_IMPL_FOR_EACH(type) \
-    void for_each_##type##Da(const type##Da wptr, const _da_##type##_to_void fn) { \
+    inline void for_each_##type##Da(const type##Da wptr, const _da_##type##_to_void fn) { \
         for (size_t i = 0; i < wptr.count; i++) { \
             (*fn)(wptr.ptr + i); \
         } \
     } \
-    void for_each_##type##Sa(const type##Sa wptr, const _da_##type##_to_void fn) { \
+    inline void for_each_##type##Sa(const type##Sa wptr, const _da_##type##_to_void fn) { \
         for (size_t i = 0; i < wptr.count; i++) { \
             (*fn)(wptr.ptr + i); \
         } \
@@ -292,13 +300,6 @@
     }
 
 #define _DA_DEF_SORT(type) \
-    DEFINE_SWAP(type) \
-    void _quick_sort_##type( \
-            type* arr, \
-            const size_t low, \
-            const size_t high, \
-            const _da_comperator_##type cmp \
-    ); \
     void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp);
 
 #define _DA_IMPL_SORT(type) \
@@ -327,7 +328,7 @@
         _quick_sort_##type(arr, low, save_sub(p,1), cmp); \
         _quick_sort_##type(arr, save_add(p,1), high, cmp); \
     } \
-    void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp){ \
+    void sort_##type##Da(type##Da arr, const _da_comperator_##type cmp) { \
         if (arr.count == 0) return; \
         _quick_sort_##type(arr.ptr, 0, arr.count-1, cmp); \
     }
@@ -359,22 +360,22 @@
                 } \
                 arr.count = 0; \
                 for (size_t i = 0; i < buff0.count; i++) { \
-                    type##Da res = insert_##type##Da(arr, buff0.ptr[i]).result; \
+                    type##Da res = insert_##type##Da(&arr, buff0.ptr[i]).result; \
                     arr.ptr = res.ptr; \
                     arr.count = res.count; \
                 } \
                 for (size_t i = 0; i < buff1.count; i++) { \
-                    type##Da res = insert_##type##Da(arr, buff1.ptr[i]).result; \
+                    type##Da res = insert_##type##Da(&arr, buff1.ptr[i]).result; \
                     arr.ptr = res.ptr; \
                     arr.count = res.count; \
                 } \
                 for (size_t i = 0; i < buff2.count; i++) { \
-                    type##Da res = insert_##type##Da(arr, buff2.ptr[i]).result; \
+                    type##Da res = insert_##type##Da(&arr, buff2.ptr[i]).result; \
                     arr.ptr = res.ptr; \
                     arr.count = res.count; \
                 } \
                 for (size_t i = 0; i < buff3.count; i++) { \
-                    type##Da res = insert_##type##Da(arr, buff3.ptr[i]).result; \
+                    type##Da res = insert_##type##Da(&arr, buff3.ptr[i]).result; \
                     arr.ptr = res.ptr; \
                     arr.count = res.count; \
                 } \

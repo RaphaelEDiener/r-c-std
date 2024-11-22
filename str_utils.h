@@ -20,6 +20,7 @@ uchar is_control(char c);
 
 typedef charDa String;
 DEFINE_RESULT(String);
+DEFINE_SWAP(String);
 DEFINE_DA(String);
 
 String      join_Da(StringDa);
