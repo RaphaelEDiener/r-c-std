@@ -94,10 +94,21 @@
  * Printing (color_print.h):
  * ------------------------------
  * 
+ * constants: 
+ * const char* TERM_CLEAR
+ * const char* TERM_BLACK
+ * const char* TERM_RED
+ * const char* TERM_GREEN
+ * const char* TERM_YELLOW
+ * const char* TERM_BLUE
+ * const char* TERM_MAGENTA
+ * const char* TERM_CYAN
+ * const char* TERM_WHITE
+ * 
  * colors: red, green, black, yellow, blue, mangenta, cyan, white
  *
- * functions:
- * <color>()
+ * macros:
+ * out_<color>()
  * <color>ln() 
  * err_<color>()
  * err_<color>ln()
