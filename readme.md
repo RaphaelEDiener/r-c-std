@@ -388,6 +388,7 @@ gcc -o main.exe main.c rstd.o
 *  TODO: test first_da
 *  TODO: linked datastructure with log n lookpups
 *  TODO: test if get on lists works with empty lists
+*  TODO: change print macros to inline functions
  
 ```
 // join("hi", "my", "name", "is")

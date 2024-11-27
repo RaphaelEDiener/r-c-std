@@ -795,11 +795,49 @@ int test_da_fold(void) {
 
     return fails;
 }
+int test_da_get(void) {
+    int fails = 0;
+
+    charDa da0 = new_charDa(10).result;
+    for (size_t i = 0; i < 10; i++) {
+        da0 = insert_charDa(&da0, (char) i).result;
+    }
+
+    charRes get0 = get_charDa(da0, 0);
+    fails += test_ResultType(get0.type, SUCCESS, "get 0 in 10 length da works");
+    fails += test_char(get0.result, 0, "get 0 in 10 length da returns correct value");
+    charRes get1 = get_charDa(da0, 1);
+    fails += test_ResultType(get1.type, SUCCESS, "get 1 in 10 length da works");
+    fails += test_char(get1.result, 1, "get 1 in 10 length da returns correct value");
+    charRes get2 = get_charDa(da0, 9);
+    fails += test_ResultType(get2.type, SUCCESS, "get 9 in 10 length da works");
+    fails += test_char(get2.result, 9, "get 9 in 10 length da returns correct value");
+    
+    charRes get9 = get_charDa(da0, -1);
+    fails += test_ResultType(get9.type, SUCCESS, "get -1 in 10 length da works");
+    fails += test_char(get9.result, 9, "get -1 in 10 length da returns correct value");
+    charRes get8 = get_charDa(da0, -2);
+    fails += test_ResultType(get8.type, SUCCESS, "get -2 in 10 length da works");
+    fails += test_char(get8.result, 8, "get -2 in 10 length da returns correct value");
+    charRes get7 = get_charDa(da0, -10);
+    fails += test_ResultType(get7.type, SUCCESS, "get -10 in 10 length da works");
+    fails += test_char(get7.result, 0, "get -10 in 10 length da returns correct value");
+    
+    charRes get10 = get_charDa(da0, 10);
+    fails += test_ResultType(get10.type, FAILURE, "get 10 in 10 length da fails");
+    charRes get_11 = get_charDa(da0, -11);
+    fails += test_ResultType(get_11.type, FAILURE, "get -11 in 10 length da fails");
+    
+    free(da0.ptr);
+
+    return fails;
+}
 
 int test_dynamic_arrays(void) {
     int fails = 0;
     fails += test_da_new();
     fails += test_da_insertion();
+    fails += test_da_get();
     fails += test_da_for_each();
     fails += test_da_all();
     fails += test_da_any();

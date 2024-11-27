@@ -4,6 +4,8 @@
 
 #include <stdio.h>
 
+#ifndef redln
+
 extern const char* TERM_CLEAR;
 extern const char* TERM_BLACK;
 extern const char* TERM_RED;
@@ -14,7 +16,6 @@ extern const char* TERM_MAGENTA;
 extern const char* TERM_CYAN;
 extern const char* TERM_WHITE;
 
-#ifndef redln
 // ##############################
 // STD OUT
 // ##############################
@@ -64,37 +65,37 @@ extern const char* TERM_WHITE;
     printf (__VA_ARGS__); \
     printf (TERM_CLEAR);
 
-#define green(...) \
+#define out_green(...) \
     printf (TERM_GREEN); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);
 
-#define black(...) \
+#define out_black(...) \
     printf (TERM_BLACK); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);
 
-#define yellow(...) \
+#define out_yellow(...) \
     printf (TERM_YELLOW); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);
 
-#define blue(...) \
+#define out_blue(...) \
     printf (TERM_BLUE); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);
 
-#define magenta(...) \
+#define out_magenta(...) \
     printf (TERM_MAGENTA); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);
 
-#define cyan(...) \
+#define out_cyan(...) \
     printf (TERM_CYAN); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);
 
-#define white(...) \
+#define out_white(...) \
     printf (TERM_WHITE); \
     printf (__VA_ARGS__);  \
     printf (TERM_CLEAR);

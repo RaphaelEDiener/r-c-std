@@ -401,18 +401,19 @@
     type##Res get_##type##Da(const type##Da arr, const llong i);
 
 // Accessing [0] always works since min len == 1
-#define _DA_IMPL_GET(type) \
-    type##Res get_##type##Da(const type##Da arr, const llong i) { \
-        type##Res res = {FAILURE, arr.ptr[0]}; \
+#define _DA_IMPL_GET(t) \
+    t##Res get_##t##Da(const t##Da arr, const llong i) { \
+        t##Res res = {FAILURE, arr.ptr[0]}; \
         if ( \
-            (i >= 0 && (size_t) i > arr.count - 1) || \
-            (size_t) (-i) > arr.count \
+            (i >= 0 && (i > (llong) arr.count - 1)) || \
+            (-i) > (llong) arr.count \
         ) { \
             err_redln("position %llu is out side of bounds. current len is %zu", i, arr.count); \
             return res; \
         } \
         size_t real_i = i >= 0 ? (size_t) i : (size_t) (arr.count + i); \
         res.result = arr.ptr[real_i]; \
+        res.type = SUCCESS; \
         return res; \
     }
 
