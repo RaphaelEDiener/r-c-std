@@ -401,18 +401,19 @@
     type##Res get_##type##Da(const type##Da arr, const llong i);
 
 // Accessing [0] always works since min len == 1
-#define _DA_IMPL_GET(type) \
-    type##Res get_##type##Da(const type##Da arr, const llong i) { \
-        type##Res res = {FAILURE, arr.ptr[0]}; \
+#define _DA_IMPL_GET(t) \
+    t##Res get_##t##Da(const t##Da arr, const llong i) { \
+        t##Res res = {FAILURE, arr.ptr[0]}; \
         if ( \
-            (i >= 0 && (size_t) i > arr.count - 1) || \
-            (size_t) (-i) > arr.count \
+            (i >= 0 && (i > (llong) arr.count - 1)) || \
+            (-i) > (llong) arr.count \
         ) { \
             err_redln("position %llu is out side of bounds. current len is %zu", i, arr.count); \
             return res; \
         } \
         size_t real_i = i >= 0 ? (size_t) i : (size_t) (arr.count + i); \
         res.result = arr.ptr[real_i]; \
+        res.type = SUCCESS; \
         return res; \
     }
 
@@ -437,13 +438,15 @@
 #define _DA_DEF_FIRST(type) \
     type##Res first_##type##Da(const type##Da arr, const _da_truthy_##type##_fn fn);
 
-#define _DA_IMPL_FIRST(type) \
-    type##Res first_##type##Da(const type##Da arr, const _da_truthy_##type##_fn fn) { \
-        type##Res ans = {FAILURE, arr.ptr[0]};\
+#define _DA_IMPL_FIRST(t) \
+    t##Res first_##t##Da(const t##Da arr, const _da_truthy_##t##_fn fn) { \
+        t##Res ans = {0};\
+        ans.type   = FAILURE; \
         for (size_t i = 0; i < arr.count; i++){ \
-            char found = (*fn) ((type*) arr.ptr+i); \
+            char found = (*fn) ((t*) arr.ptr+i); \
             if ( found ) { \
                 ans.result = arr.ptr[i]; \
+                ans.type   = SUCCESS; \
                 return ans; \
             }; \
         } \

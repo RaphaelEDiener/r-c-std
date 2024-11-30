@@ -26,8 +26,11 @@
  *
  * If a parameter is not declared 'const', it is getting modified.
  * Parameters are preferably passed by reference, 
- * since 03 can turn small references into values, 
+ * since -03 can turn small references into values, 
  * but not vise versa for large values (reliably acros compilers).
+ *
+ * Naming follows the convention:
+ * <modifyer><function name><for type>
  *
  * -- Building --
  * 
@@ -94,10 +97,21 @@
  * Printing (color_print.h):
  * ------------------------------
  * 
+ * constants: 
+ * const char* TERM_CLEAR
+ * const char* TERM_BLACK
+ * const char* TERM_RED
+ * const char* TERM_GREEN
+ * const char* TERM_YELLOW
+ * const char* TERM_BLUE
+ * const char* TERM_MAGENTA
+ * const char* TERM_CYAN
+ * const char* TERM_WHITE
+ * 
  * colors: red, green, black, yellow, blue, mangenta, cyan, white
  *
- * functions:
- * <color>()
+ * macros:
+ * out_<color>()
  * <color>ln() 
  * err_<color>()
  * err_<color>ln()
@@ -152,7 +166,7 @@
  *
  * new_sa(name, type, capacity) -> create stack array
  * 
- * <t>DaRes new_<t>Da(const size_t capacity)
+ * <t>DaRes new_<t>Da(const size_t capacity) -> where capacity > 0
  * <t>DaRes insert_<t>Da (const da*, const <t>  elem)
  * voidRes  insert_<t>Sa (      sa*, const <t>  elem)
  * <t>DaRes pinsert_<t>Da(const da*, const <t>* elem)

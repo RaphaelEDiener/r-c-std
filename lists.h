@@ -134,10 +134,10 @@
         llong max_i = (llong) save_sub(list.count, 1); \
         if (i > max_i || i+1 < -max_i || list.count == 0) return ans; \
         if (list.count == 1) { \
-            t##LlNode* res = list.first; \
+            t##LlNode* cur = list.first; \
+            free(cur); \
             list.first = NULL; \
             list.last = NULL; \
-            free(res); \
         } else { \
             t##LlNode* cur = list.first; \
             llong pos = i; \
@@ -153,11 +153,12 @@
             cur->prev->next = cur->next; \
             cur->next->prev = cur->prev; \
             if (list.first == cur) {list.first = cur->next;}; \
-            if (list.last == cur) {list.last = cur->prev;}; \
+            if (list.last  == cur) {list.last  = cur->prev;}; \
             free(cur); \
         } \
         ans.type = SUCCESS; \
-        ans.result.count--; \
+        list.count -= 1; \
+        ans.result = list; \
         return ans; \
     } \
 
