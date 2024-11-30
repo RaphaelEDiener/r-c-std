@@ -956,10 +956,36 @@ int test_is_upper(void) {
 
     return fails;
 }
+int test_string_load(void) {
+    int fails = 1;
+
+    // TODO: test
+
+    return fails;
+}
+int test_string_split(void) {
+    int fails = 1;
+
+    // TODO: test
+
+    return fails;
+}
+int test_string_join(void) {
+    int fails = 1;
+
+    // TODO: test
+
+    return fails;
+}
 int test_string_operations(void) {
     int fails = 0;
     fails += test_is_upper();
     fails += test_is_lower();
+    fails += test_string_load();
+    fails += test_string_split();
+    fails += test_string_join();
+    // TODO: Test skip_whitespace
+    // TODO: Test undoc string ops 
 
     return fails;
 }
