@@ -12,6 +12,12 @@ int add2p(const int* x) {
 char eq1(int x) {
     return x == 1;
 }
+char eq7(const char* x) {
+    return *x == 7;
+}
+char eq10(const char* x) {
+    return *x == 10;
+}
 char false(int x) {
     return 0 && (char) x;
 }
@@ -315,6 +321,43 @@ int test_da_pinsertion(void) {
 
     return fails;
 }
+int test_da_get(void) {
+    int fails = 0;
+
+    charDa da0 = new_charDa(10).result;
+    for (size_t i = 0; i < 10; i++) {
+        da0 = insert_charDa(&da0, (char) i).result;
+    }
+
+    charRes get0 = get_charDa(da0, 0);
+    fails += test_ResultType(get0.type, SUCCESS, "get 0 in 10 length da works");
+    fails += test_char(get0.result, 0, "get 0 in 10 length da returns correct value");
+    charRes get1 = get_charDa(da0, 1);
+    fails += test_ResultType(get1.type, SUCCESS, "get 1 in 10 length da works");
+    fails += test_char(get1.result, 1, "get 1 in 10 length da returns correct value");
+    charRes get2 = get_charDa(da0, 9);
+    fails += test_ResultType(get2.type, SUCCESS, "get 9 in 10 length da works");
+    fails += test_char(get2.result, 9, "get 9 in 10 length da returns correct value");
+    
+    charRes get9 = get_charDa(da0, -1);
+    fails += test_ResultType(get9.type, SUCCESS, "get -1 in 10 length da works");
+    fails += test_char(get9.result, 9, "get -1 in 10 length da returns correct value");
+    charRes get8 = get_charDa(da0, -2);
+    fails += test_ResultType(get8.type, SUCCESS, "get -2 in 10 length da works");
+    fails += test_char(get8.result, 8, "get -2 in 10 length da returns correct value");
+    charRes get7 = get_charDa(da0, -10);
+    fails += test_ResultType(get7.type, SUCCESS, "get -10 in 10 length da works");
+    fails += test_char(get7.result, 0, "get -10 in 10 length da returns correct value");
+    
+    charRes get10 = get_charDa(da0, 10);
+    fails += test_ResultType(get10.type, FAILURE, "get 10 in 10 length da fails");
+    charRes get_11 = get_charDa(da0, -11);
+    fails += test_ResultType(get_11.type, FAILURE, "get -11 in 10 length da fails");
+    
+    free(da0.ptr);
+
+    return fails;
+}
 int test_da_for_each(void) {
     int fails = 0;
     intDa da0 = new_intDa(8).result;
@@ -446,6 +489,34 @@ int test_da_in(void) {
     charDa da2 = new_charDa(0).result;
     fails += test_char(in_charDa(da2, &ten, pcmp_char), 0, "in can't find element in the empty da");
     free(da2.ptr);
+
+    return fails;
+}
+int test_da_first(void) {
+    int fails = 0;
+
+    charDa da0 = new_charDa(8).result;
+    da0.count = 8;
+    for (size_t i = 0; i < da0.count; i++) {
+        da0.ptr[i] = i;
+    }
+    charRes res0 = first_charDa(da0, eq7);
+    fails += test_ResultType(res0.type, SUCCESS, "first finds element in da");
+    fails += test_char      (res0.result, 7, "first finds element in da");
+    free(da0.ptr);
+
+    charDa da1 = new_charDa(8).result;
+    da1.count = 8;
+    for (size_t i = 0; i < da1.count; i++) {
+        da1.ptr[i] = i;
+    }
+    charRes res1 = first_charDa(da1, eq10);
+    fails += test_ResultType(res1.type, FAILURE, "first can't find element that are not in da");
+    free(da1.ptr);
+
+    charDa da2 = new_charDa(0).result;
+    charRes res2 = first_charDa(da2, eq10);
+    fails += test_ResultType(res2.type, FAILURE, "first can't find element in the empty da");
 
     return fails;
 }
@@ -786,49 +857,14 @@ int test_da_fold(void) {
     for (size_t i = 0; i < 8; i++) {
         da0 = insert_intDa(&da0, 1).result;
     }
-    int res0 = fold_intDa_to_int(da0, addpp, 0);
-    fails += test_int(res0, 8, "fold da correctly folds");
+    int res00 = fold_intDa_to_int(da0, addpp, 0);
+    int res01 = fold_intDa(da0, addpp, 0);
+    fails += test_int(res00, 8, "fold da correctly folds");
+    fails += test_int(res01, 8, "simple fold da correctly folds");
 
     intDa da1 = new_intDa(0).result;
     int res1 = fold_intDa_to_int(da1, addpp, 0);
     fails += test_int(res1, 0, "empty fold works");
-
-    return fails;
-}
-int test_da_get(void) {
-    int fails = 0;
-
-    charDa da0 = new_charDa(10).result;
-    for (size_t i = 0; i < 10; i++) {
-        da0 = insert_charDa(&da0, (char) i).result;
-    }
-
-    charRes get0 = get_charDa(da0, 0);
-    fails += test_ResultType(get0.type, SUCCESS, "get 0 in 10 length da works");
-    fails += test_char(get0.result, 0, "get 0 in 10 length da returns correct value");
-    charRes get1 = get_charDa(da0, 1);
-    fails += test_ResultType(get1.type, SUCCESS, "get 1 in 10 length da works");
-    fails += test_char(get1.result, 1, "get 1 in 10 length da returns correct value");
-    charRes get2 = get_charDa(da0, 9);
-    fails += test_ResultType(get2.type, SUCCESS, "get 9 in 10 length da works");
-    fails += test_char(get2.result, 9, "get 9 in 10 length da returns correct value");
-    
-    charRes get9 = get_charDa(da0, -1);
-    fails += test_ResultType(get9.type, SUCCESS, "get -1 in 10 length da works");
-    fails += test_char(get9.result, 9, "get -1 in 10 length da returns correct value");
-    charRes get8 = get_charDa(da0, -2);
-    fails += test_ResultType(get8.type, SUCCESS, "get -2 in 10 length da works");
-    fails += test_char(get8.result, 8, "get -2 in 10 length da returns correct value");
-    charRes get7 = get_charDa(da0, -10);
-    fails += test_ResultType(get7.type, SUCCESS, "get -10 in 10 length da works");
-    fails += test_char(get7.result, 0, "get -10 in 10 length da returns correct value");
-    
-    charRes get10 = get_charDa(da0, 10);
-    fails += test_ResultType(get10.type, FAILURE, "get 10 in 10 length da fails");
-    charRes get_11 = get_charDa(da0, -11);
-    fails += test_ResultType(get_11.type, FAILURE, "get -11 in 10 length da fails");
-    
-    free(da0.ptr);
 
     return fails;
 }
@@ -843,6 +879,7 @@ int test_dynamic_arrays(void) {
     fails += test_da_any();
     fails += test_da_in();
     fails += test_da_pin();
+    fails += test_da_first();
     fails += test_da_unique();
     fails += test_da_sort();
     fails += test_da_radix();
@@ -938,15 +975,22 @@ int test_list_append(void) {
     charRes get0 = get_charLl(res0.result, 0);
     fails += test_ResultType(get0.type, SUCCESS, "ll getting just inserted element works");
     fails += test_char(get0.result, 42, "appending into ll insertes element");
-    // free_charLl(ll0);
-
+    free_charLl(ll0);
+    
     charLl ll1 = res0.result;
     charLlRes res1 = append_charLl(ll1, 24);
     fails += test_ResultType(res1.type, SUCCESS, "appending ll into filled succeeds");
     fails += test_size_t(res1.result.count, 2, "appending ll increases count");
     fails += test_char(get_charLl(res1.result, 0).result, 42, "appending into ll doesn't alter other lements");
     fails += test_char(get_charLl(res1.result, 1).result, 24, "appending into ll insertes element in the back");
-    // free_charLl(ll1);
+    free_charLl(ll1);
+
+    charLl ll2 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll2 = append_charLl(ll2, (char) i).result;
+    }
+    fails += test_size_t(ll2.count, 10, "appending ll increases count correctly");
+    free_charLl(ll2);
 
     return fails;
 }
@@ -960,7 +1004,7 @@ int test_list_prepend(void) {
     charRes get0 = get_charLl(res0.result, 0);
     fails += test_ResultType(get0.type, SUCCESS, "ll getting just inserted element works");
     fails += test_char(get0.result, 42, "prepending into ll insertes element");
-    // free_charLl(ll0);
+    free_charLl(ll0);
 
     charLl ll1 = res0.result;
     charLlRes res1 = prepend_charLl(ll1, 24);
@@ -968,7 +1012,14 @@ int test_list_prepend(void) {
     fails += test_size_t(res1.result.count, 2, "prepending ll increases count");
     fails += test_char(get_charLl(res1.result, -1).result, 42, "prepending into ll doesn't alter other lements");
     fails += test_char(get_charLl(res1.result, 0).result, 24, "prepending into ll insertes element in the front");
-    // free_charLl(ll1);
+    free_charLl(ll1);
+    
+    charLl ll2 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll2 = prepend_charLl(ll2, (char) i).result;
+    }
+    fails += test_size_t(ll2.count, 10, "appending ll increases count correctly");
+    free_charLl(ll2);
 
     return fails;
 }
@@ -1005,7 +1056,7 @@ int test_list_get(void) {
     charRes get_11 = get_charLl(ll0, -11);
     fails += test_ResultType(get_11.type, FAILURE, "get -11 in 10 length ll fails");
     
-    // free_charLl(ll0);
+    free_charLl(ll0);
 
     charLl ll1 = new_charLl();
     charRes get_not0 = get_charLl(ll1, 0);
@@ -1026,32 +1077,64 @@ int test_list_remove(void) {
     charLlRes res0 = rem_charLl(ll0, 0);
     fails += test_ResultType(res0.type, FAILURE, "removing ll from empty list fails");
     charLlRes res1 = rem_charLl(ll0, -1);
-    fails += test_ResultType(res1.type, FAILURE, "removing ll from empty list fails");
+    fails += test_ResultType(res1.type, FAILURE, "removing backwards ll from empty list fails");
     // "removing ll from position outside of range fails"
     charLl ll1 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll1 = append_charLl(ll0, (char) i).result;
+        ll1 = append_charLl(ll1, (char) i).result;
     }
     charLlRes res2 = rem_charLl(ll1, 99);
     fails += test_ResultType(res2.type, FAILURE, "removing ll from position outside of range fails");
+    fails += test_size_t(res2.result.count, 10, "failed removal ll doesn't alter element count");
     charLlRes res3 = rem_charLl(ll1, -99);
-    fails += test_ResultType(res3.type, FAILURE, "removing ll from position outside of range fails");
-    // free_charLl(ll1);
+    fails += test_ResultType(res3.type, FAILURE, "removing backwards ll from position outside of range fails");
+    fails += test_size_t(res3.result.count, 10, "failed removal ll doesn't alter element count 2");
+    free_charLl(ll1);
 
     charLl ll2 = new_charLl();
-    for (size_t i = 0; i < 10; i++) {
+    for (size_t i = 0; i < 12; i++) {
         ll2 = append_charLl(ll2, (char) i).result;
     }
-    fails += test_size_t(ll2.count, 10, "correct amount fo items in ll");
+    fails += test_size_t(ll2.count, 12, "(remove) correct amount of items in ll in the beginning");
+
+    // removing from beginning
+    charLlRes res5 = rem_charLl(ll2, 0);
+    fails += test_ResultType(res5.type, SUCCESS, "removing ll from existing index 0 works");
+    ll2 = res5.result;
+    fails += test_size_t(ll2.count, 11, "remove ll decreases size by 1");
+    for (size_t i = 0; i < 11; i++) {
+        charRes temp_res = get_charLl(ll2, i);
+        fails += test_char(temp_res.result, i + 1, "iter after index 0 rem works");
+    }
+
+    // removing from end 
+    charLlRes res6 = rem_charLl(ll2, -1);
+    fails += test_ResultType(res6.type, SUCCESS, "removing ll from existing index -1 works");
+    ll2 = res6.result;
+    for (size_t i = 0; i < 10; i++) {
+        charRes temp_res = get_charLl(ll2, i);
+        fails += test_char(temp_res.result, i + 1, "iter after index -1 rem works");
+    }
+
     charLlRes res4 = rem_charLl(ll2, 5);
     fails += test_ResultType(res4.type, SUCCESS, "removing ll from existing forward index works");
-    fails += test_size_t(res4.result.count, 9, "removing ll from existing forward index works");
-
-    // "removing ll first element"
-
-    // "removing ll last element"
-    // "removing ll from existing backward index works"
-    // "emptying list through remove works"
+    fails += test_size_t(
+        res4.result.count, 
+        9, 
+        "removing ll from existing forward index leaves right amount of elements"
+    );
+    ll2 = res4.result;
+    for (size_t i = 0; i < 5; i++) {
+        charRes temp_res = get_charLl(ll2, i);
+        fails += test_ResultType(temp_res.type, SUCCESS, "after removal the previous elements are untouched");
+        fails += test_char(temp_res.result, i + 1, "after removal the previous elements are untouched 2");
+    }
+    for (size_t i = 5; i < 9; i++) {
+        charRes temp_res = get_charLl(ll2, i);
+        fails += test_ResultType(temp_res.type, SUCCESS, "after removal the succeding elements are untouched");
+        fails += test_char(temp_res.result, i + 2, "after removal the succeding elements are untouched 2");
+    }
+    free_charLl(ll2);
 
     return fails;
 }
