@@ -393,7 +393,7 @@
 #define _DA_IMPL_REVERSE(type) \
     void reverse_##type##Da(type##Da arr) { \
         for (size_t i = 0; i < (arr.count / 2); i++) { \
-            swap_##type(arr.ptr + i, arr.ptr + arr.capacity - i); \
+            swap_##type(arr.ptr + i, arr.ptr + arr.count - i - 1); \
         } \
     }
 

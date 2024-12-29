@@ -326,7 +326,7 @@ test_size_t     (size_t, size_t, message)
 First clone the repository.
 
 ```
-git clone -b clean -–depth 1 git@github.com:RaphaelEDiener/r-c-std.git
+git clone -b clean --depth 1 git@github.com:RaphaelEDiener/r-c-std.git
 ```
 
 It is recomended to create a new folder for this inside your project:
@@ -390,6 +390,8 @@ gcc -o main.exe main.c rstd.o
 *  TODO: test if get on lists works with empty lists
 *  TODO: change print macros to inline functions
 *  TODO: primitive in and general in can be combined to general byte checks like in radix
+*  TODO: radix broken 
+*  TODO: print function for arbitrary arrays and costume readable implementation for default types
  
 ```
 // join("hi", "my", "name", "is")

@@ -23,15 +23,15 @@ DEFINE_RESULT(String);
 DEFINE_SWAP(String);
 DEFINE_DA(String);
 
-String      join_Da(StringDa);
-String      join_with(StringDa, String);
-String      join_uchar(StringDa, uchar);
-String      join_schar(StringDa, schar);
-StringRes   load_file(FILE* fp);
-StringDaRes split_file(FILE* fp);
-StringDa    split(String);
-StringDa    split_at(String, String);
-StringDa    split_uchar(String, uchar);
-StringDa    split_schar(String, schar);
+String      join_Da   (StringDa        );
+String      join_with (StringDa, String);
+String      join_uchar(StringDa, uchar );
+String      join_schar(StringDa, schar );
+StringRes   load_file (const char* name);
+StringDaRes split_file(const char* name);
+StringDaRes split      (String        );
+StringDaRes split_at   (String, String);
+StringDaRes split_uchar(String, uchar );
+StringDaRes split_schar(String, schar );
 
 #endif
