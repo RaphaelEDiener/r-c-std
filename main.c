@@ -277,6 +277,7 @@ int test_da_insertion(void) {
 
     return fails;
 }
+
 int test_da_pinsertion(void) {
     int fails = 0;
 
@@ -321,6 +322,7 @@ int test_da_pinsertion(void) {
 
     return fails;
 }
+
 int test_da_get(void) {
     int fails = 0;
 
@@ -358,6 +360,7 @@ int test_da_get(void) {
 
     return fails;
 }
+
 int test_da_for_each(void) {
     int fails = 0;
     intDa da0 = new_intDa(8).result;
@@ -416,6 +419,7 @@ int test_da_all(void) {
     free(da0.ptr);
     return fails;
 }
+
 int test_da_any(void) {
     int fails = 0;
 
@@ -465,6 +469,7 @@ int test_da_pin(void) {
 
     return fails;
 }
+
 int test_da_in(void) {
     int fails = 0;
     const char seven = 7;
@@ -492,6 +497,7 @@ int test_da_in(void) {
 
     return fails;
 }
+
 int test_da_first(void) {
     int fails = 0;
 
@@ -520,6 +526,7 @@ int test_da_first(void) {
 
     return fails;
 }
+
 int test_da_unique(void) {
     int fails = 0;
 
@@ -565,6 +572,7 @@ int test_da_unique(void) {
 
     return fails;
 }
+
 int test_da_sort(void) {
     int fails = 0;
 
@@ -578,8 +586,8 @@ int test_da_sort(void) {
     for (uchar i = 0; i < 128; i++) {
         sorted0 += da0.ptr[(size_t)i] == i;
     }
-    fails += test_uchar(sorted0, 128, "reverse da becomes sorted");
-    fails += test_size_t(da0.count, 128, "sorting doesn't impact count");
+    fails += test_uchar(sorted0,       128, "reverse da becomes sorted");
+    fails += test_size_t(da0.count,    128, "sorting doesn't impact count");
     fails += test_size_t(da0.capacity, 128, "sorting doesn't impact capacity");
     free(da0.ptr);
 
@@ -680,6 +688,7 @@ int test_da_sort(void) {
 
     return fails;
 }
+
 int test_da_radix(void) {
     int fails = 0;
 
@@ -797,6 +806,7 @@ int test_da_radix(void) {
 
     return fails;
 }
+
 int test_da_mapip(void) {
     int fails = 0;
 
@@ -809,7 +819,10 @@ int test_da_mapip(void) {
         is_twos += da0.ptr[i] == 2;
     }
     fails += test_uchar(is_twos, 8, "mapip's all elements correctly");
-    fails += test_char(op == da0.ptr, 1, "in place mapping is in place");
+    fails += test_char(
+        op == da0.ptr, 1, 
+        "in place mapping is in place - pointer is identical"
+    );
     free(da0.ptr);
 
     intDa da1 = new_intDa(0).result;
@@ -818,6 +831,7 @@ int test_da_mapip(void) {
 
     return fails;
 }
+
 int test_da_map(void) {
     int fails = 0;
 
@@ -827,7 +841,10 @@ int test_da_map(void) {
     }
     intDa res0 = map_intDa_to_intDa(da0, add2p).result;
     for (size_t i = 0; i < 8; i++) { 
-        fails += test_int(res0.ptr[i], 2 + (int) i, "Da maps all elements correctly within same type");
+        fails += test_int(
+            res0.ptr[i], 2 + (int) i, 
+            "Da maps all elements correctly within same type"
+        );
     }
     fails += test_char(res0.ptr[1] == da0.ptr[1], 0 , "map da doesn't alter original da");
     free(da0.ptr);
@@ -839,7 +856,10 @@ int test_da_map(void) {
     }
     ucharDa res1 = map_intDa_to_ucharDa(da1, intp_to_uchar).result;
     for (size_t i = 0; i < 8; i++) {
-        fails += test_uchar(res1.ptr[i], (uchar) i, "maps all elements correctly within different types");
+        fails += test_uchar(
+            res1.ptr[i], (uchar) i, 
+            "maps all elements correctly within different types"
+        );
     }
     free(da1.ptr);
     free(res1.ptr);
@@ -850,6 +870,7 @@ int test_da_map(void) {
 
     return fails;
 }
+
 int test_da_fold(void) {
     int fails = 0;
 
@@ -895,12 +916,14 @@ int test_save_sub(void) {
     fails += test_size_t(save_sub(20, 10), 10, "save subbing inside bound works normally");
     return fails;
 }
+
 int test_save_add(void) {
     int fails = 0;
     fails += test_size_t(save_add(SIZE_MAX - 10, 20), SIZE_MAX, "save add doesn't go's above max");
     fails += test_size_t(save_add(20, 10), 30, "save adding inside bound works");
     return fails;
 }
+
 int test_math(void) {
     int fails = 0;
     fails += test_save_sub();
@@ -915,13 +938,13 @@ int test_is_lower(void) {
         fails += test_char(is_lower(c), 1, "Special char is lowercase");
     }
     for (char c = '['; c <= '`'; c++) {
-        fails += test_char(is_lower(c), 1, "Special char is lowercase");
+        fails += test_char(is_lower(c), 1, "Special char row 2 is lowercase");
     }
     for (char c = '{'; c <= '~'; c++) {
         fails += test_char(is_lower(c), 1, "braces are lowercase");
     }
     for (char c = 'A'; c <= 'Z'; c++) {
-        fails += test_char(is_lower(c), 0, "Uppercase not lowercase");
+        fails += test_char(is_lower(c), 0, "Uppercase is not lowercase");
     }
     for (char c = 'a'; c <= 'z'; c++) {
         fails += test_char(is_lower(c), 1, "lowercase is lowecase");
@@ -932,6 +955,7 @@ int test_is_lower(void) {
 
     return fails;
 }
+
 int test_is_upper(void) {
     int fails = 0;
 
@@ -956,6 +980,7 @@ int test_is_upper(void) {
 
     return fails;
 }
+
 int test_string_operations(void) {
     int fails = 0;
     fails += test_is_upper();
@@ -970,19 +995,43 @@ int test_list_append(void) {
     charLl ll0 = new_charLl();
     fails += test_size_t(ll0.count, 0, "new ll are empty");
     charLlRes res0 = append_charLl(ll0, 42);
-    fails += test_ResultType(res0.type, SUCCESS, "appending ll into empty succeeds");
-    fails += test_size_t(res0.result.count, 1, "appending ll increases count");
+    fails += test_ResultType(
+        res0.type, SUCCESS, 
+        "appending ll into empty succeeds"
+    );
+    fails += test_size_t(
+        res0.result.count, 1, 
+        "appending ll increases count"
+    );
     charRes get0 = get_charLl(res0.result, 0);
-    fails += test_ResultType(get0.type, SUCCESS, "ll getting just inserted element works");
-    fails += test_char(get0.result, 42, "appending into ll insertes element");
-    free_charLl(ll0);
+    fails += test_ResultType(
+        get0.type, SUCCESS, 
+        "ll getting just inserted element works"
+    );
+    fails += test_char(
+        get0.result, 42,
+        "appending into ll insertes element correctly"
+    );
+    // free_charLl(ll0); <- no! used in next test
     
     charLl ll1 = res0.result;
     charLlRes res1 = append_charLl(ll1, 24);
-    fails += test_ResultType(res1.type, SUCCESS, "appending ll into filled succeeds");
-    fails += test_size_t(res1.result.count, 2, "appending ll increases count");
-    fails += test_char(get_charLl(res1.result, 0).result, 42, "appending into ll doesn't alter other lements");
-    fails += test_char(get_charLl(res1.result, 1).result, 24, "appending into ll insertes element in the back");
+    fails += test_ResultType(
+        res1.type, SUCCESS,
+        "appending ll into filled succeeds"
+    );
+    fails += test_size_t(
+        res1.result.count, 2,
+        "appending ll increases count"
+    );
+    fails += test_char(
+        get_charLl(res1.result, 0).result, 42,
+        "appending into ll doesn't alter other lements"
+    );
+    fails += test_char(
+        get_charLl(res1.result, 1).result, 24,
+        "appending into ll insertes element in the back"
+    );
     free_charLl(ll1);
 
     charLl ll2 = new_charLl();
@@ -994,6 +1043,7 @@ int test_list_append(void) {
 
     return fails;
 }
+
 int test_list_prepend(void) {
     int fails = 0;
 
@@ -1023,6 +1073,7 @@ int test_list_prepend(void) {
 
     return fails;
 }
+
 int test_list_get(void) {
     int fails = 0;
 
@@ -1066,6 +1117,7 @@ int test_list_get(void) {
 
     return fails;
 }
+
 int test_list_remove(void) {
     int fails = 0;
 
@@ -1138,16 +1190,65 @@ int test_list_remove(void) {
 
     return fails;
 }
-int test_list_delete(void) {
-    int fails = 1;
 
-    // "ll deletes the element"
-    // "ll deletes only the first element"
-    // "del ll fails if element was not found"
-    // "del ll fails on empty list"
+int test_list_delete(void) {
+    int fails = 0;
+
+    // "ll deletes the element if found"
+    charLl ll0 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll0 = append_charLl(ll0, (char) i).result;
+    }
+    voidRes res0 = del_charLl(&ll0, 5);
+    fails += test_ResultType(
+        res0.type, SUCCESS, 
+        "ll deletes the element if found"
+    );
+    fails += test_char(ll0.count == 9, 1, "ll delete reduces count");
+    for (size_t i = 0; i < 5; i++) {
+        charRes temp_res = get_charLl(ll0, i);
+        fails += test_char(
+            temp_res.result, i, 
+            "after deletion in ll the previous elements are untouched"
+        );
+    }
+    for (size_t i = 5; i < 9; i++) {
+        charRes temp_res = get_charLl(ll0, i);
+        fails += test_char(
+            temp_res.result, i + 1, 
+            "after deletion in ll the succeding elements are untouched"
+        );
+    }
+    free_charLl(ll0);
+    
+    charLl ll1 = new_charLl();
+    for (size_t i = 0; i < 10; i++) {
+        ll1 = append_charLl(ll1, (char) i).result;
+    }
+    voidRes res1 = del_charLl(&ll1, 0);
+    fails += test_ResultType(
+        res1.type, SUCCESS, 
+        "ll deletes the element if found v2"
+    );
+    fails += test_char(ll1.count == 9, 1, "ll delete reduces count v2");
+    for (size_t i = 0; i < 9; i++) {
+        charRes temp_res = get_charLl(ll1, i);
+        fails += test_char(
+            temp_res.result, i + 1, 
+            "after deletion in ll the succeding elements are untouched"
+        );
+    }
+    // TODO: fix bug: I don't edit the root, if node is linked to by root!
+    free_charLl(ll1);
+
+    // "TODO: ll deletes only the first found element"
+    // "TODO: del ll fails if element was not found"
+    // "TODO: del ll fails on empty list"
+    // "TODO: del ll delets 1 elem list correctly"
 
     return fails;
 }
+
 int test_lists(void) {
     int fails = 0;
     fails += test_list_remove();
@@ -1160,43 +1261,48 @@ int test_lists(void) {
 
 int test_ring_new(void) {
     int fails = 1;
-    // "new ring gets allocated"
-    // "new rings are distinct"
-    // "new rings with capacity < 2 don't make sense"
-    // "new rings with too large capacity fail"
+    // "TODO: new ring gets allocated"
+    // "TODO: new rings are distinct"
+    // "TODO: new rings with capacity < 2 don't make sense"
+    // "TODO: new rings with too large capacity fail"
     return fails;
 }
+
 int test_ring_insert(void) {
     int fails = 1;
-    // "insert inserts"
-    // "back pointer doesn't advance normally"
-    // "overrides old values"
-    // "overrides moves the back pointer"
+    // "TODO: insert inserts"
+    // "TODO: back pointer doesn't advance normally"
+    // "TODO: overrides old values"
+    // "TODO: overrides moves the back pointer"
     return fails;
 }
+
 int test_ring_sinsert(void) {
     int fails = 1;
-    // "insert inserts"
-    // "back pointer doesn't advance normally"
-    // "fails if it would overrides old values"
+    // "TODO: insert inserts"
+    // "TODO: back pointer doesn't advance normally"
+    // "TODO: fails if it would overrides old values"
     return fails;
 }
+
 int test_ring_pop(void) {
     int fails = 1;
-    // "fails on empty rings"
-    // "removes the last element"
+    // "TODO: fails on empty rings"
+    // "TODO: removes the last element"
     return fails;
 }
+
 int test_ring_peak(void) {
     int fails = 1;
-    // "fails on empty rings"
-    // "shows the last element"
+    // "TODO: fails on empty rings"
+    // "TODO: shows the last element"
     return fails;
 }
+
 int test_ring_count(void) {
     int fails = 1;
-    // "count in full rings is capacity-1"
-    // "returns correct element count"
+    // "TODO: count in full rings is capacity-1"
+    // "TODO: returns correct element count"
     return fails;
 }
 

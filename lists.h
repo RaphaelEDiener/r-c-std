@@ -40,7 +40,6 @@
             list.last = e; \
             list.first = e; \
         } else { \
-            e->val = elem; \
             e->prev = list.last; \
             e->next = list.first; \
             list.last->next = e; \
@@ -66,7 +65,6 @@
             list.last = e; \
             list.first = e; \
         } else { \
-            e->val = elem; \
             e->prev = list.last; \
             e->next = list.first; \
             list.last->next = e; \
@@ -106,17 +104,18 @@
     }
 
 #define _LL_DEF_DEL(t) \
-    voidRes del_##t##Ll(t##Ll list, t elem);
+    voidRes del_##t##Ll(t##Ll* list, t elem);
 
 #define _LL_IMPL_DEL(t) \
-    voidRes del_##t##Ll(t##Ll list, const t elem) { \
+    voidRes del_##t##Ll(t##Ll* list, const t elem) { \
         voidRes ans = {FAILURE}; \
-        t##LlNode* cur = list.first; \
-        for (size_t i = 0; i < list.count; i++) { \
+        t##LlNode* cur = list->first; \
+        for (size_t i = 0; i < list->count; i++) { \
             if (eq_##t(cur->val, elem)) { \
-                ans.type = SUCCESS; \
                 cur->prev->next = cur->next; \
                 cur->next->prev = cur->prev; \
+                ans.type = SUCCESS; \
+                list->count -= 1; \
                 return ans; \
             } else { \
                 cur = cur->next; \
