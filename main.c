@@ -680,6 +680,7 @@ int test_da_sort(void) {
 
     return fails;
 }
+
 int test_da_radix(void) {
     int fails = 0;
 
