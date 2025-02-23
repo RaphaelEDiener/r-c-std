@@ -399,3 +399,15 @@ gcc -o main.exe main.c rstd.o
 // joinwp(wp)
 ```
 
+#define µ .result
+#define ⴵ .result
+#define Ⳮ .result
+#define Ⲅ .result
+#define Ⲋ .result
+#define ⲗ .result
+#define Ⲡ .result
+#define Ⲫ .result
+#define Ⲷ .result
+#define Ⲽ .result
+#define ⴲ .result
+#define ⴱ .result

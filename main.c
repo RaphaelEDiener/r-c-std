@@ -223,6 +223,7 @@ int test_cmp(void) {
     return fails;
 }
 
+
 int test_da_new(void) {
     int fails = 0;
     intDaRes da0 = new_intDa(1);
@@ -239,13 +240,13 @@ int test_da_new(void) {
 
 int test_da_insertion(void) {
     int fails = 0;
-    const intDa da0 = new_intDa(16).result;
+    const intDa da0 = new_intDa(16)ⴵ;
     fails += test_size_t(da0.count, 0, "new dynamic arrays are empty");
     fails += test_size_t(da0.size, sizeof(int), "new dynamic arrays have the element size gets correctly inferred");
     fails += test_size_t(da0.capacity, 16, "new dynamic arrays have the given capacity");
     free(da0.ptr);
 
-    const charDa da1 = new_charDa(0).result;
+    const charDa da1 = new_charDa(0)ⴵ;
     fails += test_size_t(da1.capacity, 0, "new dynamic arrays can be empty");
     charDaRes suc = insert_charDa(&da1, '0');
     fails += test_ResultType(suc.type, SUCCESS, "Inserting into empty DA succeeds");
@@ -256,10 +257,10 @@ int test_da_insertion(void) {
     );
     free(suc.result.ptr);
 
-    charDa da2 = new_charDa(1).result;
-    charDa da2a = insert_charDa(&da2, '0').result;
+    charDa da2 = new_charDa(1)ⴵ;
+    charDa da2a = insert_charDa(&da2, '0')ⴵ;
     fails += test_size_t(da2a.capacity, 1, "inserting into DA while not at full capacity doesn't increase capacity");
-    charDa da2b = insert_charDa(&da2a, '1').result;
+    charDa da2b = insert_charDa(&da2a, '1')ⴵ;
     fails += test_Compareable(
         cmp_size_t(da2b.capacity, 1), 
         GREATER, 
@@ -270,7 +271,7 @@ int test_da_insertion(void) {
     free(da2b.ptr);
 
     // this will be invalid and pointing to null, ensuring that the new size, will also point to null 
-    charDa da4 = new_charDa(SIZE_MAX / 4).result;
+    charDa da4 = new_charDa(SIZE_MAX / 4)ⴵ;
     da4.count = SIZE_MAX / 4;
     charDaRes faill = insert_charDa(&da4, '0');
     fails += test_ResultType(faill.type, FAILURE, "Fail if can't allocate new memory for size increase");
@@ -283,7 +284,7 @@ int test_da_pinsertion(void) {
 
     const char ZEROCHAR = '0';
     const char ONECHAR  = '1';
-    const charDa da1 = new_charDa(0).result;
+    const charDa da1 = new_charDa(0)ⴵ;
     charDaRes suc = pinsert_charDa(&da1, &ZEROCHAR);
     fails += test_ResultType(
         suc.type, 
@@ -297,14 +298,14 @@ int test_da_pinsertion(void) {
     );
     free(suc.result.ptr);
 
-    charDa da2 = new_charDa(1).result;
-    charDa da2a = pinsert_charDa(&da2, &ZEROCHAR).result;
+    charDa da2 = new_charDa(1)ⴵ;
+    charDa da2a = pinsert_charDa(&da2, &ZEROCHAR)ⴵ;
     fails += test_size_t(
         da2a.capacity, 
         1, 
         "Pointer inserting into DA while not at full capacity doesn't increase capacity"
     );
-    charDa da2b = pinsert_charDa(&da2a, &ONECHAR).result;
+    charDa da2b = pinsert_charDa(&da2a, &ONECHAR)ⴵ;
     fails += test_Compareable(
         cmp_size_t(da2b.capacity, 1), 
         GREATER, 
@@ -315,7 +316,7 @@ int test_da_pinsertion(void) {
     free(da2b.ptr);
 
     // this will be invalid and pointing to null, ensuring that the new size, will also point to null 
-    charDa da4 = new_charDa(SIZE_MAX / 4).result;
+    charDa da4 = new_charDa(SIZE_MAX / 4)ⴵ;
     da4.count = SIZE_MAX / 4;
     charDaRes faill = pinsert_charDa(&da4, &ZEROCHAR);
     fails += test_ResultType(faill.type, FAILURE, "Fail if can't allocate new memory for size increase");
@@ -326,9 +327,9 @@ int test_da_pinsertion(void) {
 int test_da_get(void) {
     int fails = 0;
 
-    charDa da0 = new_charDa(10).result;
+    charDa da0 = new_charDa(10)ⴵ;
     for (size_t i = 0; i < 10; i++) {
-        da0 = insert_charDa(&da0, (char) i).result;
+        da0 = insert_charDa(&da0, (char) i)ⴵ;
     }
 
     charRes get0 = get_charDa(da0, 0);
@@ -363,7 +364,7 @@ int test_da_get(void) {
 
 int test_da_for_each(void) {
     int fails = 0;
-    intDa da0 = new_intDa(8).result;
+    intDa da0 = new_intDa(8)ⴵ;
     da0.count = 8;
     for_each_intDa(da0, inc_counter);
     fails += test_int(counter_, 8, "for each DA executes the right amount of times");
@@ -373,7 +374,7 @@ int test_da_for_each(void) {
 
 int test_da_reverse(void) {
     int fails = 0;
-    intDa da0 = new_intDa(8).result;
+    intDa da0 = new_intDa(8)ⴵ;
     for (size_t i = 0; i < da0.capacity; i++) {
         insert_intDa(&da0, (int) i);
     }
@@ -383,7 +384,7 @@ int test_da_reverse(void) {
     }
     free(da0.ptr);
     
-    intDa da1 = new_intDa(7).result;
+    intDa da1 = new_intDa(7)ⴵ;
     for (size_t i = 0; i < da1.capacity; i++) {
         insert_intDa(&da1, (int) i);
     }
@@ -393,7 +394,7 @@ int test_da_reverse(void) {
     }
     free(da1.ptr);
 
-    intDa da2 = new_intDa(8).result;
+    intDa da2 = new_intDa(8)ⴵ;
     reverse_intDa(da2);
     fails += test_size_t(da2.count, 0, "reversing an empty da works");
     return fails;
@@ -402,18 +403,18 @@ int test_da_reverse(void) {
 int test_da_all(void) {
     int fails = 0;
 
-    charDa da0 = new_charDa(8).result;
+    charDa da0 = new_charDa(8)ⴵ;
     da0.count = 8;
     mapip_charDa(da0, to_zero);
     fails += test_char(all_charDa(da0, is_zero), 1, "all succeeds if it finds all cases");
 
-    charDa da1 = new_charDa(8).result;
+    charDa da1 = new_charDa(8)ⴵ;
     da1.count = 8;
     mapip_charDa(da1, to_zero);
     da1.ptr[4] = 123;
     fails += test_char(all_charDa(da1, is_zero), 0, "all fails if one doesn't fit");
 
-    charDa da2 = new_charDa(0).result;
+    charDa da2 = new_charDa(0)ⴵ;
     fails += test_char(all_charDa(da2, is_zero), 1, "all succeeds for the empty case");
 
     free(da0.ptr);
@@ -423,20 +424,20 @@ int test_da_all(void) {
 int test_da_any(void) {
     int fails = 0;
 
-    charDa da0 = new_charDa(8).result;
+    charDa da0 = new_charDa(8)ⴵ;
     da0.count = 8;
     mapip_charDa(da0, to_zero);
     da0.ptr[7] = 1;
     fails += test_char(any_charDa(da0, is_one), 1, "any succeeds if it finds one case");
     free(da0.ptr);
 
-    charDa da1 = new_charDa(8).result;
+    charDa da1 = new_charDa(8)ⴵ;
     da1.count = 8;
     mapip_charDa(da1, to_zero);
     fails += test_char(any_charDa(da1, is_one), 0, "any fails if all don't fit");
     free(da1.ptr);
 
-    charDa da2 = new_charDa(0).result;
+    charDa da2 = new_charDa(0)ⴵ;
     fails += test_char(any_charDa(da2, is_zero), 0, "any fails for the empty case");
 
     return fails;
@@ -447,7 +448,7 @@ int test_da_pin(void) {
     const char seven = 7;
     const char ten = 10;
 
-    charDa da0 = new_charDa(8).result;
+    charDa da0 = new_charDa(8)ⴵ;
     da0.count = 8;
     for (size_t i = 0; i < da0.count; i++) {
         da0.ptr[i] = i;
@@ -455,7 +456,7 @@ int test_da_pin(void) {
     fails += test_char(pin_charDa(da0, &seven), 1, "pin finds element in da");
     free(da0.ptr);
 
-    charDa da1 = new_charDa(8).result;
+    charDa da1 = new_charDa(8)ⴵ;
     da1.count = 8;
     for (size_t i = 0; i < da1.count; i++) {
         da1.ptr[i] = i;
@@ -463,7 +464,7 @@ int test_da_pin(void) {
     fails += test_char(pin_charDa(da1, &ten), 0, "pin can't find element that are not in da");
     free(da1.ptr);
 
-    charDa da2 = new_charDa(0).result;
+    charDa da2 = new_charDa(0)ⴵ;
     fails += test_char(pin_charDa(da2, &ten), 0, "pin can't find element in the empty da");
     free(da2.ptr);
 
@@ -475,7 +476,7 @@ int test_da_in(void) {
     const char seven = 7;
     const char ten = 10;
 
-    charDa da0 = new_charDa(8).result;
+    charDa da0 = new_charDa(8)ⴵ;
     da0.count = 8;
     for (size_t i = 0; i < da0.count; i++) {
         da0.ptr[i] = i;
@@ -483,7 +484,7 @@ int test_da_in(void) {
     fails += test_char(in_charDa(da0, &seven, pcmp_char), 1, "in finds element in da");
     free(da0.ptr);
 
-    charDa da1 = new_charDa(8).result;
+    charDa da1 = new_charDa(8)ⴵ;
     da1.count = 8;
     for (size_t i = 0; i < da1.count; i++) {
         da1.ptr[i] = i;
@@ -491,7 +492,7 @@ int test_da_in(void) {
     fails += test_char(in_charDa(da1, &ten, pcmp_char), 0, "in can't find element that are not in da");
     free(da1.ptr);
 
-    charDa da2 = new_charDa(0).result;
+    charDa da2 = new_charDa(0)ⴵ;
     fails += test_char(in_charDa(da2, &ten, pcmp_char), 0, "in can't find element in the empty da");
     free(da2.ptr);
 
@@ -501,7 +502,7 @@ int test_da_in(void) {
 int test_da_first(void) {
     int fails = 0;
 
-    charDa da0 = new_charDa(8).result;
+    charDa da0 = new_charDa(8)ⴵ;
     da0.count = 8;
     for (size_t i = 0; i < da0.count; i++) {
         da0.ptr[i] = i;
@@ -511,7 +512,7 @@ int test_da_first(void) {
     fails += test_char      (res0.result, 7, "first finds element in da");
     free(da0.ptr);
 
-    charDa da1 = new_charDa(8).result;
+    charDa da1 = new_charDa(8)ⴵ;
     da1.count = 8;
     for (size_t i = 0; i < da1.count; i++) {
         da1.ptr[i] = i;
@@ -520,7 +521,7 @@ int test_da_first(void) {
     fails += test_ResultType(res1.type, FAILURE, "first can't find element that are not in da");
     free(da1.ptr);
 
-    charDa da2 = new_charDa(0).result;
+    charDa da2 = new_charDa(0)ⴵ;
     charRes res2 = first_charDa(da2, eq10);
     fails += test_ResultType(res2.type, FAILURE, "first can't find element in the empty da");
 
@@ -530,26 +531,26 @@ int test_da_first(void) {
 int test_da_unique(void) {
     int fails = 0;
 
-    charDa da0 = new_charDa(8).result;
+    charDa da0 = new_charDa(8)ⴵ;
     for (size_t i = 0; i < 7; i++) {
         da0.ptr[i] = i;
     }
     da0.ptr[7] = 1;
     da0.count = 8;
-    charDa un0 = unique_charDa(da0, peq_char).result;
+    charDa un0 = unique_charDa(da0, peq_char)ⴵ;
     fails += test_size_t(un0.count, 7, "unique removes dulpicates");
     for (char i = 0; i < 7; i++) {
         fails += test_char(un0.ptr[(size_t)i], i, "unique preseves unique elements");
     }
     free(da0.ptr);
 
-    charDa da1 = new_charDa(8).result;
+    charDa da1 = new_charDa(8)ⴵ;
     for (size_t i = 0; i < 7; i++) {
         da1.ptr[i] = i;
     }
     da1.ptr[7] = 1;
     da1.count = 8;
-    charDa un1 = unique_charDa(da1, peq_char).result;
+    charDa un1 = unique_charDa(da1, peq_char)ⴵ;
     fails += test_size_t(
         un1.capacity, 
         7, 
@@ -557,15 +558,15 @@ int test_da_unique(void) {
     );
     free(da1.ptr);
 
-    charDa da2 = new_charDa(8).result;
+    charDa da2 = new_charDa(8)ⴵ;
     da2.ptr[2] = 1;
     da2.count = 4;
-    charDa un2 = unique_charDa(da2, peq_char).result;
+    charDa un2 = unique_charDa(da2, peq_char)ⴵ;
     fails += test_char((da2.ptr != un2.ptr), 1, "unique da's return a copy of it");
     free(da2.ptr);
 
-    charDa da3 = new_charDa(0).result;
-    charDa un3 = unique_charDa(da3, peq_char).result;
+    charDa da3 = new_charDa(0)ⴵ;
+    charDa un3 = unique_charDa(da3, peq_char)ⴵ;
     fails += test_size_t(un3.capacity, 0, "unique da elements of the empty da is also empty");
     fails += test_size_t(un3.count, 0, "unique da elements of the empty da is also empty");
     free(da3.ptr);
@@ -576,7 +577,7 @@ int test_da_unique(void) {
 int test_da_sort(void) {
     int fails = 0;
 
-    ucharDa da0 = new_ucharDa(128).result;
+    ucharDa da0 = new_ucharDa(128)ⴵ;
     da0.count = 128;
     for (uchar i = 0; i < 128; i++) {
         da0.ptr[i] = 127-i;
@@ -591,13 +592,13 @@ int test_da_sort(void) {
     fails += test_size_t(da0.capacity, 128, "sorting doesn't impact capacity");
     free(da0.ptr);
 
-    ucharDa da1 = new_ucharDa(0).result;
+    ucharDa da1 = new_ucharDa(0)ⴵ;
     sort_ucharDa(da1, pcmp_uchar);
     fails += test_uchar(da1.capacity, 0, "sorting empty da leaves it empty");
     fails += test_uchar(da1.count, 0, "sorting empty da leaves it empty");
     free(da1.ptr);
 
-    ucharDa da2 = new_ucharDa(8).result;
+    ucharDa da2 = new_ucharDa(8)ⴵ;
     da2.count = 8;
     for (uchar i = 0; i < 8; i++) {
         da2.ptr[i] = 7-i;
@@ -610,7 +611,7 @@ int test_da_sort(void) {
     fails += test_uchar(contains, 8, "sorting contains the same elements as before");
     free(da2.ptr);
 
-    ucharDa da3 = new_ucharDa(128).result;
+    ucharDa da3 = new_ucharDa(128)ⴵ;
     da3.count = 128;
     for (uchar i = 0; i < 128; i++) {
         da3.ptr[i] = i;
@@ -623,7 +624,7 @@ int test_da_sort(void) {
     fails += test_uchar(sorted3, 128, "sorted da stays sorted");
     free(da3.ptr);
 
-    ucharDa da4 = new_ucharDa(128).result;
+    ucharDa da4 = new_ucharDa(128)ⴵ;
     da4.count = 128;
     free(da4.ptr); // cursed but easiest way to test
     uchar arr0[128] = {
@@ -672,7 +673,7 @@ int test_da_sort(void) {
     }
     fails += test_uchar(sorted4, 128, "sorts 'random' da 2");
 
-    ucharDa da5 = new_ucharDa(16).result;
+    ucharDa da5 = new_ucharDa(16)ⴵ;
     da5.count = 16;
     free(da5.ptr); // cursed but easiest way to test
     uchar arr5[16] = {
@@ -692,7 +693,7 @@ int test_da_sort(void) {
 int test_da_radix(void) {
     int fails = 0;
 
-    ucharDa da0 = new_ucharDa(128).result;
+    ucharDa da0 = new_ucharDa(128)ⴵ;
     da0.count = 128;
     for (uchar i = 0; i < 128; i++) {
         da0.ptr[i] = 127-i;
@@ -707,13 +708,13 @@ int test_da_radix(void) {
     fails += test_size_t(da0.capacity, 128, "radix doesn't impact capacity");
     free(da0.ptr);
 
-    ucharDa da1 = new_ucharDa(0).result;
+    ucharDa da1 = new_ucharDa(0)ⴵ;
     radix_ucharDa(da1);
     fails += test_uchar(da1.capacity, 0, "radix empty da leaves it empty");
     fails += test_uchar(da1.count, 0, "radix empty da leaves it empty");
     free(da1.ptr);
 
-    ucharDa da2 = new_ucharDa(8).result;
+    ucharDa da2 = new_ucharDa(8)ⴵ;
     da2.count = 8;
     for (uchar i = 0; i < 8; i++) {
         da2.ptr[i] = 7-i;
@@ -726,7 +727,7 @@ int test_da_radix(void) {
     fails += test_uchar(contains, 8, "radix contains the same elements as before");
     free(da2.ptr);
 
-    ucharDa da3 = new_ucharDa(128).result;
+    ucharDa da3 = new_ucharDa(128)ⴵ;
     da3.count = 128;
     for (uchar i = 0; i < 128; i++) {
         da3.ptr[i] = i;
@@ -739,7 +740,7 @@ int test_da_radix(void) {
     fails += test_uchar(sorted3, 128, "radix sorted da stays sorted");
     free(da3.ptr);
 
-    ucharDa da4 = new_ucharDa(128).result;
+    ucharDa da4 = new_ucharDa(128)ⴵ;
     da4.count = 128;
     free(da4.ptr); // cursed but easiest way to test
     uchar arr0[128] = {
@@ -789,7 +790,7 @@ int test_da_radix(void) {
     fails += test_uchar(sorted4, 128, "radix sorts 'random' da 2");
     // free(da4.ptr); <- local array = no free!
 
-    ucharDa da5 = new_ucharDa(16).result;
+    ucharDa da5 = new_ucharDa(16)ⴵ;
     da5.count = 16;
     free(da5.ptr); // cursed but easiest way to test
     uchar arr5[16] = {
@@ -810,7 +811,7 @@ int test_da_radix(void) {
 int test_da_mapip(void) {
     int fails = 0;
 
-    intDa da0 = new_intDa(8).result;
+    intDa da0 = new_intDa(8)ⴵ;
     da0.count = 8;
     int* op = da0.ptr;
     mapip_intDa(da0, add2p);
@@ -825,7 +826,7 @@ int test_da_mapip(void) {
     );
     free(da0.ptr);
 
-    intDa da1 = new_intDa(0).result;
+    intDa da1 = new_intDa(0)ⴵ;
     mapip_intDa(da1, add2p);
     fails += test_size_t(da1.count, 0, "empty mapip works");
 
@@ -835,11 +836,11 @@ int test_da_mapip(void) {
 int test_da_map(void) {
     int fails = 0;
 
-    intDa da0 = new_intDa(8).result;
+    intDa da0 = new_intDa(8)ⴵ;
     for (size_t i = 0; i < 8; i++) {
-        da0 = insert_intDa(&da0, (int) i).result;
+        da0 = insert_intDa(&da0, (int) i)ⴵ;
     }
-    intDa res0 = map_intDa_to_intDa(da0, add2p).result;
+    intDa res0 = map_intDa_to_intDa(da0, add2p)ⴵ;
     for (size_t i = 0; i < 8; i++) { 
         fails += test_int(
             res0.ptr[i], 2 + (int) i, 
@@ -850,11 +851,11 @@ int test_da_map(void) {
     free(da0.ptr);
     free(res0.ptr);
 
-    intDa da1 = new_intDa(8).result;
+    intDa da1 = new_intDa(8)ⴵ;
     for (size_t i = 0; i < 8; i++) {
-        da1 = insert_intDa(&da1, (int) i).result;
+        da1 = insert_intDa(&da1, (int) i)ⴵ;
     }
-    ucharDa res1 = map_intDa_to_ucharDa(da1, intp_to_uchar).result;
+    ucharDa res1 = map_intDa_to_ucharDa(da1, intp_to_uchar)ⴵ;
     for (size_t i = 0; i < 8; i++) {
         fails += test_uchar(
             res1.ptr[i], (uchar) i, 
@@ -864,8 +865,8 @@ int test_da_map(void) {
     free(da1.ptr);
     free(res1.ptr);
 
-    intDa da2 = new_intDa(0).result;
-    intDa res2 = map_intDa_to_intDa(da2, add2p).result;
+    intDa da2 = new_intDa(0)ⴵ;
+    intDa res2 = map_intDa_to_intDa(da2, add2p)ⴵ;
     fails += test_size_t(res2.count, 0, "empty map da works");
 
     return fails;
@@ -874,16 +875,16 @@ int test_da_map(void) {
 int test_da_fold(void) {
     int fails = 0;
 
-    intDa da0 = new_intDa(8).result;
+    intDa da0 = new_intDa(8)ⴵ;
     for (size_t i = 0; i < 8; i++) {
-        da0 = insert_intDa(&da0, 1).result;
+        da0 = insert_intDa(&da0, 1)ⴵ;
     }
     int res00 = fold_intDa_to_int(da0, addpp, 0);
     int res01 = fold_intDa(da0, addpp, 0);
     fails += test_int(res00, 8, "fold da correctly folds");
     fails += test_int(res01, 8, "simple fold da correctly folds");
 
-    intDa da1 = new_intDa(0).result;
+    intDa da1 = new_intDa(0)ⴵ;
     int res1 = fold_intDa_to_int(da1, addpp, 0);
     fails += test_int(res1, 0, "empty fold works");
 
@@ -1052,18 +1053,18 @@ int test_list_append(void) {
         "appending ll increases count"
     );
     fails += test_char(
-        get_charLl(res1.result, 0).result, 42,
+        get_charLl(res1.result, 0)ⴵ, 42,
         "appending into ll doesn't alter other lements"
     );
     fails += test_char(
-        get_charLl(res1.result, 1).result, 24,
+        get_charLl(res1.result, 1)ⴵ, 24,
         "appending into ll insertes element in the back"
     );
     free_charLl(ll1);
 
     charLl ll2 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll2 = append_charLl(ll2, (char) i).result;
+        ll2 = append_charLl(ll2, (char) i)ⴵ;
     }
     fails += test_size_t(ll2.count, 10, "appending ll increases count correctly");
     free_charLl(ll2);
@@ -1087,13 +1088,13 @@ int test_list_prepend(void) {
     charLlRes res1 = prepend_charLl(ll1, 24);
     fails += test_ResultType(res1.type, SUCCESS, "prepending ll into filled succeeds");
     fails += test_size_t(res1.result.count, 2, "prepending ll increases count");
-    fails += test_char(get_charLl(res1.result, -1).result, 42, "prepending into ll doesn't alter other lements");
-    fails += test_char(get_charLl(res1.result, 0).result, 24, "prepending into ll insertes element in the front");
+    fails += test_char(get_charLl(res1.result, -1)ⴵ, 42, "prepending into ll doesn't alter other lements");
+    fails += test_char(get_charLl(res1.result, 0)ⴵ, 24, "prepending into ll insertes element in the front");
     free_charLl(ll1);
     
     charLl ll2 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll2 = prepend_charLl(ll2, (char) i).result;
+        ll2 = prepend_charLl(ll2, (char) i)ⴵ;
     }
     fails += test_size_t(ll2.count, 10, "appending ll increases count correctly");
     free_charLl(ll2);
@@ -1106,7 +1107,7 @@ int test_list_get(void) {
 
     charLl ll0 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll0 = append_charLl(ll0, (char) i).result;
+        ll0 = append_charLl(ll0, (char) i)ⴵ;
     }
 
     charRes get0 = get_charLl(ll0, 0);
@@ -1160,7 +1161,7 @@ int test_list_remove(void) {
     // "removing ll from position outside of range fails"
     charLl ll1 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll1 = append_charLl(ll1, (char) i).result;
+        ll1 = append_charLl(ll1, (char) i)ⴵ;
     }
     charLlRes res2 = rem_charLl(ll1, 99);
     fails += test_ResultType(res2.type, FAILURE, "removing ll from position outside of range fails");
@@ -1172,7 +1173,7 @@ int test_list_remove(void) {
 
     charLl ll2 = new_charLl();
     for (size_t i = 0; i < 12; i++) {
-        ll2 = append_charLl(ll2, (char) i).result;
+        ll2 = append_charLl(ll2, (char) i)ⴵ;
     }
     fails += test_size_t(ll2.count, 12, "(remove) correct amount of items in ll in the beginning");
 
@@ -1224,7 +1225,7 @@ int test_list_delete(void) {
     // "ll deletes the element if found"
     charLl ll0 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll0 = append_charLl(ll0, (char) i).result;
+        ll0 = append_charLl(ll0, (char) i)ⴵ;
     }
     voidRes res0 = del_charLl(&ll0, 5);
     fails += test_ResultType(
@@ -1247,10 +1248,12 @@ int test_list_delete(void) {
         );
     }
     free_charLl(ll0);
+
+    e_assert(1==0, "message");
     
     charLl ll1 = new_charLl();
     for (size_t i = 0; i < 10; i++) {
-        ll1 = append_charLl(ll1, (char) i).result;
+        ll1 = append_charLl(ll1, (char) i)ⴵ;
     }
     voidRes res1 = del_charLl(&ll1, 0);
     fails += test_ResultType(

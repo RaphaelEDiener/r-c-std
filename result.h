@@ -4,6 +4,9 @@
 #include "default_types.h"
 
 #ifndef RESULT
+
+#define ⴵ .result
+
 #define RESULT
 typedef enum {
     SUCCESS,

@@ -5,12 +5,23 @@
 #include "testing.h"
 
 
-char test_costume(const void* real, const void* expected, const truthy equals, const stringify to_str, const char* message){
+char test_costume(
+    const void* real, 
+    const void* expected, 
+    const truthy equals, 
+    const stringify to_str, 
+    const char* message
+){
     if (equals(real, expected)) {
         // printf("\x1B[32m%s\x1B[0m\n", message);
         return 0;
     } else {
-        printf("\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", to_str(expected), to_str(real), message);
+        printf(
+            "\x1B[31mexpected: %s\nreceived: %s\n%s\x1B[0m\n", 
+            to_str(expected), 
+            to_str(real), 
+            message
+        );
         return 1;
     }  
 }

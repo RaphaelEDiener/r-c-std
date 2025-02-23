@@ -47,7 +47,8 @@
  * -- Using --
  *
  * `#include "rstd.h"`
- *
+ */
+/** 
  * ------------------------------
  * Working with Arrays (array_utils.h):
  * ------------------------------
@@ -66,7 +67,8 @@
  * FOLD     (arr, len, fn, type, name, start) : fn(start , type )->start
  * FOLDP    (arr, len, fn, type, name, start) : fn(start , type*)->start
  * FOLDPP   (arr, len, fn, type, name, start) : fn(start*, type*)->start
- *
+ */
+/** 
  * ------------------------------
  * Comparing (cmp.h):
  * ------------------------------
@@ -92,7 +94,8 @@
  *
  * DEFINE_CMP(t)
  * IMPL_CMP(t)
- *
+ */
+/** 
  * ------------------------------
  * Printing (color_print.h):
  * ------------------------------
@@ -115,7 +118,8 @@
  * <color>ln() 
  * err_<color>()
  * err_<color>ln()
- *
+ */
+/** 
  * ------------------------------
  * Type Definitions (default_types.h):
  * ------------------------------
@@ -134,7 +138,8 @@
  * DEFAULT_FOR_TTYPES (macro)             -> DEFAULT_TTYPES(macro, t1) \ ...
  * DEFAULT_TTTYPES    (macro, type, epyt) -> macro(epyt, type, t1) \ ...
  * DEFAULT_FOR_TTTYPES(macro)             -> DEFAULT_TTTYPES(macro, t1, t1) \...
- *
+ */
+/** 
  * ------------------------------
  * Result (result.h):
  * ------------------------------
@@ -143,7 +148,8 @@
  * <t>Res -> {type: SUCCESS | FAILURE; result: t}
  * DEFINE_RESULT(type) -> creates new Result wrapper
  * voidRes -> {type: SUCCESS | FAILURE}
- * 
+ */
+/** 
  * ------------------------------
  * Dynamic Arrays (dynamic_array.h):
  * ------------------------------
@@ -225,7 +231,8 @@
  *              const fn(const <to_t>*, const <from_t>*)-><to_t>, 
  *              const start
  *          )
- *
+ */
+/** 
  * ------------------------------
  * Rings (rings.h):
  * ------------------------------
@@ -251,7 +258,8 @@
  * <t>RingRes pop_<t>Ring    (      <t>Ring ring)
  * <t>Res     peak_<t>Ring   (const <t>Ring ring) -> last element
  * size_t     count_<t>Ring  (const <t>Ring ring) -> amount of elements 
- *
+ */
+/** 
  * ------------------------------
  * Lists (lists.h):
  * ------------------------------
@@ -276,7 +284,8 @@
  * voidRes   del_<t>LL    (      <t>LL list, const <t> elem) -> 
  *               removes the first element found,
  *               that matches the given element.
- *
+ */
+/** 
  * ------------------------------
  * String Operations (str_utils.h):
  * ------------------------------
@@ -286,7 +295,8 @@
  *  uchar is_digit(char c);
  *  uchar is_lower(char c);
  *  uchar is_upper(char c);
- *
+ */
+/** 
  * ------------------------------
  * Math (rmath.h):
  * ------------------------------
@@ -318,11 +328,24 @@
  * sub_<t>Vec<n>(const <t>Vec<n>* a, const <t>Vec<n>* b)
  * mul_<t>Vec<n>(const <t>Vec<n>* a, const <t>Vec<n>* b)
  * div_<t>Vec<n>(const <t>Vec<n>* a, const <t>Vec<n>* b)
- *   
+ */
+/** 
  * ------------------------------
  * Testing (testing.h):
  * ------------------------------
+ * 
+ * Asserts:
+ * void w_assert(const char truthy, const char* msg)
+ * void e_assert(const char truthy, const char* msg)
+ *
+ * The asserts 'e_assert' && 'e_assert' will include little infermation.
+ * For more information and slower compile times, 
+ * compile with `-DEBUG`.
+ * The asserts can be disabeled 
+ * by compilin with RELEASE defined (-DRELEASE).
  *  
+ * Use the more flexible test_* functions for your unit tests.
+ *
  * test_costume(
  *     void* real, 
  *     void* exprected, 
@@ -342,11 +365,11 @@
  * test_ulong      (ulong, ulong, message)
  * test_llong      (llong, llong, message)
  * test_ullong     (ullong, ullong, message)
+ * test_size_t     (size_t, size_t, message)
+ * test_Compareable(Compareable, Compareable, message)
  * ! float operations round to 4 and double to 8 level precission !
  * test_float      (float, float, message)
  * test_double     (double, double, message)
  * test_ldouble    (ldouble, ldouble, message)
- * test_Compareable(Compareable, Compareable, message)
- * test_size_t     (size_t, size_t, message)
  * 
  */
