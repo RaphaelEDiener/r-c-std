@@ -5,13 +5,14 @@
  * Asserts are functions by defautl so the compiler works fast.
  * The optimizing compilers 
  * can eliminate the dead code from dead functions.
- * This is faster than thi preprocessor.
+ * This is faster than the preprocessor.
  * The asserts are comiling slow because preprocessor.
  */
 
 #include "default_types.h"
 #include "cmp.h"
 #include "result.h" 
+#include <stdlib.h> 
 
 #ifndef TEST_SIGNATURES
 #define TEST_SIGNATURES
@@ -34,53 +35,37 @@ char test_eq(
 );
 
 #if defined(RELEASE)
-void w_assert(const char truthy, const char* msg) {}
-void e_assert(const char truthy, const char* msg) {}
+    void w_assert(const char truthy, const char* msg);
+    void e_assert(const char truthy, const char* msg);
 #elif defined(DEBUG)
-#define e_assert(truthy, msg) \
-if (!(truthy)) { \
-    redln( \
-        "Assert\n\t%s\nfailed in %s @ line %u:\n\t%s",  \
-        #truthy, \
-        __FILE__, __LINE__, \
-        msg \
-    ) \
-    err_redln( \
-        "Assert\n\t%s\nfailed in %s @ line %u:\n\t%s",  \
-        #truthy, \
-        __FILE__, __LINE__, \
-        msg \
-    ) \
-    exit(-1); \
-}
-#define w_assert(truthy, msg) \
-if (!(truthy)) { \
-    err_yellowln( \
-        "Assert\n\t%s\nfailed in %s @ line %u:\n\t%s",  \
-        #truthy, \
-        __FILE__, __LINE__, \
-        msg \
-    ) \
-}
+    #define e_assert(truthy, msg) \
+    if (!(truthy)) { \
+        redln( \
+            "Assert\n\t%s\nfailed in %s @ line %u:\n\t%s",  \
+            #truthy, \
+            __FILE__, __LINE__, \
+            msg \
+        ) \
+        err_redln( \
+            "Assert\n\t%s\nfailed in %s @ line %u:\n\t%s",  \
+            #truthy, \
+            __FILE__, __LINE__, \
+            msg \
+        ) \
+        exit(-1); \
+    }
+    #define w_assert(truthy, msg) \
+    if (!(truthy)) { \
+        err_yellowln( \
+            "Assert\n\t%s\nfailed in %s @ line %u:\n\t%s",  \
+            #truthy, \
+            __FILE__, __LINE__, \
+            msg \
+        ) \
+    }
 #else 
-void e_assert(const char truthy, const char* msg) {
-    if (!(truthy)) {
-        redln(
-            "Assert failed:\n\t%s", msg
-        );
-        err_redln(
-            "Assert failed:\n\t%s", msg
-        );
-        exit(-1);
-    }
-}
-void w_assert(const char truthy, const char* msg) {
-    if (!(truthy)) {
-        err_yellowln(
-            "Assert failed:\n\t%s", msg
-        );
-    }
-}
+    void w_assert(const char truthy, const char* msg);
+    void e_assert(const char truthy, const char* msg);
 #endif
 
 #define DEFINE_TEST_SIG(type) \

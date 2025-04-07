@@ -11,16 +11,26 @@ using the aliases/shorthands found in default_types.h
 
 If a parameter is not declared 'const', it is getting modified.
 Parameters are preferably passed by reference, 
-since 03 can turn small references into values, 
+since -03 can turn small references into values, 
 but not vise versa for large values (reliably acros compilers).
+
+Naming follows the convention:
+<modifyer><function name><for type>
 
 -- Building --
 
-gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o
+There are 3 modes that change how asserts work,
+and with that compile time: 
+
+normal:  gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o
+debug:   gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o -D DEBUG
+release: gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o -D RELEASE
 
 -- Linking --
 
-gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o
+normal:  gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o
+debug:   gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o -D DEBUG
+release: gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o -D RELEASE
 
 It is recommended to use `-fmax-errors=2`,
 since the library is heavily dependant on macros,

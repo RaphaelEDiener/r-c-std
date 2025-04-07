@@ -1248,8 +1248,6 @@ int test_list_delete(void) {
         );
     }
     free_charLl(ll0);
-
-    e_assert(1==0, "message");
     
     charLl ll1 = new_charLl();
     for (size_t i = 0; i < 10; i++) {

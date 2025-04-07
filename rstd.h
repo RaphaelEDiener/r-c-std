@@ -34,11 +34,18 @@
  *
  * -- Building --
  * 
- * gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o
+ * There are 3 modes that change how asserts work,
+ * and with that compile time: 
+ *
+ * normal:  gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o
+ * debug:   gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o -D DEBUG
+ * release: gcc rstd.c -Wall -Wextra -c -O3 -fmax-errors=2 -o rstd.o -D RELEASE
  *
  * -- Linking --
  *
- * gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o
+ * normal:  gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o
+ * debug:   gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o -D DEBUG
+ * release: gcc -Wall -Wextra -o main.exe -fmax-errors=2 main.c rstd.o -D RELEASE
  *
  * It is recommended to use `-fmax-errors=2`,
  * since the library is heavily dependant on macros,

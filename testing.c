@@ -4,6 +4,32 @@
 #include <stdio.h>
 #include "testing.h"
 
+#if defined(RELEASE)
+    void w_assert(const char truthy, const char* msg) {}
+    void e_assert(const char truthy, const char* msg) {}
+
+#elif defined(DEBUG)
+    // define in header
+#else 
+    void e_assert(const char truthy, const char* msg) {
+        if (!(truthy)) {
+            redln(
+                "Assert failed:\n\t%s", msg
+            );
+            err_redln(
+                "Assert failed:\n\t%s", msg
+            );
+            exit(-1);
+        }
+    }
+    void w_assert(const char truthy, const char* msg) {
+        if (!(truthy)) {
+            err_yellowln(
+                "Assert failed:\n\t%s", msg
+            );
+        }
+    }
+#endif
 
 char test_costume(
     const void* real, 
